@@ -1,0 +1,25 @@
+<project name="BeeHive" >
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: init                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="init">
+            <property name="build" location=".build" />
+			<property name="warjar" location="${build}/warjar" />
+			<property name="web" location="web" />
+    		
+    </target>
+	<!-- ================================= 
+          target: build              
+         ================================= -->
+    <target name="build" depends="init" description="Builds war-jar">
+		<mkdir dir="${warjar}"/>
+    	<unjar src="lib/bin/winstone-0.9.10.jar" dest="${warjar}" />
+        <jar  basedir="${web}" destfile="${warjar}/embedded.war" />
+		<jar  basedir="${warjar}" destfile="${build}/${ant.project.name}.jar" 
+			manifest="${warjar}/META-INF/MANIFEST.MF"
+			>
+		</jar>
+    </target>
+
+
+</project>

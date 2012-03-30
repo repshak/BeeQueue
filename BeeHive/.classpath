@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry kind="lib" path="lib/bin/groovy-all-1.8.6.jar"/>
+	<classpathentry kind="lib" path="lib/bin/jackson-core-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/build/jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/build/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="lib/bin/derby.jar"/>
+	<classpathentry kind="lib" path="lib/bin/jackson-databind-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/bin/winstone-0.9.10.jar"/>
+	<classpathentry kind="lib" path="lib/bin/jackson-annotations-2.0.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
