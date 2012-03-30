@@ -1,16 +1,19 @@
 BeeHive
 =======
 
-Idea to create simple scheduler, that manage small cluster of machines. Database will be used to coordinate between machines. 
-(I now it is SPOF, but in future there is intent to do coordination plugable and use something like zookeeper or dooozer).
+Idea to create simple scheduler, that manage cluster of machines. Database will be used to coordinate between machines. 
+(I now it is SPOF. It seems like simpliest way iron out web interface for now). In future we will make coordination plugable 
+and use something like [zookeeper](http://zookeeper.apache.org/) or [doozerd](https://github.com/ha/doozerd).
 
-Development
------------
+Current Status
+--------------
+
+We are very early in development, so not much is working yet.
 
 ### Languages used
  
-Java - sever side
-JavaScript - web interface 
+* Java - sever side
+* JavaScript - web interface 
 
 ### Some info about components 
 
@@ -19,6 +22,12 @@ JavaScript - web interface
 * [wingstone](http://winstone.sourceforge.net/) - servlet container
 
 
-### DataModel
+Development
+-----------
 
-[see image](https://github.com/repshak/BeeHive/blob/master/BeeHive/dbModel.png)
+[DataModel](https://github.com/repshak/BeeHive/raw/master/BeeHive/dbModel.png)
+
+Downloads
+---------
+
+nothing yet
