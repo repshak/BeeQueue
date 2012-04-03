@@ -2,7 +2,7 @@ BeeHive
 =======
 
 Idea to create simple scheduler, that manage cluster of machines. Database will be used to coordinate between machines. 
-(I now it is SPOF. It seems like simpliest way iron out web interface for now). In future we will make coordination plugable 
+(I know it is SPOF. It seems like simpliest way iron out web interface for now). In future we will make coordination plugable 
 and use something like [zookeeper](http://zookeeper.apache.org/) or [doozerd](https://github.com/ha/doozerd).
 
 Current Status
