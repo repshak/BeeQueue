@@ -20,12 +20,14 @@ We are very early in development, so not much is working yet.
 * [jackson](http://jackson.codehaus.org/Home) - JSON binding and configuration
 * [groovy](http://groovy.codehaus.org/) - templates
 * [wingstone](http://winstone.sourceforge.net/) - servlet container
+* [sigar api](http://support.hyperic.com/display/SIGAR/Home) - OS abstraction 
 
 
 Development
 -----------
 
-[DataModel](https://github.com/repshak/BeeHive/raw/master/BeeHive/dbModel.png)
+[DataModel](https://github.com/repshak/BeeHive/raw/master/BeeHive/design/dbModel.png)
+[ObjectStates](https://github.com/repshak/BeeHive/raw/master/BeeHive/design/ObjectStates.png)
 
 Downloads
 ---------

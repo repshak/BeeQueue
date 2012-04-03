@@ -12,7 +12,7 @@ public class GenerateTables  {
 
   @Test
   public void test() throws Exception{
-	  Clay clay = new Clay(new FileInputStream("dbModel.clay"));
+	  Clay clay = new Clay(new FileInputStream("design/dbModel.clay"));
     System.out.println(clay);
 	  
 //	  List<Table> list = MySqlDao.instance.get();
