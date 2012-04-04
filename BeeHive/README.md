@@ -1,4 +1,4 @@
-BeeHive
+BeeComb
 =======
 
 Idea to create simple scheduler, that manage cluster of machines. Database will be used to coordinate between machines. 
