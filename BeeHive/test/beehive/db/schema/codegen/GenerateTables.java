@@ -13,7 +13,7 @@ public class GenerateTables  {
   @Test
   public void test() throws Exception{
 	  Clay clay = new Clay(new FileInputStream("design/dbModel.clay"));
-    System.out.println(clay);
+      System.out.println(clay);
 	  
 //	  List<Table> list = MySqlDao.instance.get();
 //    GroovyTemplate groovyTemplate = new GroovyTemplate(getClass(),"TableMapCode.gtemplate");
