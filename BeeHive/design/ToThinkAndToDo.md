@@ -1,0 +1,30 @@
+
+ToDo
+===
+
+- Enums: 
+  * AlertLevel
+  * MessageState
+  * JobState
+  * StageState
+  * Run State
+- 
+- Add names in msg/job/stage to minimize joins
+- Add domain_cd into NN_MESSAGE
+
+ToThink
+---
+- DbMapping
+- Record somewhere that runs are failing on stage, job and message levels
+- Host - Achitecture - Datastorages rules to match host to particular 
+  stage
+- Scheduling/Mathching logic to assign job to Message
+- How job that mark message/job complete, and how to set deadline if that
+  did not happend on time
+- 
+
+### Done
+  * DomainState
+  
+
+ 
