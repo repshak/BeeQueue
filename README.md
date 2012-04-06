@@ -28,13 +28,13 @@ We are very early in development, so not much is working yet.
 Development
 -----------
 
-[DataModel](design/dbModel.png)
+[DataModel](/repshak/BeeQueue/blob/master/design/dbModel.png)
 
-[ObjectStates](design/ObjectStates.png)
+[ObjectStates](/repshak/BeeQueue/blob/master/design/ObjectStates.png)
 
-[Screens](design/Screens.mediawiki)
+[Screens](/repshak/BeeQueue/blob/master/design/Screens.mediawiki)
 
-[ToDo](design/ToThinkAndToDo.mediawiki)
+[ToDo](/repshak/BeeQueue/blob/master/design/ToThinkAndToDo.mediawiki)
 
 Downloads
 ---------
