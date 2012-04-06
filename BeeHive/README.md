@@ -28,8 +28,8 @@ We are very early in development, so not much is working yet.
 Development
 -----------
 
-- [DataModel](https://github.com/repshak/BeeHive/raw/master/BeeHive/design/dbModel.png)
-- [ObjectStates](https://github.com/repshak/BeeHive/raw/master/BeeHive/design/ObjectStates.png)
+- [DataModel](https://github.com/repshak/BeeComb/raw/master/BeeHive/design/dbModel.png)
+- [ObjectStates](https://github.com/repshak/BeeComb/raw/master/BeeHive/design/ObjectStates.png)
 
 Downloads
 ---------
