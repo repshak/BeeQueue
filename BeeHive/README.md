@@ -1,9 +1,9 @@
 BeeQueue
 =======
 
-Idea to create simple scheduler, that manage cluster of machines. Database will be used to coordinate between nodes. 
-(I know it is SPOF. It seems like simpliest way iron out web interface for now). In future I will make 
-coordination datastore plugable and use something like [zookeeper](http://zookeeper.apache.org/) 
+BeeQueue - is simple event queue and workflow execution engine, it is capable of managing small cluster of machines. Database will be used to coordinate between nodes.  (I know it is SPOF. It seems like simpliest way iron out web interface for now). 
+
+In future I will make  coordination datastore plugable and use something like [zookeeper](http://zookeeper.apache.org/) 
 or [doozerd](https://github.com/ha/doozerd).
 
 Current Status
