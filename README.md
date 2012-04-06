@@ -28,8 +28,9 @@ We are very early in development, so not much is working yet.
 Development
 -----------
 
-- [DataModel](design/dbModel.png)
-- [ObjectStates](design/ObjectStates.png)
+![DataModel](design/dbModel.png)
+
+![ObjectStates](design/ObjectStates.png)
 
 Downloads
 ---------
