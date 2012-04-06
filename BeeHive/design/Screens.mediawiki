@@ -8,7 +8,7 @@ Query: NN_DOMAINS < NN_MESSAGE
 
 {|
 | Domain Code || Status || AlertLevel || Action |-
-| Prod || UP,DOWN || Green,Yellow,Red || UP -> Shutdown, DOWN -> Startup |
+| Prod || UP,DOWN || Green,Yellow,Red || UP -> Shutdown, DOWN -> Startup 
 |}
 
 
