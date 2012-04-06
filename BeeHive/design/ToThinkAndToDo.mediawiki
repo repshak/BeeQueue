@@ -1,6 +1,4 @@
-
-ToDo
-===
+= ToDo =
 
 - Enums: 
   * AlertLevel
@@ -12,8 +10,8 @@ ToDo
 - Add names in msg/job/stage to minimize joins
 - Add domain_cd into NN_MESSAGE
 
-ToThink
----
+== ToThink ==
+
 - DbMapping
 - Record somewhere that runs are failing on stage, job and message levels
 - Host - Achitecture - Datastorages rules to match host to particular 
