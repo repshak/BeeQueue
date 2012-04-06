@@ -1,10 +1,8 @@
-Screens
-===
+= Screens =
 
-Home Screen
----
+== Home Screen ==
 
-### Domains
+=== Domains ===
 
 Query: NN_DOMAINS < NN_MESSAGE
 
