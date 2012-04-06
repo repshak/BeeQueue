@@ -12,8 +12,7 @@ Query: NN_DOMAINS < NN_MESSAGE
 | Prod || UP,DOWN || Green,Yellow,Red || UP -> Shutdown, DOWN -> Startup 
 |}
 
-
-### Host Groups
+=== Host Groups ===
 
 Query: NN_HOST_GROUP < NN_HOST
 
