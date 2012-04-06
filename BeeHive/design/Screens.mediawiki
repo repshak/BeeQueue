@@ -8,8 +8,10 @@ Home Screen
 
 Query: NN_DOMAINS < NN_MESSAGE
 
-| Domain Code | Status | AlertLevel | Action |
-| Prod | UP,DOWN | Green,Yellow,Red | UP -> Shutdown, DOWN -> Startup | 
+{|
+| Domain Code || Status || AlertLevel || Action |-
+| Prod || UP,DOWN || Green,Yellow,Red || UP -> Shutdown, DOWN -> Startup |
+|}
 
 
 ### Host Groups
