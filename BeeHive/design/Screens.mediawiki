@@ -17,7 +17,9 @@ Query: NN_DOMAINS < NN_MESSAGE
 
 Query: NN_HOST_GROUP < NN_HOST
 
-| Host Group Code | AlertLevel |
+{| 
+| Host Group Code || AlertLevel 
+|}
 
 
 Message Queue Screen
