@@ -1,8 +1,5 @@
 = ToDo =
 
-* Enums: 
-** StageState
-** Run State 
 * Add names in msg/job/stage to minimize joins
 * Add domain_cd into NN_MESSAGE
 
@@ -15,7 +12,10 @@
 * How job that mark message/job complete, and how to set deadline if that did not happend on time
 
 == Done ==
-* JobState
-* DomainState
-* AlertLevel
-* MessageState
+* Enums: 
+** RunState 
+** StageState
+** JobState
+** DomainState
+** AlertLevel
+** MessageState
