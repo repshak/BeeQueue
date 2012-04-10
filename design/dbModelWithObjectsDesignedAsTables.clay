@@ -12,10 +12,10 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e50" mandatory="true" name="MSG_NAME">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7e6e" mandatory="true" name="DOMAIN_CD" remarks="lazylookup:chaosctrl.msg.Domain">
+<column auto-increment="false" column-size="4000" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7e53" mandatory="true" name="MSG_TEMPLATE_DATA" remarks="stringable:org.beequeue.MessageTemplateData">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7c91" mandatory="true" name="ACTIVE">
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7e6e" mandatory="true" name="DOMAIN_CD" remarks="lazylookup:chaosctrl.msg.Domain">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 </column-list>
@@ -36,14 +36,11 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e2b" mandatory="true" name="DOMAIN_STATE">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7ded" mandatory="true" name="PROPERTIES_ID">
-<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7f3c" mandatory="true" name="DOMAIN_PROPERTIES">
+<data-type name="CLOB" selected-variant-pattern="CLOB(%n K)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7d24" mandatory="true" name="MSGCONFIG_ID">
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7ded" mandatory="true" name="CONFIG_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7c56" mandatory="false" name="UPDATED_TS">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-7f55" name="PK_NN_DOMAIN">
@@ -51,10 +48,34 @@
 </primary-key>
 <foreign-key-list>
 <foreign-key id="2d42fd58:1365a31ffa5:-7def" name="FK_NN_DOMAIN_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_CONFIGURATION" referenced-table="NN_CONFIGURATION" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="PROPERTIES_ID" referenced-key-column-name="CONFIG_ID"/>
+<foreign-key-column column-name="CONFIG_ID" referenced-key-column-name="CONFIG_ID"/>
 </foreign-key>
-<foreign-key id="2d42fd58:1365a31ffa5:-7d26" name="FK_NN_DOMAIN_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_CONFIGURATION" referenced-table="NN_CONFIGURATION" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="MSGCONFIG_ID" referenced-key-column-name="CONFIG_ID"/>
+</foreign-key-list>
+</table>
+<table id="43a11a8e:13648c9dafd:-7db8" name="NN_SCHEDULE">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7db4" mandatory="true" name="SCHEDULE_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7d89" mandatory="true" name="JOB_TEMPLATE_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7d3d" mandatory="true" name="MSG_TEMPLATE_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7d04" mandatory="true" name="SEQ_TRANSFORM_RULE">
+<data-type name="CLOB" selected-variant-pattern="CLOB(%n K)"/>
+</column>
+</column-list>
+<primary-key id="43a11a8e:13648c9dafd:-7db7" name="PK_NN_SCHEDULE">
+<primary-key-column name="SCHEDULE_ID"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="43a11a8e:13648c9dafd:-7d8b" name="FK_NN_SCHEDULE_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_JOB_TEMPLATE" referenced-table="NN_JOB_TEMPLATE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="JOB_TEMPLATE_ID" referenced-key-column-name="JOB_TEMPLATE_ID"/>
+</foreign-key>
+<foreign-key id="43a11a8e:13648c9dafd:-7d4a" name="FK_NN_SCHEDULE_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_MESSAGE_TEMPLATE" referenced-table="NN_MESSAGE_TEMPLATE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="MSG_TEMPLATE_ID" referenced-key-column-name="MSG_TEMPLATE_ID"/>
 </foreign-key>
 </foreign-key-list>
 </table>
@@ -66,11 +87,14 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-76d9" mandatory="true" name="JOB_NAME">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-76e0" mandatory="false" name="END_STAGE">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-76c3" mandatory="true" name="MSG_TEMPLATE_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
-<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7dcc" mandatory="true" name="ACTIVE">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-769c" mandatory="false" name="JOB_TEMPLATE_DATA">
+<data-type name="CLOB" selected-variant-pattern="CLOB(%n K)"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-7da6" name="PK_NN_JOB_TEMPLATE">
@@ -90,11 +114,11 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-791c" mandatory="false" name="STAGE_NAME">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7918" mandatory="false" name="STAGE_DEFINITION" remarks="stringable:chaosctrl.job.StageDefinition">
+<data-type name="CLOB" selected-variant-pattern="CLOB(%n K)"/>
+</column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-76f0" mandatory="true" name="JOB_TEMPLATE_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
-</column>
-<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7c8d" mandatory="true" name="ACTIVE">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-7c57" name="PK_NN_STAGE_TEMPLATE">
@@ -103,6 +127,49 @@
 <foreign-key-list>
 <foreign-key id="43a11a8e:13648c9dafd:-76f2" name="FK_NN_STAGE_TEMPLATE_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_JOB_TEMPLATE" referenced-table="NN_JOB_TEMPLATE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
 <foreign-key-column column-name="JOB_TEMPLATE_ID" referenced-key-column-name="JOB_TEMPLATE_ID"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="43a11a8e:13648c9dafd:-7c2b" name="NN_STAGE_DEPENDENCY">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="505fd8:1364125ae19:-7c5e" mandatory="true" name="STAGE_TEMPLATE_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7c26" mandatory="true" name="DEPEND_ON_STAGE">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="43a11a8e:13648c9dafd:-7c2a" name="PK_NN_STAGE_DEPENDENCY">
+<primary-key-column name="DEPEND_ON_STAGE"/>
+<primary-key-column name="STAGE_TEMPLATE_ID"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="505fd8:1364125ae19:-7c60" name="FK_NN_STAGE_DEPENDENCY_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_STAGE_TEMPLATE" referenced-table="NN_STAGE_TEMPLATE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="STAGE_TEMPLATE_ID" referenced-key-column-name="STAGE_TEMPLATE_ID"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="43a11a8e:13648c9dafd:-7bfb" name="NN_SEQUENCE">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7bf7" mandatory="true" name="SEQUENCE_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7be7" mandatory="true" name="SCHEDULE_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7af0" mandatory="true" name="MSG_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+</column-list>
+<primary-key id="43a11a8e:13648c9dafd:-7bfa" name="PK_NN_SEQUENCE">
+<primary-key-column name="SEQUENCE_ID"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="43a11a8e:13648c9dafd:-7be9" name="FK_NN_SEQUENCE_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_SCHEDULE" referenced-table="NN_SCHEDULE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="SCHEDULE_ID" referenced-key-column-name="SCHEDULE_ID"/>
+</foreign-key>
+<foreign-key id="43a11a8e:13648c9dafd:-7af2" name="FK_NN_SEQUENCE_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_MESSAGE" referenced-table="NN_MESSAGE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="MSG_ID" referenced-key-column-name="MSG_ID"/>
 </foreign-key>
 </foreign-key-list>
 </table>
@@ -330,8 +397,8 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-75e9" mandatory="false" name="JOB_STATE" remarks="enum:chaosctrl.jobcontrol.JobState">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f48" mandatory="true" name="RESPONSIBLE">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f48" mandatory="true" name="IS_RESPONSIBLE">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
 </column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e55" mandatory="true" name="JOB_NAME">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
@@ -392,21 +459,42 @@
 </schema-list>
 </database-model>
 <diagram>
-<table-figure refid="43a11a8e:13648c9dafd:-7f5c" x="969" y="271"/>
-<table-figure refid="43a11a8e:13648c9dafd:-7f56" x="823" y="53"/>
-<fk-figure refid="2d42fd58:1365a31ffa5:-7def">
+<table-figure refid="43a11a8e:13648c9dafd:-7f5c" x="773" y="69"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7f56" x="234" y="46"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7db8" x="934" y="299"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7da7" x="511" y="300"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7c58" x="253" y="204"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7c2b" x="527" y="152"/>
+<fk-figure refid="505fd8:1364125ae19:-7c60">
 <bendpoints>
-<bendpoint height1="-49" height2="-13" weight="0.5" width1="52" width2="-296"/>
+<bendpoint height1="-42" height2="-104" weight="0.5" width1="-2" width2="267"/>
+<bendpoint height1="-41" height2="-103" weight="0.5" width1="-271" width2="-2"/>
 </bendpoints>
 </fk-figure>
-<table-figure refid="43a11a8e:13648c9dafd:-7da7" x="526" y="281"/>
-<table-figure refid="43a11a8e:13648c9dafd:-7c58" x="238" y="145"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7bfb" x="1051" y="592"/>
+<fk-figure refid="43a11a8e:13648c9dafd:-7be9">
+<bendpoints>
+<bendpoint height1="-118" height2="162" weight="0.5" width1="0" width2="57"/>
+</bendpoints>
+</fk-figure>
+<fk-figure refid="43a11a8e:13648c9dafd:-7af2">
+<target-terminal x="164" y="57"/>
+<bendpoints>
+<bendpoint height1="-6" height2="127" weight="0.5" width1="-194" width2="2"/>
+</bendpoints>
+</fk-figure>
 <table-figure refid="43a11a8e:13648c9dafd:-7b61" x="801" y="439"/>
 <fk-figure refid="43a11a8e:13648c9dafd:-7b43">
 <bendpoints>
 <bendpoint height1="83" height2="83" weight="0.5" width1="13" width2="13"/>
 <bendpoint height1="80" height2="80" weight="0.5" width1="145" width2="145"/>
 <bendpoint height1="2" height2="2" weight="0.5" width1="145" width2="145"/>
+</bendpoints>
+</fk-figure>
+<fk-figure refid="2d42fd58:1365a31ffa5:-7e38">
+<bendpoints>
+<bendpoint height1="-179" height2="223" weight="0.5" width1="-111" width2="437"/>
+<bendpoint height1="-349" height2="53" weight="0.5" width1="-494" width2="54"/>
 </bendpoints>
 </fk-figure>
 <table-figure refid="43a11a8e:13648c9dafd:-78f8" x="37" y="86"/>
@@ -423,6 +511,6 @@
 <table-figure refid="43a11a8e:13648c9dafd:-78dd" x="238" y="453"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78d9" x="525" y="453"/>
 <table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="702" y="625"/>
-<table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="436" y="72"/>
+<table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="585" y="10"/>
 </diagram>
 </clay-model>

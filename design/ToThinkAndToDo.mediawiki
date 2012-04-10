@@ -1,16 +1,18 @@
 = ToDo =
-
-* simplify db schema for faster develpoment
+* stand alone derby script
+* deploy schema to derby
+* DbMapping
 
 == ToThink ==
 
-* DbMapping
 * Record somewhere that runs are failing on stage, job and message levels
 * Host - Achitecture - Datastorages rules to match host to particular stage
+* How job that mark message/job complete, and 
+* How to set deadline if that did not happend on time
 * Scheduling/Mathching logic to assign job to Message
-* How job that mark message/job complete, and how to set deadline if that did not happend on time
 
 == Done ==
+* simplify db schema for faster develpoment
 * Add names in msg/job/stage to minimize joins
 * Add domain_cd into NN_MESSAGE
 * Enums: 
