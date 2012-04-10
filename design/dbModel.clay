@@ -106,12 +106,6 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-76f0" mandatory="true" name="JOB_TEMPLATE_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2a789924:13656a37a73:-7f90" mandatory="false" name="RAM_COST">
-<data-type name="FLOAT" selected-variant-pattern="FLOAT"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2a789924:13656a37a73:-7f8d" mandatory="false" name="CPU_COST">
-<data-type name="FLOAT" selected-variant-pattern="FLOAT"/>
-</column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-7c57" name="PK_NN_STAGE_TEMPLATE">
 <primary-key-column name="STAGE_TEMPLATE_ID"/>
@@ -227,12 +221,6 @@
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77a3" mandatory="false" name="ACTIVE_WORKER_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2a789924:13656a37a73:-7f8a" mandatory="true" name="CPU_CAPACITY">
-<data-type name="FLOAT" selected-variant-pattern="FLOAT"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2a789924:13656a37a73:-7f89" mandatory="true" name="RAM_CAPACITY">
-<data-type name="FLOAT" selected-variant-pattern="FLOAT"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-78f0" name="PK_NN_HOST">

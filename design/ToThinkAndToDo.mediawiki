@@ -1,9 +1,6 @@
 = ToDo =
 
 * Enums: 
-** AlertLevel
-** MessageState
-** JobState
 ** StageState
 ** Run State 
 * Add names in msg/job/stage to minimize joins
@@ -18,4 +15,7 @@
 * How job that mark message/job complete, and how to set deadline if that did not happend on time
 
 == Done ==
+* JobState
 * DomainState
+* AlertLevel
+* MessageState
