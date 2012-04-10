@@ -9,6 +9,9 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7f58" mandatory="true" name="MSG_TEMPLATE_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e50" mandatory="true" name="MSG_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
 <column auto-increment="false" column-size="4000" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7e53" mandatory="true" name="MSG_TEMPLATE_DATA" remarks="stringable:org.beequeue.MessageTemplateData">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
@@ -164,6 +167,9 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7b5d" mandatory="true" name="MSG_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e49" mandatory="true" name="MSG_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7b5c" mandatory="true" name="MSG_STATE">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
@@ -182,6 +188,9 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f5c" mandatory="true" name="USER_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e36" mandatory="true" name="DOMAIN_CD">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-7b60" name="PK_NN_MESSAGE">
 <primary-key-column name="MSG_ID"/>
@@ -195,6 +204,9 @@
 </foreign-key>
 <foreign-key id="2d42fd58:1365a31ffa5:-7f5e" name="FK_NN_MESSAGE_3" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_USER" referenced-table="NN_USER" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
 <foreign-key-column column-name="USER_CD" referenced-key-column-name="USER_CD"/>
+</foreign-key>
+<foreign-key id="2d42fd58:1365a31ffa5:-7e38" name="FK_NN_MESSAGE_5" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_DOMAIN" referenced-table="NN_DOMAIN" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="DOMAIN_CD" referenced-key-column-name="DOMAIN_CD"/>
 </foreign-key>
 </foreign-key-list>
 </table>
@@ -341,6 +353,9 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="505fd8:1364125ae19:-7bd0" mandatory="false" name="RETRIES_LEFT">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e46" mandatory="false" name="STAGE_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-78dc" name="PK_NN_STAGE">
 <primary-key-column name="STAGE_ID"/>
@@ -373,6 +388,9 @@
 </column>
 <column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f48" mandatory="true" name="IS_RESPONSIBLE">
 <data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e55" mandatory="true" name="JOB_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-78d8" name="PK_NN_JOB">
@@ -415,12 +433,12 @@
 <table-figure refid="43a11a8e:13648c9dafd:-7f56" x="250" y="76"/>
 <table-figure refid="43a11a8e:13648c9dafd:-7db8" x="934" y="299"/>
 <table-figure refid="43a11a8e:13648c9dafd:-7da7" x="511" y="300"/>
-<table-figure refid="43a11a8e:13648c9dafd:-7c58" x="255" y="157"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7c58" x="253" y="204"/>
 <table-figure refid="43a11a8e:13648c9dafd:-7c2b" x="527" y="152"/>
 <fk-figure refid="505fd8:1364125ae19:-7c60">
 <bendpoints>
-<bendpoint height1="-42" height2="-59" weight="0.5" width1="-1" width2="265"/>
-<bendpoint height1="-37" height2="-54" weight="0.5" width1="-266" width2="0"/>
+<bendpoint height1="-42" height2="-104" weight="0.5" width1="-2" width2="267"/>
+<bendpoint height1="-41" height2="-103" weight="0.5" width1="-271" width2="-2"/>
 </bendpoints>
 </fk-figure>
 <table-figure refid="43a11a8e:13648c9dafd:-7bfb" x="1051" y="592"/>
@@ -441,6 +459,12 @@
 <bendpoint height1="83" height2="83" weight="0.5" width1="13" width2="13"/>
 <bendpoint height1="80" height2="80" weight="0.5" width1="145" width2="145"/>
 <bendpoint height1="2" height2="2" weight="0.5" width1="145" width2="145"/>
+</bendpoints>
+</fk-figure>
+<fk-figure refid="2d42fd58:1365a31ffa5:-7e38">
+<bendpoints>
+<bendpoint height1="-179" height2="223" weight="0.5" width1="-111" width2="437"/>
+<bendpoint height1="-349" height2="53" weight="0.5" width1="-494" width2="54"/>
 </bendpoints>
 </fk-figure>
 <table-figure refid="43a11a8e:13648c9dafd:-78f8" x="37" y="86"/>

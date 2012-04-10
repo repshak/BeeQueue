@@ -1,7 +1,6 @@
 = ToDo =
 
-* Add names in msg/job/stage to minimize joins
-* Add domain_cd into NN_MESSAGE
+* simplify db schema for faster develpoment
 
 == ToThink ==
 
@@ -12,6 +11,8 @@
 * How job that mark message/job complete, and how to set deadline if that did not happend on time
 
 == Done ==
+* Add names in msg/job/stage to minimize joins
+* Add domain_cd into NN_MESSAGE
 * Enums: 
 ** RunState 
 ** StageState
