@@ -6,7 +6,18 @@
             <property name="build" location=".build" />
 			<property name="warjar" location="${build}/warjar" />
 			<property name="web" location="web" />
-    		
+    	    <property name="scripts" location="scripts" />
+    	<property name="lib" location="lib" />
+
+    	<path id="scripts.cp">
+    		<pathelement location="${scripts}"/>
+    		<fileset dir="${lib}" >
+    			<include name="**/*.jar"/>
+			</fileset>
+    	</path>
+    	<taskdef name="groovy"
+    	    	         classname="org.codehaus.groovy.ant.Groovy"
+    	    	         classpathref="scripts.cp"/>   		
     </target>
 	<!-- ================================= 
           target: build              
@@ -21,5 +32,10 @@
 		</jar>
     </target>
 
+	<target name="ApplyLicense.groovy" depends="init" description="--> ApplyLicense.groovy">
+    	<groovy src="${scripts}/ApplyLicense.groovy">
+    		<classpath refid="scripts.cp"/>
+    	</groovy>
+    </target>
 
 </project>

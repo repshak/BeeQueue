@@ -9,7 +9,7 @@ class ApplyLicense {
   
   	def LICENSE = 
 """/** ${BEGIN_LICENSE}
-   Copyright 2012 - BeeQueue
+   Copyright 2012 - BeeQueue.org
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class ApplyLicense {
  
  *  ${END_LICENSE} */
 """;
- 	["java/src","java/test"].each{
+ 	["src","test"].each{
 	 	new File(it).eachFileRecurse { 
 	      if ( it.name =~ /\.java$/ ) {
 	        def text = it.getText().replaceAll("\\r","");
