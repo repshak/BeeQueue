@@ -31,11 +31,16 @@
 			>
 		</jar>
     </target>
-
-	<target name="ApplyLicense.groovy" depends="init" description="--> ApplyLicense.groovy">
-    	<groovy src="${scripts}/ApplyLicense.groovy">
+	<target name="RemoveTildas.groovy" depends="init" description="--> RemoveTildas.groovy">
+    	<groovy src="${scripts}/codegen/RemoveTildas.groovy">
     		<classpath refid="scripts.cp"/>
     	</groovy>
     </target>
 
+	<target name="ApplyLicense.groovy" depends="init" description="--> ApplyLicense.groovy">
+    	<groovy src="${scripts}/codegen/ApplyLicense.groovy">
+    		<classpath refid="scripts.cp"/>
+    	</groovy>
+    </target>
+	
 </project>
