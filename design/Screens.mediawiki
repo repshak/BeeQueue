@@ -21,7 +21,7 @@ Query: NN_HOST_GROUP < NN_HOST
 |}
 
 
-=== Message Queue Screen ===
+== Message Queue Screen ==
 
 Context: DOMAIN_CD
 
@@ -29,7 +29,7 @@ Query: NN_MESSAGE < NN_JOB
 Drives Query: NN_STAGE < NN_RUN
 
 
-=== Job Screen ===
+== Job Screen ==
 
 Context: DOMAIN_CD, JOB_NAME
 
@@ -38,7 +38,7 @@ Query: NN_JOB_TEMPLATE < NN_STAGE_TEMPLATE
 Drives Query: NN_RUN > NN_STAGE > NN_JOB > NN_MESSAGE
 
 
-=== Run Screen ===
+== Run Screen ==
 
 Context: RUN_ID
 
@@ -48,13 +48,6 @@ Drives Query: NN_ARTIFACTS
 
 Drives: Log iframe
 
-
-=== Edit/Init Scheduling/Matching logic Screen ===
-
-See: ToThink
-
-Query: NN_MESSAGE_TEMPLATE > NN_SCHEDULE > NN_JOB_TEMPLATE
- 
 
 
 

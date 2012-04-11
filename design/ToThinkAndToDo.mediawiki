@@ -1,6 +1,4 @@
 = ToDo =
-* stand alone derby script
-* deploy schema to derby
 * DbMapping
 
 == ToThink ==
@@ -12,6 +10,8 @@
 * Scheduling/Mathching logic to assign job to Message
 
 == Done ==
+* deploy schema to derby
+* stand alone derby script
 * simplify db schema for faster develpoment
 * Add names in msg/job/stage to minimize joins
 * Add domain_cd into NN_MESSAGE
@@ -21,4 +21,4 @@
 ** JobState
 ** DomainState
 ** AlertLevel
-** MessageState
+** MessageStateucklluckyll
