@@ -14,12 +14,6 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-/* This file is generated out of 
- * java/kernel/num/cracker/flock/impl/DoubleFlockImpl.java
- * Please do not edit. 
- *
- * Yours truly, DoubleFlockCodegen
- */
 package org.beequeue.piles.flock;
 
 import java.io.IOException;
