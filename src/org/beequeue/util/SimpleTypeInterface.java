@@ -16,32 +16,8 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
-/**
- * ToStringUtil - class used for debugging purposes. That class uses 
- * reflection to introspect object properties and print out them. 
- * <br>
- * Is is pretty CPU expensive so use with caution.
- */
-public class ToStringUtil
-{
-	public static ObjectMapper MAPPER = new ObjectMapper();
-	
-	public String toString() {
-		return toString(this);
-	}
-
-
-	public static String toString(Object o) {
-		ObjectWriter writer = MAPPER.writerWithDefaultPrettyPrinter();
-	    try {
-			return writer.writeValueAsString(o);
-		} catch (Exception e) {
-			return e.toString();
-		}
-	}
-
-    
+public interface SimpleTypeInterface 
+extends Morph<String,Object> {
+  Object toObject(String s);
 }

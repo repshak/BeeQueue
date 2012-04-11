@@ -1,0 +1,9 @@
+package org.beequeue.host;
+
+public enum WorkerState {
+	READY_FOR_WORK,
+	OVERWELMED,
+	LOST_CONNECTTION_TO_COORDINATOR,
+	LOST_FILESYSTEM,
+	TERMINATED,
+}
