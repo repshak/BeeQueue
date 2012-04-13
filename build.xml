@@ -3,34 +3,65 @@
           target: init                      
          - - - - - - - - - - - - - - - - - -->
     <target name="init">
-            <property name="build" location=".build" />
-			<property name="warjar" location="${build}/warjar" />
-			<property name="web" location="web" />
-    	    <property name="scripts" location="scripts" />
-    	<property name="lib" location="lib" />
+    	<property name="lib" value="lib" />
+        <property name="build" location=".build" />
+		<property name="warjar" location="${build}/warjar" />
+		<property name="web" location="web" />
+		<property name="classes" location="${web}/WEB-INF/classes" />
+		<property name="weblib" location="${web}/WEB-INF/lib" />
 
-    	<path id="scripts.cp">
-    		<pathelement location="${scripts}"/>
+    	<property name="src" location="src" />
+    	<property name="scripts" location="scripts" />
+
+    	<path id="lib.cp">
     		<fileset dir="${lib}" >
     			<include name="**/*.jar"/>
 			</fileset>
+		</path>
+    	<path id="scripts.cp">
+    		<pathelement location="${scripts}"/>
+    		<path refid="lib.cp"/>
     	</path>
-    	<taskdef name="groovy"
-    	    	         classname="org.codehaus.groovy.ant.Groovy"
-    	    	         classpathref="scripts.cp"/>   		
+    	<taskdef 
+    		name="groovy" classname="org.codehaus.groovy.ant.Groovy" 
+    		classpathref="scripts.cp"/>   		
     </target>
+	
+	<target name="clean" depends="init" description="Clean up">
+    	<delete dir="${build}"/>
+    	<delete dir="${web}/${lib}"/>
+    	<delete dir="${classes}"/>
+	</target>
+	
+	
 	<!-- ================================= 
           target: build              
          ================================= -->
     <target name="build" depends="init" description="Builds war-jar">
 		<mkdir dir="${warjar}"/>
     	<unjar src="lib/bin/winstone-0.9.10.jar" dest="${warjar}" />
+    	
+    	<mkdir dir="${weblib}"/>
+    	<mkdir dir="${classes}"/>
+    	
+    	<javac 
+    		destdir="${classes}"
+    		srcdir="${src}" >
+    		<classpath refid="lib.cp" />
+    	</javac>
+    	<copy todir="${weblib}">
+    		<fileset dir="${lib}/bin">
+    			<include name="*jar" />
+    		</fileset>
+    	</copy>
+    	
         <jar  basedir="${web}" destfile="${warjar}/embedded.war" />
 		<jar  basedir="${warjar}" destfile="${build}/${ant.project.name}.jar" 
 			manifest="${warjar}/META-INF/MANIFEST.MF"
 			>
 		</jar>
     </target>
+	
 	<target name="RemoveTildas.groovy" depends="init" description="--> RemoveTildas.groovy">
     	<groovy src="${scripts}/codegen/RemoveTildas.groovy">
     		<classpath refid="scripts.cp"/>

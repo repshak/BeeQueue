@@ -14,11 +14,11 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.host;
+package org.beequeue.worker;
 
 public enum WorkerState {
 	READY_FOR_WORK,
-	OVERWELMED,
+	OVERWHELMED,
 	LOST_CONNECTTION_TO_COORDINATOR,
 	LOST_FILESYSTEM,
 	TERMINATED,
