@@ -63,7 +63,7 @@ public class WorkerServlet  extends HttpServlet {
 	throws ServletException, IOException {
 		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
-		String q = request.getQueryString();
+		String q = request.getPathInfo();
 		out.println(q);
 		System.out.println("service:"+q);
 		
