@@ -1,10 +1,12 @@
 = ToDo =
 * Deployment bq.jar
+** change default port for bq.jar to 7332
 ** autodeployment of agent native libraries
-** test agent on mac and windows.
-* check json visuzlization from http://chris.photobooks.com/json/default.htm
+** test agent on windows.
+* json visuzlization 
+** copy page with all dependencies from http://chris.photobooks.com/json/default.htm
+** modify it to run visualization automaticaly on all json data pulled on the web
 * DbMapping
-* webdeployment: push out one table from db to web
 
 == ToThink ==
 
@@ -15,6 +17,9 @@
 * Scheduling/Mathching logic to assign job to Message
 
 == Done ==
+* check json visuzlization 
+* Agent
+** test agent on mac.
 * deploy schema to derby
 * stand alone derby script
 * simplify db schema for faster develpoment

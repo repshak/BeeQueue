@@ -60,7 +60,7 @@ public class Agent {
 			return -1;
 		}
 		try {
-			this.timestamp = new SimpleDateFormat("YYYYMMDDhhmmss").format(new Date());
+			this.timestamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
 			this.host = java.net.InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
@@ -93,7 +93,9 @@ public class Agent {
 		File f = outputDirectory;
 		f = new File(f, metricName); if( !f.isDirectory() && !f.mkdirs() ) throw new FileNotFoundException(f.toString());
 		f = new File(f, this.host); if( !f.isDirectory() && !f.mkdirs() ) throw new FileNotFoundException(f.toString());
-		FileWriter w = new FileWriter(new File(f,timestamp+".txt"));
+		File dumpFile = new File(f,timestamp+".txt");
+		FileWriter w = new FileWriter(dumpFile);
+		System.out.println("@Artifact: "+metricName+": "+dumpFile);
 		ObjectWriter pp = om.writerWithDefaultPrettyPrinter();
 		w.write(pp.writeValueAsString(systemMetric));
 		w.close();
