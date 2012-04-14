@@ -1,23 +1,24 @@
 = ToDo =
 * Deployment bq.jar
+** establish or pickup BQ_HOME
 ** change default port for bq.jar to 7332
-** autodeployment of agent native libraries
+** autodeployment of agent native libraries into $BQ_HOME/agent
 ** test agent on windows.
-* json visuzlization 
-** copy page with all dependencies from http://chris.photobooks.com/json/default.htm
-** modify it to run visualization automaticaly on all json data pulled on the web
+* json visualization 
+** modify it to run visualization automatically on all json data pulled on the web
 * DbMapping
 
 == ToThink ==
 
 * Record somewhere that runs are failing on stage, job and message levels
-* Host - Achitecture - Datastorages rules to match host to particular stage
+* Host - Architecture - Datastores rules to match host to particular stage
 * How job that mark message/job complete, and 
 * How to set deadline if that did not happend on time
 * Scheduling/Mathching logic to assign job to Message
 
 == Done ==
-* check json visuzlization 
+* json visuzlization 
+** copy page with all dependencies from http://chris.photobooks.com/json/default.htm
 * Agent
 ** test agent on mac.
 * deploy schema to derby
