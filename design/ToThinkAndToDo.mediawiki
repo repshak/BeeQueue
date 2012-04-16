@@ -1,14 +1,15 @@
 = ToDo =
-* Deployment bq.jar
-** BQ_HOME
-*** establish system wide configuration is in $BQ_HOME/system.json
-*** establish host specific directory in $BQ_HOME/hosts/<hostname>/ (set environment in BQ_HOST)
-*** save current worker info in BQ_HOST/worker.csv (pid and computer vitals)
-** test agent on windows.
+* schedule agent runs in each worker
 * $BQ_HOST/worker.csv
 ** maintain for worker that running
-** shutdown other bq.jar if its already running on this machine on same port and as same user with same home
-*** check $BQ_HOST/worker.csv and shut it down if all other workers.
+** cleanup dead workers info (workers that did not update its status form more then 1 hour).
+** header: pid,ts,active, available_cpu,total_cpu,available_ram,total_ram,status
+** shutdown other bq.jar if its already running on this machine 
+* Deployment bq.jar
+** BQ_HOME
+*** conditional unpack only if version, in bq.properties does not match already downloaded.
+*** establish system wide configuration is in $BQ_HOME/system.json
+** test agent on windows.
 * json visualization 
 ** modify it to run visualization automatically on all json data pulled on the web
 * coordination datasource configuration is in $BQ_HOME/bq-config.json
@@ -29,6 +30,7 @@
 *** establish or pickup BQ_HOME ( default to `pwd`/bq-home/ )
 *** autodeployment of agent native libraries into $BQ_HOME/web/WEB-INF/lib
 *** autodeployment web application $BQ_HOME/web/
+*** establish host specific directory in $BQ_HOME/hosts/##hostname##/ (set environment in BQ_HOST)
 * json visualization 
 ** copy page with all dependencies from http://chris.photobooks.com/json/default.htm
 * Agent

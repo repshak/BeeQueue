@@ -18,6 +18,10 @@ package org.beequeue.worker;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,16 +29,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.beequeue.agent.Agent;
 import org.beequeue.launcher.BeeQueueHome;
 
 public class WorkerServlet  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	
+	 private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+        scheduler.scheduleAtFixedRate(new Runnable() {
+                public void run() { 
+                	new Agent(new String[]{ "ps", "mem", "cpu"}).run(); 
+            	}
+        }, 30, 60, TimeUnit.SECONDS);
 		System.out.println("init");
 	}
 

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.util.Strings;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarProxy;
@@ -37,8 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class Agent {
-	private static final String HOST_DIAG_DIR = "HOST_DIAG_DIR";
-
 	public final static ObjectMapper om = new ObjectMapper();
 	
 	private static final String KILL_CMD = "kill:";
@@ -56,32 +55,20 @@ public class Agent {
     final public SigarProxy proxy = shell.getSigarProxy();
     public File outputDirectory;
 
-	public String host;
 	public String timestamp;
     
-    public Agent(String[] args) {
+    public Agent(String... args) {
     	this.argsList = new ArrayList<String>(Arrays.asList(args));
 	}
 
 
-	private int run() {
-		String hostDiagnosticDirectory = System.getenv(HOST_DIAG_DIR);
-		if(Strings.isEmpty(hostDiagnosticDirectory)) {
-			System.err.println("Enironment "+HOST_DIAG_DIR + " is not set.");
-			return -1;
-		}
-		outputDirectory = new File(hostDiagnosticDirectory);
+	public int run() {
+		outputDirectory = BeeQueueHome.instance.getHost();
 		if(!outputDirectory.isDirectory() && !outputDirectory.mkdirs() ){
 			System.err.println("Cannot use or create "+ outputDirectory  );
 			return -1;
 		}
-		try {
-			this.timestamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-			this.host = java.net.InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-			return -1;
-		}
+		this.timestamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
 		int rc = 0;
 		for (String command : argsList) {
 			try{
@@ -108,7 +95,6 @@ public class Agent {
 	public void dump(String metricName, Object systemMetric) throws IOException {
 		File f = outputDirectory;
 		f = new File(f, metricName); if( !f.isDirectory() && !f.mkdirs() ) throw new FileNotFoundException(f.toString());
-		f = new File(f, this.host); if( !f.isDirectory() && !f.mkdirs() ) throw new FileNotFoundException(f.toString());
 		File dumpFile = new File(f,timestamp+".txt");
 		FileWriter w = new FileWriter(dumpFile);
 		System.out.println("@Artifact: "+metricName+": "+dumpFile);

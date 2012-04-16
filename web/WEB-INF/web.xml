@@ -6,6 +6,7 @@
 	<servlet>
 		<servlet-name>Worker</servlet-name>
 		<servlet-class>org.beequeue.worker.WorkerServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
 	</servlet>
  
 	<servlet-mapping>
