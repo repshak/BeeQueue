@@ -7,10 +7,11 @@
         <property name="build" location=".build" />
 		<property name="warjar" location="${build}/warjar" />
 		<property name="web" location="web" />
-		<property name="classes" location="${web}/WEB-INF/classes" />
-		<property name="weblib" location="${web}/WEB-INF/lib" />
+		<property name="classes" location="${warjar}/web/WEB-INF/classes" />
+		<property name="weblib" location="${warjar}/web/WEB-INF/lib" />
 
     	<property name="src" location="src" />
+    	<property name="launcher" location="launcher" />
     	<property name="scripts" location="scripts" />
 
     	<path id="lib.cp">
@@ -29,33 +30,61 @@
 	
 	<target name="clean" depends="init" description="Clean up">
     	<delete dir="${build}"/>
-    	<delete dir="${web}/${lib}"/>
-    	<delete dir="${classes}"/>
 	</target>
 	
 	
     <target name="build" depends="init" description="Builds war-jar">
 		<mkdir dir="${warjar}"/>
-    	<unjar src="lib/bin/winstone-0.9.10.jar" dest="${warjar}" />
+    	<unjar src="lib/web/winstone-0.9.10.jar" dest="${warjar}" />
     	
+    	
+    	<javac 
+    		destdir="${warjar}"
+    		srcdir="${launcher}" 
+    		debug="true"
+    		includeantruntime="false"
+    		>
+    	</javac>
+
+    	<tstamp>
+    	      <format property="version" pattern="yyyyMMddhhmmss" />
+    	</tstamp>
     	<mkdir dir="${weblib}"/>
     	<mkdir dir="${classes}"/>
+
+    	<propertyfile file="${warjar}/bq.properties" comment="BeeQueue properties">
+    	  <entry  key="version" value="${version}"/>
+    	</propertyfile>
+    	
+    	<copy todir="${warjar}/web">
+    		<fileset dir="${web}"/>
+    	</copy>
     	
     	<javac 
     		destdir="${classes}"
     		srcdir="${src}" 
+    		debug="true"
     		includeantruntime="false"
     		>
     		<classpath refid="lib.cp" />
+    		<classpath location="${warjar}" />
     	</javac>
     	<copy todir="${weblib}">
     		<fileset dir="${lib}/bin">
     			<include name="*jar" />
     		</fileset>
     	</copy>
-    	
-        <jar  basedir="${web}" destfile="${warjar}/embedded.war" />
-		<jar  basedir="${warjar}" destfile="${build}/bq.jar" manifest="${warjar}/META-INF/MANIFEST.MF" />
+    	<copy todir="${weblib}">
+    		<fileset dir="${lib}/sigar-bin/lib">
+    			<include name="*" />
+    		</fileset>
+    	</copy>
+    	<delete file="${warjar}/META-INF/MANIFEST.MF" />
+		<jar  basedir="${warjar}" destfile="${build}/bq.jar" >
+			  <manifest>
+			      <attribute name="Main-Class" value="org.beequeue.launcher.BeeQueueLauncher"/>
+			  </manifest>			
+		</jar>
     </target>
 	
 	<target name="RemoveTildas.groovy" depends="init" description="RemoveTildas.groovy">

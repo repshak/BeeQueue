@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.beequeue.launcher.BeeQueueHome;
+
 public class WorkerServlet  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -65,6 +67,8 @@ public class WorkerServlet  extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		String q = request.getPathInfo();
 		out.println(q);
+		out.println("BQ_HOME:"+BeeQueueHome.instance.getHome());
+		System.out.println("BQ_HOME:"+BeeQueueHome.instance.getHome());
 		System.out.println("service:"+q);
 		
 	}

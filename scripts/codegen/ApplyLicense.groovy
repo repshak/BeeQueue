@@ -25,7 +25,7 @@ class ApplyLicense {
  
  *  ${END_LICENSE} */
 """;
- 	["src","test"].each{
+ 	["launcher","src","test"].each{
 	 	new File(it).eachFileRecurse { 
 	      if ( it.name =~ /\.java$/ ) {
 	        def text = it.getText().replaceAll("\\r","");

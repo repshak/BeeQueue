@@ -4,7 +4,7 @@ package codegen;
 class RemoveTildas {
 
   static void main(args) {
- 	["src","test"].each
+ 	["launcher","src","test"].each
  	{
 	  new File(it).eachFileRecurse 
 	  { 

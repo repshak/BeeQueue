@@ -1,11 +1,17 @@
 = ToDo =
 * Deployment bq.jar
-** establish or pickup BQ_HOME
-** change default port for bq.jar to 7332
-** autodeployment of agent native libraries into $BQ_HOME/agent
+** BQ_HOME
+*** establish system wide configuration is in $BQ_HOME/system.json
+*** establish host specific directory in $BQ_HOME/hosts/<hostname>/ (set environment in BQ_HOST)
+*** save current worker info in BQ_HOST/worker.csv (pid and computer vitals)
 ** test agent on windows.
+* $BQ_HOST/worker.csv
+** maintain for worker that running
+** shutdown other bq.jar if its already running on this machine on same port and as same user with same home
+*** check $BQ_HOST/worker.csv and shut it down if all other workers.
 * json visualization 
 ** modify it to run visualization automatically on all json data pulled on the web
+* coordination datasource configuration is in $BQ_HOME/bq-config.json
 * DbMapping
 
 == ToThink ==
@@ -13,11 +19,17 @@
 * Record somewhere that runs are failing on stage, job and message levels
 * Host - Architecture - Datastores rules to match host to particular stage
 * How job that mark message/job complete, and 
-* How to set deadline if that did not happend on time
-* Scheduling/Mathching logic to assign job to Message
+* How to set deadline if that did not happened on time
+* Scheduling/Matching logic to assign job to Message
 
 == Done ==
-* json visuzlization 
+* Deployment bq.jar
+** change default port for bq.jar to 7532
+** BQ_HOME
+*** establish or pickup BQ_HOME ( default to `pwd`/bq-home/ )
+*** autodeployment of agent native libraries into $BQ_HOME/web/WEB-INF/lib
+*** autodeployment web application $BQ_HOME/web/
+* json visualization 
 ** copy page with all dependencies from http://chris.photobooks.com/json/default.htm
 * Agent
 ** test agent on mac.
@@ -32,4 +44,4 @@
 ** JobState
 ** DomainState
 ** AlertLevel
-** MessageStateucklluckyll
+** MessageState
