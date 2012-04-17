@@ -1,5 +1,6 @@
 = ToDo =
-* schedule agent runs in each worker
+* json visualization 
+** modify it to run visualization automatically on all json data pulled on the web
 * $BQ_HOST/worker.csv
 ** maintain for worker that running
 ** cleanup dead workers info (workers that did not update its status form more then 1 hour).
@@ -7,12 +8,10 @@
 ** shutdown other bq.jar if its already running on this machine 
 * Deployment bq.jar
 ** BQ_HOME
-*** conditional unpack only if version, in bq.properties does not match already downloaded.
+*** conditional unpack only if version, in bq.properties does not match already downloaded, delete old one
 *** establish system wide configuration is in $BQ_HOME/system.json
 ** test agent on windows.
-* json visualization 
-** modify it to run visualization automatically on all json data pulled on the web
-* coordination datasource configuration is in $BQ_HOME/bq-config.json
+* coordination datasource configuration is in $BQ_HOME/system.json
 * DbMapping
 
 == ToThink ==
@@ -24,6 +23,8 @@
 * Scheduling/Matching logic to assign job to Message
 
 == Done ==
+* modify WorkerServlet to push json data out
+* schedule agent runs in each worker
 * Deployment bq.jar
 ** change default port for bq.jar to 7532
 ** BQ_HOME

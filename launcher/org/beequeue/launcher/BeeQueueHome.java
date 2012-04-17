@@ -55,7 +55,6 @@ public class BeeQueueHome {
 			this.host.mkdirs();
 			
 			JarUnpacker.unpack(BeeQueueHome.class, new EntryFilter() {
-				
 				@Override
 				public boolean include(ZipEntry ze) {
 					return ze.getName().startsWith("web");

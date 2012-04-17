@@ -16,11 +16,12 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.worker;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletConfig;
@@ -31,34 +32,54 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.beequeue.agent.Agent;
 import org.beequeue.launcher.BeeQueueHome;
+import org.beequeue.util.Buffers;
+import org.beequeue.util.Streams;
+import org.beequeue.util.ToStringUtil;
 
 public class WorkerServlet  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	 private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	@Override
+	 private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	static {
+		scheduler.scheduleAtFixedRate(new Runnable() {
+			public void run() { 
+				new Agent(new String[]{ "ps", "mem", "cpu"}).run(); 
+			}
+		}, 0, 10, TimeUnit.MINUTES);
+		System.out.println("static-init");
+	}
+	 @Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-        scheduler.scheduleAtFixedRate(new Runnable() {
-                public void run() { 
-                	new Agent(new String[]{ "ps", "mem", "cpu"}).run(); 
-            	}
-        }, 30, 60, TimeUnit.SECONDS);
 		System.out.println("init");
 	}
 
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doAny(req, resp);
+		PrintWriter out = response.getWriter();
+		String q = request.getPathInfo();
+		File f = BeeQueueHome.instance.getHost();
+		if( q != null && !q.equals("") && !q.equals("/") ){
+			f = new File(f,q.substring(1));
+		}
+		if( f.exists() ){
+			response.setContentType("text/plain");
+			if(f.isDirectory() ){
+				out.println(ToStringUtil.toString(f.list()));
+			}else{
+				Streams.copyAndClose(new FileReader(f), out);
+			}
+		}
 	}
 
 
 	@Override
 	protected void doHead(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
 		// TODO Auto-generated method stub
 		super.doHead(req, resp);
 	}
@@ -73,13 +94,6 @@ public class WorkerServlet  extends HttpServlet {
 
 	protected void doAny(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
-		response.setContentType("text/plain");
-		PrintWriter out = response.getWriter();
-		String q = request.getPathInfo();
-		out.println(q);
-		out.println("BQ_HOME:"+BeeQueueHome.instance.getHome());
-		System.out.println("BQ_HOME:"+BeeQueueHome.instance.getHome());
-		System.out.println("service:"+q);
 		
 	}
 	
