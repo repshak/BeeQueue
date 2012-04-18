@@ -1,8 +1,5 @@
 = ToDo =
 * POJO
-** MessageTemplate
-*** JobTemplate
-*** StageTemplate
 ** Message
 *** Job
 *** Stage
@@ -35,6 +32,10 @@
 * Scheduling/Matching logic to assign job to Message
 
 == Done ==
+* POJO
+** MessageTemplate
+*** JobTemplate
+*** StageTemplate
 * modify WorkerServlet to push json data out
 * schedule agent runs in each worker
 * Deployment bq.jar
