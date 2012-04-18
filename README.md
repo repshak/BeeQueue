@@ -28,7 +28,8 @@ We are very early in development, so not much is working yet.
 Development
 -----------
 
-[DataModel](/repshak/BeeQueue/blob/master/design/dbModel.png)
+[DataModel Phase I](/repshak/BeeQueue/blob/master/design/dbModel-P1.png)
+[Phase II](/repshak/BeeQueue/blob/master/design/dbModel-P2.png)
 
 [ObjectStates](/repshak/BeeQueue/blob/master/design/ObjectStates.png)
 
