@@ -1,4 +1,16 @@
 = ToDo =
+* POJO
+** MessageTemplate
+*** JobTemplate
+*** StageTemplate
+** Message
+*** Job
+*** Stage
+*** Run
+** HostGroup
+*** Host
+*** Worker
+
 * json visualization 
 ** modify it to run visualization automatically on all json data pulled on the web
 * $BQ_HOST/worker.csv

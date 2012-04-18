@@ -17,9 +17,8 @@
 package org.beequeue.worker;
 
 public enum WorkerState {
-	READY_FOR_WORK,
-	OVERWHELMED,
-	LOST_CONNECTTION_TO_COORDINATOR,
-	LOST_FILESYSTEM,
+	INIT,
+	READY,
+	PAUSED,
 	TERMINATED,
 }
