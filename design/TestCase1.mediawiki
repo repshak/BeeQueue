@@ -3,3 +3,49 @@
 # hardmessage(param1,param2,param3) posted externaly
 # it has one job that respond to it
 # job has one stage, and if run fail it does not retry, and mark message as FAILURE.
+
+<nowiki>
+{
+  "domainName" : "tc1-Balance",
+  "messages" : [ {
+    "messageName" : "ReportRequest",
+    "columns" : [ "ReportName", "StartDate", "EndDdate" ],
+    "jobs" : [ {
+      "jobName" : "report",
+      "stages" : [ {
+        "stageName" : "run",
+        "dependOnStage" : null,
+        "commands" : {
+          "os:windows" : {
+            "files" : null,
+            "cmd" : {
+              "classPath" : null,
+              "file" : null,
+              "text" : "$reportRoot/bin/report.bat $ReportName $StartDate $EndDate"
+            }
+          },
+          "os:*" : {
+            "files" : null,
+            "cmd" : {
+              "classPath" : null,
+              "file" : null,
+              "text" : "$reportRoot/bin/report.sh $ReportName $StartDate $EndDate"
+            }
+          }
+        },
+        "retryStrategy" : {
+          "maxTries" : 1,
+          "delayBetweenTries" : 15
+        }
+      } ],
+      "filters" : [ {
+        "expression" : "true"
+      } ]
+    } ]
+  } ],
+  "properties" : {
+    "dp1" : "10",
+    "dp2" : "20"
+  }
+}
+</nowiki>
