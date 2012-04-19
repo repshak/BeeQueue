@@ -4,7 +4,7 @@
 # it has one job that respond to it
 # job has one stage, and if run fail it does not retry, and mark message as FAILURE.
 
-'''
+ <nowiki>
 {
   "domainName" : "tc1-Balance",
   "messages" : [ {
@@ -48,4 +48,4 @@
     "dp2" : "20"
   }
 }
-'''
+</nowiki>
