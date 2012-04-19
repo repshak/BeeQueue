@@ -1,0 +1,5 @@
+= TestCase: Simple Load balancing =
+
+# hardmessage(param1,param2,param3) posted externaly
+# it has one job that respond to it
+# job has one stage, and if run fail it does not retry, and mark message as FAILURE.
