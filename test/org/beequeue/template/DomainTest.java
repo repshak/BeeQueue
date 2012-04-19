@@ -21,6 +21,7 @@ public class DomainTest {
 		d.properties.put("width", "20" );
 		d.messages = new MessageTemplate[] {
 			new MessageTemplate(), 
+			new MessageTemplate(), 
 			new MessageTemplate()	
 		};
 		d.messages[0].messageName="waterLevel";
@@ -29,7 +30,7 @@ public class DomainTest {
 		};
 		d.messages[0].jobs[0].jobName = "measureSalinity";
 		
-		d.messages[1].messageName="processByWidth";
+		d.messages[1].messageName="chlorinLevel";
 		d.messages[1].jobs = new JobTemplate[]{
 				new JobTemplate(),
 				new JobTemplate()
