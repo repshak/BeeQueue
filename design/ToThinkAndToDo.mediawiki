@@ -8,8 +8,8 @@
 *** Host
 *** Worker
 * TestCases
-** [[TestCase1 - Load Balancing]]
-** [[TestCase2 - Swinng pool chlorination and watel level]]
+** [[TestCase1 - Load Balancing|TestCase1.mediawiki]]
+** [[TestCase2 - Swinng pool chlorination and watel level|TestCase2.mediawiki]]
 * json visualization 
 ** modify it to run visualization automatically on all json data pulled on the web
 * $BQ_HOST/worker.csv
