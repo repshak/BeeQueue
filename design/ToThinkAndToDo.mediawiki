@@ -32,9 +32,8 @@
 
 == Done ==
 * POJO
-** MessageTemplate
-*** JobTemplate
-*** StageTemplate
+** Domain, MessageTemplate, JobTemplate, StageTemplate
+*** configration.json
 * modify WorkerServlet to push json data out
 * schedule agent runs in each worker
 * Deployment bq.jar

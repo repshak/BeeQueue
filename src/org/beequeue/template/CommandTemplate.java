@@ -1,5 +1,7 @@
 package org.beequeue.template;
 
+
 public class CommandTemplate {
-	public String cmd;
+	FileGroovyTemplate[] files;
+	public GroovyTemplate cmd;
 }

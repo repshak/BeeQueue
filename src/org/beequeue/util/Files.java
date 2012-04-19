@@ -20,23 +20,27 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 
 public class Files {
 
   public static String readAll(File file) throws IOException {
-    FileReader fileReader = new FileReader(file);
-    StringBuilder sb = new StringBuilder();
+    return readAll(new FileReader(file));
+  }
+
+public static String readAll(Reader reader) throws IOException {
+	StringBuilder sb = new StringBuilder();
     char buf[] = new char[2048];
     int read;
     try{
-      while((read = fileReader.read(buf))>0){
+      while((read = reader.read(buf))>0){
         sb.append(buf, 0, read);
       }
       return sb.toString();
     }finally{
-      fileReader.close();
+      reader.close();
     }
-  }
+}
   
   public static void writeAll(File file, String content) throws IOException {
     Dirs.ensureParentDirExists(file);
