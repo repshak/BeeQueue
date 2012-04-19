@@ -1,5 +1,3 @@
-= TestCase: Simple Load balancing =
+= TestCase2 - Swinng pool chlorination and water level =
 
-# hardmessage(param1,param2,param3) posted externaly
-# it has one job that respond to it
-# job has one stage, and if run fail it does not retry, and mark message as FAILURE.
+# mesages: chlorinLevel(ppm), waterLevel(inchesFromLevel), cheapElectircity at 7pm
