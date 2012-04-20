@@ -17,19 +17,11 @@
         "commands" : {
           "os:windows" : {
             "files" : null,
-            "cmd" : {
-              "classPath" : null,
-              "file" : null,
-              "text" : "$reportRoot/bin/report.bat $ReportName $StartDate $EndDate"
-            }
+            "cmd" : "inline:$reportRoot/bin/report.bat $ReportName $StartDate $EndDate"
           },
           "os:*" : {
             "files" : null,
-            "cmd" : {
-              "classPath" : null,
-              "file" : null,
-              "text" : "$reportRoot/bin/report.sh $ReportName $StartDate $EndDate"
-            }
+            "cmd" : "inline:$reportRoot/bin/report.sh $ReportName $StartDate $EndDate"
           }
         },
         "retryStrategy" : {
@@ -46,4 +38,5 @@
     "dp1" : "10",
     "dp2" : "20"
   }
-} </nowiki>
+}
+</nowiki>
