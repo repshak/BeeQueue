@@ -31,10 +31,54 @@ import java.util.Map;
 import org.beequeue.util.Files;
 import org.codehaus.groovy.control.CompilationFailedException;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class GroovyTemplate {
-	public String classPath;
-	public String file;
-	public String text;
+	public enum Source {
+		inline{
+			public String getTemplateText(String template, Map<String, ?> context) throws IOException, ClassNotFoundException {
+				return template;
+			}
+		},
+		file{
+			public String getTemplateText(String template, Map<String, ?> context) throws IOException, ClassNotFoundException {
+				return Files.readAll(new File(resolveTemplate(context, template)));
+			}
+			
+		},
+		classPath{
+			public String getTemplateText(String template,Map<String, ?> context) throws IOException, ClassNotFoundException {
+				return Files.readAll(new InputStreamReader(getResourceFromClasspath(resolveTemplate(context, template))));
+			}
+			
+		};
+		abstract public String getTemplateText(String template, Map<String, ?> context) throws IOException, ClassNotFoundException ;
+
+	}
+	private Source source = null;
+	private String template;
+
+
+	
+	public GroovyTemplate(String s) {
+		Source[] values = Source.values();
+		for (int i = 0; i < values.length; i++) {
+			if( s.startsWith(values[i].name()+":") ){
+				this.source = values[i];
+			}
+		}
+		if(this.source == null){
+			this.source = Source.inline ;
+			this.template = s;
+		}else{
+			this.template = s.substring(this.source.name().length()+1);
+		}
+	}
+
+	@Override @JsonValue
+	public String toString() {
+		return source +":"+template;
+	}
 
 	public boolean generate(Map<String, ?> context, File writeTo)
 			throws IOException, CompilationFailedException,
@@ -53,29 +97,17 @@ public class GroovyTemplate {
 	public String generate(Map<String, ?> context)
 			throws CompilationFailedException, ClassNotFoundException,
 			IOException {
-		return buildTemplate().make(context).toString();
+		String templateText = source.getTemplateText(this.template, context);
+		return resolveTemplate(context, templateText);
 	}
 
-	public groovy.text.Template buildTemplate() throws ClassNotFoundException,
-			IOException {
+	public static String resolveTemplate(Map<String, ?> context, String templateText)
+			throws ClassNotFoundException, IOException {
 		SimpleTemplateEngine engine = new SimpleTemplateEngine(false);
-		return engine.createTemplate(getTemplateText());
+		return engine.createTemplate(templateText).make(context).toString();
 	}
 
-	public String getTemplateText() throws IOException {
-		if(text==null){
-			if(file!=null){
-				text = Files.readAll(new File(file));
-			} else if(classPath!=null){
-				text = Files.readAll(new InputStreamReader(getResourceFromClasspath(classPath)));
-			}else{
-				throw new RuntimeException("Cannot initialize template");
-			}
-		}
-		return text;
-	}
-
-	public InputStream getResourceFromClasspath(String cp) {
+	public static InputStream getResourceFromClasspath(String cp) {
 		return Thread.currentThread().getContextClassLoader().getResourceAsStream(cp);
 	}
 
