@@ -23,7 +23,7 @@
 
 == ToTest ==
 * TestCases
-** [[TestCase2|TestCase2 - Swinng pool chlorination and water level]]
+** [[TestCase2.mediawiki|TestCase2 - Swinng pool chlorination and water level]]
 
 == ToThink ==
 
@@ -37,7 +37,7 @@
 * DataType,Column,Set
 == Done ==
 * TestCases
-** [[TestCase1|TestCase1 - Load Balancing]]
+** [[TestCase1.mediawiki|TestCase1 - Load Balancing]]
 *** Create config/and script for testcase 
 * POJO
 ** Domain, MessageTemplate, JobTemplate, StageTemplate
