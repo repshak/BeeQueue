@@ -24,7 +24,6 @@ import groovy.text.SimpleTemplateEngine;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class GroovyTemplate {
 		},
 		classPath{
 			public String getTemplateText(String template,Map<String, ?> context) throws IOException, ClassNotFoundException {
-				return Files.readAll(new InputStreamReader(getResourceFromClasspath(resolveTemplate(context, template))));
+				return Files.readAll(new InputStreamReader(Files.getResourceFromClasspath(resolveTemplate(context, template))));
 			}
 			
 		};
@@ -60,6 +59,11 @@ public class GroovyTemplate {
 
 
 	
+	public GroovyTemplate(Source source, String template) {
+		this.source = source;
+		this.template = template;
+	}
+
 	public GroovyTemplate(String s) {
 		Source[] values = Source.values();
 		for (int i = 0; i < values.length; i++) {
@@ -107,8 +111,5 @@ public class GroovyTemplate {
 		return engine.createTemplate(templateText).make(context).toString();
 	}
 
-	public static InputStream getResourceFromClasspath(String cp) {
-		return Thread.currentThread().getContextClassLoader().getResourceAsStream(cp);
-	}
 
 }

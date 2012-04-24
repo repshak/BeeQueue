@@ -1,0 +1,5 @@
+public static DataType<${T}> ${U} = new DataType<${T}>("${U}", ${T}.class) {
+	@Override public Flock<${T}> newFlock() { return new ${T}FlockImpl(); }
+	@Override public String o2s(${T} o) throws Exception { return o.toString() ; }
+	@Override public ${T} s2o(String s) throws Exception { return new ${T}(s) ; }
+};

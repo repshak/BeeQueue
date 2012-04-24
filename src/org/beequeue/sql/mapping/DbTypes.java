@@ -27,9 +27,9 @@ import java.util.TimeZone;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.SqlTypesUtil;
 
-public interface DataTypes {
+public interface DbTypes {
 
-  DataType<Long> LONG = new DataType<Long>(){
+  DbType<Long> LONG = new DbType<Long>(){
     
     public Long get(ResultSet rs, Index idx) throws SQLException {
       return rs.getLong(idx.next());
@@ -40,7 +40,7 @@ public interface DataTypes {
     }
   };
 
-  DataType<Long> LONG_NULL = new DataType<Long>(){
+  DbType<Long> LONG_NULL = new DbType<Long>(){
 
     public Long get(ResultSet rs, Index idx) throws SQLException {
       long value = rs.getLong(idx.next());
@@ -60,7 +60,7 @@ public interface DataTypes {
     }
   };
 
-  DataType<Double> DOUBLE = new DataType<Double>(){
+  DbType<Double> DOUBLE = new DbType<Double>(){
     public Double get(ResultSet rs, Index idx) throws SQLException {
       return rs.getDouble(idx.next());
     }
@@ -70,7 +70,7 @@ public interface DataTypes {
     }
   };
   
-  DataType<String> STRING = new DataType<String>(){
+  DbType<String> STRING = new DbType<String>(){
     public String get(ResultSet rs, Index idx) throws SQLException {
       return rs.getString(idx.next());
     }
@@ -79,7 +79,7 @@ public interface DataTypes {
       pstmt.setString(idx.next(), (String)value);
     }
   };
-  DataType<byte[]> BYTES = new DataType<byte[]>(){
+  DbType<byte[]> BYTES = new DbType<byte[]>(){
     public byte[] get(ResultSet rs, Index idx) throws SQLException {
       return rs.getBytes(idx.next());
     }
@@ -88,7 +88,7 @@ public interface DataTypes {
       pstmt.setBytes(idx.next(), (byte[])value);
     }
   };
-  DataType<Integer> INTEGER = new DataType<Integer>(){
+  DbType<Integer> INTEGER = new DbType<Integer>(){
     public Integer get(ResultSet rs, Index idx) throws SQLException {
       return rs.getInt(idx.next());
     }
@@ -98,7 +98,7 @@ public interface DataTypes {
     }
   };
   
-  DataType<Boolean> BOOLEAN = new DataType<Boolean>(){
+  DbType<Boolean> BOOLEAN = new DbType<Boolean>(){
     public Boolean get(ResultSet rs, Index idx) throws SQLException {
       return rs.getInt(idx.next()) > 0;
     }
@@ -108,7 +108,7 @@ public interface DataTypes {
     }
   };
   
-  DataType<Date> DATE = new DataType<Date>(){
+  DbType<Date> DATE = new DbType<Date>(){
     public Date get(ResultSet rs, Index idx) throws SQLException {
       return rs.getDate(idx.next());
     }
@@ -118,7 +118,7 @@ public interface DataTypes {
     }
   };  
 
-  DataType<Date> TIMESTAMP = new DataType<Date>(){
+  DbType<Date> TIMESTAMP = new DbType<Date>(){
     public Date get(ResultSet rs, Index idx) throws SQLException {
       return rs.getTimestamp(idx.next());
     }
@@ -128,7 +128,7 @@ public interface DataTypes {
     }
   };  
 
-  DataType<TimeZone> TIMEZONE = new DataType<TimeZone>(){
+  DbType<TimeZone> TIMEZONE = new DbType<TimeZone>(){
     public TimeZone get(ResultSet rs, Index idx) throws SQLException {
       return SqlTypesUtil.toTimezone(rs.getString(idx.next()));
     }
@@ -139,7 +139,7 @@ public interface DataTypes {
     
   };
 
-  DataType<URL> URL = new DataType<URL>(){
+  DbType<URL> URL = new DbType<URL>(){
 
     public java.net.URL get(ResultSet rs, Index idx) throws SQLException {
       return rs.getURL(idx.next());

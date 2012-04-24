@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.beequeue.agent.Agent;
 import org.beequeue.launcher.BeeQueueHome;
-import org.beequeue.util.Buffers;
 import org.beequeue.util.Streams;
 import org.beequeue.util.ToStringUtil;
 
@@ -40,7 +39,7 @@ public class WorkerServlet  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	 private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	static {
 		scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() { 
@@ -49,7 +48,8 @@ public class WorkerServlet  extends HttpServlet {
 		}, 0, 10, TimeUnit.MINUTES);
 		System.out.println("static-init");
 	}
-	 @Override
+	
+	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		System.out.println("init");

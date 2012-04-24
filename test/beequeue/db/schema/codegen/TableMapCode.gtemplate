@@ -1,4 +1,4 @@
-package com.idea2project.dao.map;
+package beequeue.db.schema;
 
 import java.util.List;
 

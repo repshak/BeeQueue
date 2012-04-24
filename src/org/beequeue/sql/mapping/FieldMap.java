@@ -73,14 +73,14 @@ public class FieldMap<T> {
 
   final public String beanPath;
 
-  final public DataType<T> dataType;
+  final public DbType<T> dataType;
 
   final private List<FieldSet> criteria;
   
   final public FieldSet set ;
 
   public FieldMap(String table, String name, String beanPath,
-      DataType<T> typeMap, FieldSet... criteria) {
+      DbType<T> typeMap, FieldSet... criteria) {
     super();
     this.table = table;
     this.name = name;

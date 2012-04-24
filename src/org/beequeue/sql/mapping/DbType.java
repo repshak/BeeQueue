@@ -26,7 +26,7 @@ import java.sql.SQLException;
 
 import org.beequeue.sql.Index;
 
-public interface DataType<T> {
+public interface DbType<T> {
   T get(ResultSet rs, Index idx)
   throws SQLException ;
   

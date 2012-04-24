@@ -20,7 +20,6 @@
 *** establish system wide configuration is in $BQ_HOME/system.json
 ** test agent on windows.
 * coordination datasource configuration is in $BQ_HOME/system.json
-* DbMapping
 
 == ToTest ==
 * TestCases
@@ -33,7 +32,9 @@
 * How job that mark message/job complete, and 
 * How to set deadline if that did not happened on time
 * Scheduling/Matching logic to assign job to Message
-
+* DbMapping
+** DbType (INT,BIGINT*,FLOAT,BOOLEAN*,VARCHAR*,CLOB*,DATE,TIMESTAMP*,BLOB)
+* DataType,Column,Set
 == Done ==
 * TestCases
 ** [[TestCase1|TestCase1 - Load Balancing]]

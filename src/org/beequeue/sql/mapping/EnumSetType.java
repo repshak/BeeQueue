@@ -25,7 +25,7 @@ import java.util.EnumSet;
 
 import org.beequeue.sql.Index;
 
-public class EnumSetType<T extends Enum<T>> implements DataType<EnumSet<T>> {
+public class EnumSetType<T extends Enum<T>> implements DbType<EnumSet<T>> {
   Class<T> enumClass ;
   private T[] values = null;
   

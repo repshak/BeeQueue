@@ -28,7 +28,7 @@ import org.beequeue.util.Throwables;
  * Mapping data type that stores enum ordinal in database field
  * @param <T> enum type
  */
-public class EnumType<T extends Enum> implements DataType<T> {
+public class EnumType<T extends Enum> implements DbType<T> {
   Class<T> enumClass ;
   private T[] values = null;
   

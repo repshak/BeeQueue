@@ -27,7 +27,7 @@ import org.beequeue.sql.Index;
  * Mapping data type that stores enum name in database field
  * @param <T> enum type
  */
-public class EnumNameType<T extends Enum> implements DataType<T> {
+public class EnumNameType<T extends Enum> implements DbType<T> {
   Class<T> enumClass ;
   private T[] values = null;
   
