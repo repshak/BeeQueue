@@ -85,7 +85,7 @@ public class DbCoordinator extends Coordiantor {
 			if( table != null && !table.equals("") && !table.equals("/") ){
 				t = table.substring(1);
 			}else{
-				t = "systables";
+				t = "sys.systables";
 			}
 			String q = "select * from "+t;
 			ResultSet rs = connection.createStatement().executeQuery(q );
