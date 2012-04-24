@@ -20,46 +20,48 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 
 public class Files {
 
-  public static String readAll(File file) throws IOException {
-    return readAll(new FileReader(file));
-  }
+	public static String readAll(File file) throws IOException {
+		return readAll(new FileReader(file));
+	}
 
-public static String readAll(Reader reader) throws IOException {
-	StringBuilder sb = new StringBuilder();
-    char buf[] = new char[2048];
-    int read;
-    try{
-      while((read = reader.read(buf))>0){
-        sb.append(buf, 0, read);
-      }
-      return sb.toString();
-    }finally{
-      reader.close();
-    }
-}
+	public static String readAll(Reader reader) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		char buf[] = new char[2048];
+		int read;
+		try {
+			while ((read = reader.read(buf)) > 0) {
+				sb.append(buf, 0, read);
+			}
+			return sb.toString();
+		} finally {
+			reader.close();
+		}
+	}
   
-  public static void writeAll(File file, String content) throws IOException {
-    Dirs.ensureParentDirExists(file);
-    FileWriter fileWriter = new FileWriter(file);
-    try{
-      fileWriter.write(content);
-    }finally{
-      fileWriter.close();
-    }
-  }
+	public static void writeAll(File file, String content) throws IOException {
+		Dirs.ensureParentDirExists(file);
+		FileWriter fileWriter = new FileWriter(file);
+		try {
+			fileWriter.write(content);
+		} finally {
+			fileWriter.close();
+		}
+	}
 
-  public static File absolute(String path) {
-    File file = new File(path).getAbsoluteFile();
-    try{
-      file = file.getCanonicalFile();
-    }catch (Exception ignore) {}
-    return file;
-  }
+	public static File absolute(String path) {
+		File file = new File(path).getAbsoluteFile();
+		try {
+			file = file.getCanonicalFile();
+		} catch (Exception ignore) {}
+		return file;
+	}
 
-
-
+	public static InputStream getResourceFromClasspath(String cp) {
+		return Object.class.getResourceAsStream(cp);
+	}
 }
