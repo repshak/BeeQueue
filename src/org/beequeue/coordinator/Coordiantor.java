@@ -14,19 +14,21 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.template;
+package org.beequeue.coordinator;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-public class StageTemplate {
-	public String stageName;
-	public String[] dependOnStage;
-	public Map<String,CommandTemplate> commands = new LinkedHashMap<String, CommandTemplate>();
-	public RetryStrategy retryStrategy = new RetryStrategy();
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value=DbCoordinator.class, name="db"),
+    @JsonSubTypes.Type(value=ZooKeeperCoordinator.class, name="zk")
+})
+abstract public class Coordiantor {
+
+	abstract public String selectAnyTable(String table) ;
 	
-	public StageTemplate command(String key, CommandTemplate cmd){
-		commands.put(key, cmd);
-		return this;
-	}
+
 }

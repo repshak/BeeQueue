@@ -14,35 +14,34 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-/*
- * Created on Sep 21, 2005 7:28:08 PM
- *
+/**
+ * 
  */
 package org.beequeue.sql;
 
-public class DalException extends RuntimeException {
+import java.sql.Connection;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4673830527692626847L;
-	/**
-	 * @param message
-	 */
-	public DalException(String message) {
-		super(message);
+import org.beequeue.coordinator.DbCoordinator;
+
+public class DalResources {
+	private static DbCoordinator config =  null ; 
+	
+  public static boolean isConfigured(){
+    return config != null;
+  }
+  
+	public static void init(DbCoordinator coordinator) {
+		config =coordinator;
 	}
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public DalException(String message, Throwable cause) {
-		super(message, cause);
+
+	public static Connection getConnection() throws DalException{
+      String name = "config";
+	JdbcResourceTracker tracker = TransactionContext.searchResource(JdbcResourceTracker.class,name);
+			if( tracker == null ){
+			  tracker = new JdbcResourceTracker(name,config.connection());
+        TransactionContext.register(tracker);
+      }
+			return tracker.getResource();
 	}
-	/**
-	 * @param cause
-	 */
-	public DalException(Throwable cause) {
-		super(cause);
-	}
+	
 }

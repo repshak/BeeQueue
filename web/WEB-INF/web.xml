@@ -11,6 +11,18 @@
  
 	<servlet-mapping>
 		<servlet-name>Worker</servlet-name>
-		<url-pattern>/w/*</url-pattern>
+		<url-pattern>/home/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Worker</servlet-name>
+		<url-pattern>/host/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Worker</servlet-name>
+		<url-pattern>/db/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Worker</servlet-name>
+		<url-pattern>/conf/*</url-pattern>
 	</servlet-mapping>
 </web-app>

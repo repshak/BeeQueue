@@ -17,12 +17,14 @@
 package org.beequeue.worker;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,9 +33,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.beequeue.agent.Agent;
+import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.launcher.BeeQueueHome;
+import org.beequeue.util.Files;
 import org.beequeue.util.Streams;
 import org.beequeue.util.ToStringUtil;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class WorkerServlet  extends HttpServlet {
 
@@ -55,48 +62,68 @@ public class WorkerServlet  extends HttpServlet {
 		System.out.println("init");
 	}
 
+	public static AtomicReference<Coordiantor> COORD = new AtomicReference<Coordiantor>();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		response.setContentType("text/plain");
 		String q = request.getPathInfo();
-		File f = BeeQueueHome.instance.getHost();
-		if( q != null && !q.equals("") && !q.equals("/") ){
-			f = new File(f,q.substring(1));
+		String ctx = request.getServletPath();
+		System.out.println(ctx);
+		System.out.println(q);
+		if( ctx.equals("/host") ){
+			File host = BeeQueueHome.instance.getHost();
+			dumpDataFromFileSystem(host, q, out);
+		}else if( ctx.equals("/home") ){
+			File home = BeeQueueHome.instance.getHome();
+			dumpDataFromFileSystem(home, q, out);
+		}else if( ctx.equals("/db") ){
+			Coordiantor c = getCoordinator();
+			try{
+				out.println(c.selectAnyTable(q));
+			}catch (Exception e) {
+				throw new ServletException(e);
+			}
 		}
-		if( f.exists() ){
-			response.setContentType("text/plain");
-			if(f.isDirectory() ){
-				out.println(ToStringUtil.toString(f.list()));
+		
+	}
+
+
+	public Coordiantor getCoordinator() throws IOException, JsonParseException,
+			JsonMappingException {
+		File home = BeeQueueHome.instance.getHome();
+		Coordiantor c  ;
+		while( (c = COORD.get()) == null){
+			String s = Files.readAll( new File(home,"coordinator.json") );
+			COORD.compareAndSet(null, ToStringUtil.toObject(s, Coordiantor.class));
+		}
+		return c;
+	}
+
+
+	public void dumpDataFromFileSystem(File base, String query, PrintWriter out)
+			throws IOException, FileNotFoundException {
+		if( query != null && !query.equals("") && !query.equals("/") ){
+			base = new File(base,query.substring(1));
+		}
+		if( base.exists() ){
+			if(base.isDirectory() ){
+				out.println(ToStringUtil.toString(base.list()));
 			}else{
-				Streams.copyAndClose(new FileReader(f), out);
+				Streams.copyAndClose(new FileReader(base), out);
 			}
 		}
 	}
 
 
-	@Override
-	protected void doHead(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		// TODO Auto-generated method stub
-		super.doHead(req, resp);
-	}
-
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		doAny(req, resp);
 	}
 
 
-	protected void doAny(HttpServletRequest request, HttpServletResponse response)
-	throws ServletException, IOException {
-		
-	}
-	
-	
 
 }

@@ -14,33 +14,36 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.template;
+package org.beequeue.sql;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
-
-import org.beequeue.msg.BeeQueueMessage;
-
-public class MessageFilter {
-	public String expression;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 
-	public MessageFilter() {}
-
-
-	public MessageFilter(String expression) {
-		this.expression = expression;
+public class JdbcResourceTracker extends ResourceTracker<Connection> {
+  
+	public JdbcResourceTracker(String key, Connection connection) {
+		super(key,connection);
 	}
+  
+  
 
 
-	public boolean evalFilter(BeeQueueMessage msg){
-		Binding binding = new Binding();
-		binding.setVariable("msg", msg);
-		GroovyShell shell = new GroovyShell(binding);
-		Object value = shell.evaluate(expression);
-		if( !(value instanceof Boolean) ){
-			throw new RuntimeException("Boolean value expected out of expression: "+expression);
+
+  public void release(boolean doRollBackOnly) throws DalException {
+		try {
+			if(doRollBackOnly){
+				getResource().rollback();
+			}
+		} catch (SQLException e) {
+			throw new DalException(e);
+		}finally{
+			try{ getResource().close(); } catch (Exception ignore) {}
 		}
-		return (Boolean)value;
+		
+		
 	}
+
+
+
 }
