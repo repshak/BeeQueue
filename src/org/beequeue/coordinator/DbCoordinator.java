@@ -89,36 +89,39 @@ public class DbCoordinator extends Coordiantor {
 			}
 			String q = "select * from "+t;
 			ResultSet rs = connection.createStatement().executeQuery(q );
-			Map<String,Object> d = new LinkedHashMap<String, Object>();
-			ResultSetMetaData md = rs.getMetaData();
-			ArrayList<Object> header = new ArrayList<Object>();
-			d.put("query", q);
-			d.put("aoColumns", header);
-			for (int i = 0; i < md.getColumnCount(); i++) {
-				header.add(buildColumn(md.getColumnName(i+1)));
-			}
-			ArrayList<Object> data = new ArrayList<Object>();
-			d.put("aaData", data);
-			while(rs.next()){
-				ArrayList<Object> row = new ArrayList<Object>();
-				data.add(row);
-				for (int i = 0; i < md.getColumnCount(); i++) {
-					Object object = rs.getObject(i+1);
-					if(object instanceof Clob){
-					Clob c = (Clob) object;
-					object = c.getSubString(1, (int)c.length());
-					}
-					row.add(object);
-					
-				}
-			}
-			rs.close();
-			return ToStringUtil.toString(d);
+			return queryToJson(rs, q);
 		} catch (SQLException e) {
 			throw new DalException(e);
 		}finally{
 			try{connection.close();}catch (Exception ignore) {}
 		}
+	}
+	public String queryToJson(ResultSet rs, String q) throws SQLException {
+		Map<String,Object> d = new LinkedHashMap<String, Object>();
+		ResultSetMetaData md = rs.getMetaData();
+		ArrayList<Object> header = new ArrayList<Object>();
+		d.put("query", q);
+		d.put("aoColumns", header);
+		for (int i = 0; i < md.getColumnCount(); i++) {
+			header.add(buildColumn(md.getColumnName(i+1)));
+		}
+		ArrayList<Object> data = new ArrayList<Object>();
+		d.put("aaData", data);
+		while(rs.next()){
+			ArrayList<Object> row = new ArrayList<Object>();
+			data.add(row);
+			for (int i = 0; i < md.getColumnCount(); i++) {
+				Object object = rs.getObject(i+1);
+				if(object instanceof Clob){
+				Clob c = (Clob) object;
+				object = c.getSubString(1, (int)c.length());
+				}
+				row.add(object);
+				
+			}
+		}
+		rs.close();
+		return ToStringUtil.toString(d);
 	}
 	
 	public LinkedHashMap<String, Object> buildColumn(String columnName) {

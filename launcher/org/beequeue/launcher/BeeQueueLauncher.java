@@ -25,7 +25,8 @@ public class BeeQueueLauncher {
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("BQ_HOME:"+BeeQueueHome.instance.getHome());
-		File webDir = new File(BeeQueueHome.instance.getHome(), "web").getCanonicalFile();
+		File webDir = BeeQueueHome.instance.getWeb();
+		System.out.println("BQ_WEB:"+webDir);
 		String newArgs[] = { "--webroot="+webDir, "--httpPort=7532" , "--ajp13Port=-1" };
 		Launcher.main(newArgs);
 	}

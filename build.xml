@@ -7,8 +7,8 @@
         <property name="build" location=".build" />
 		<property name="warjar" location="${build}/warjar" />
 		<property name="web" location="web" />
-		<property name="classes" location="${warjar}/web/WEB-INF/classes" />
-		<property name="weblib" location="${warjar}/web/WEB-INF/lib" />
+		<property name="classes" location="web/WEB-INF/classes" />
+		<property name="weblib" location="web/WEB-INF/lib" />
 
     	<property name="src" location="src" />
     	<property name="launcher" location="launcher" />
@@ -56,9 +56,6 @@
     	  <entry  key="version" value="${version}"/>
     	</propertyfile>
     	
-    	<copy todir="${warjar}/web">
-    		<fileset dir="${web}"/>
-    	</copy>
     	
     	<javac 
     		destdir="${classes}"
@@ -79,6 +76,9 @@
     			<include name="*" />
     		</fileset>
     	</copy>
+    	<copy todir="${warjar}/web">
+    		<fileset dir="${web}"/>
+    	</copy>
     	<delete file="${warjar}/META-INF/MANIFEST.MF" />
 		<jar  basedir="${warjar}" destfile="${build}/bq.jar" >
 			  <manifest>
@@ -86,6 +86,12 @@
 			  </manifest>			
 		</jar>
     </target>
+	
+	<target name="run" depends="build">
+		<java fork="yes" classpath="${warjar}" classname="org.beequeue.launcher.BeeQueueLauncher">
+			<env key="BQ_WEB" value="${web}" />
+		</java>
+	</target>
 	
 	<target name="RemoveTildas.groovy" depends="init" description="RemoveTildas.groovy">
     	<groovy src="${scripts}/codegen/RemoveTildas.groovy">

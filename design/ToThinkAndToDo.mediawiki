@@ -1,4 +1,5 @@
 = ToDo =
+* Load tc1.config
 * POJO
 ** Message
 *** Job
@@ -23,6 +24,7 @@
 
 == ToTest ==
 * TestCases
+** [[TestCase1.mediawiki|TestCase1 - Load Balancing]]
 ** [[TestCase2.mediawiki|TestCase2 - Swinng pool chlorination and water level]]
 
 == ToThink ==
@@ -36,6 +38,7 @@
 ** DbType (INT,BIGINT*,FLOAT,BOOLEAN*,VARCHAR*,CLOB*,DATE,TIMESTAMP*,BLOB)
 * DataType,Column,Set
 == Done ==
+* build target tha allow to test and debug web content inline 
 * TestCases
 ** [[TestCase1.mediawiki|TestCase1 - Load Balancing]]
 *** Create config/and script for testcase 

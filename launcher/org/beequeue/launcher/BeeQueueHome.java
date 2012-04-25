@@ -29,11 +29,13 @@ import org.beequeue.launcher.JarUnpacker.EntryFilter;
 
 public class BeeQueueHome {
 	public static final String BQ_HOME = "BQ_HOME";
+	public static final String BQ_WEB = "BQ_WEB";
 	public static final String BQ_HOST = "BQ_HOST";
 	
 	public static final BeeQueueHome instance = new BeeQueueHome();
 	
 	private File home;
+	private File web;
 	private File host;
 	private long pid;
 	private String hostName;
@@ -54,12 +56,18 @@ public class BeeQueueHome {
 			this.host = new File( home, "hosts/"+hostName );
 			this.host.mkdirs();
 			
-			JarUnpacker.unpack(BeeQueueHome.class, new EntryFilter() {
-				@Override
-				public boolean include(ZipEntry ze) {
-					return ze.getName().startsWith("web");
-				}
-			}, home);
+			String webEnv = System.getenv(BQ_WEB);
+			if( webEnv == null || webEnv.trim().length()==0 ){
+				this.web = new File(home, "web");
+				JarUnpacker.unpack(BeeQueueHome.class, new EntryFilter() {
+					@Override
+					public boolean include(ZipEntry ze) {
+						return ze.getName().startsWith("web");
+					}
+				}, home);
+			}else{
+				this.web = new File(webEnv).getAbsoluteFile();
+			}
 		}catch (Exception e) {
 			System.err.println("Cannot establish home directory: " + home+" error:" );
 			e.printStackTrace();
@@ -76,6 +84,7 @@ public class BeeQueueHome {
 			envList.add(k+"="+getenv.get(k));
 		}
 		envList.add(BQ_HOME+"="+home);
+		envList.add(BQ_WEB+"="+web);
 		envList.add(BQ_HOST+"="+host);
 		return envList.toArray(new String[0]);
 	}
@@ -100,6 +109,10 @@ public class BeeQueueHome {
 		return home;
 	}
 
+	public File getWeb() {
+		return web;
+	}
+
 	public File getHost() {
 		return host;
 	}
@@ -111,8 +124,5 @@ public class BeeQueueHome {
 	public long getPid() {
 		return pid;
 	}
-	
-	
-	
-	
+
 }

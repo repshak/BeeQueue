@@ -1,12 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-<head>
-<title>
-</title>
-</head>
-<body background="">
-<img alt="logo" src="Logo.png">
-<h1>BeeHive</h1>
-<a href="json/index.html">JSON Visualization</a>
-<p />
-</body>
+	<head>
+	<title></title>
+	<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+	<!-- 
+	 -->
+	<style type="text/css" title="currentStyle">
+		@import "demo_page.css";
+		@import "demo_table.css";
+		tbody tr:hover, a:hover {
+		  background-color: #ECC;
+		  cursor: pointer;
+		} ;
+	</style>
+	<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="jquery-ui-1.8.19.custom.min.js"></script>
+	<script type="text/javascript" src="jquery.dataTables.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+      		var rootUrl = location.href.replace(/#[^#]+$/,"").replace(/index\.html$/,"");
+      		var sData = null;
+      		var lastHashProccessed = null;
+       		$(window).bind( 'hashchange', function(){
+           		if(location.hash == lastHashProccessed) return ;
+       			lastHashProccessed = location.hash;
+				getTableData(
+					location.hash.substr(1), 
+					function (data){
+						 sData = data;
+						 document.title = data.title;
+						 $('#title').html(data.title);
+						 if(data.parent){
+							 $('#parent').css("display","inline")
+							    .html("Go back to parent")
+							 	.click(function(){goToHash(data.parent);});
+						 }else{
+							 $('#parent').unbind().css("display","none");
+						 }
+						 $('#div').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="table"></table>' );     
+						 $('#table').dataTable( {
+							 iDisplayLength: -1,
+							 aLengthMenu: [],
+						     aaData: data.data,
+						     aoColumns: data.columns,
+						     fnDrawCallback: function() {
+					                if (Math.ceil((this.fnSettings().fnRecordsDisplay()) / this.fnSettings()._iDisplayLength) > 1)  {
+					                        $('.dataTables_paginate').css("display", "block"); 
+					                        $('.dataTables_length').css("display", "block");
+					                } else {
+					                        $('.dataTables_paginate').css("display", "none");
+					                        $('.dataTables_length').css("display", "none");
+					                }
+					            }
+						 } );  	
+						 $('#table tbody tr').live('click', function(){
+							 if( sData.drill){
+								var td0 = this.getElementsByTagName('td')[0];
+							    var id = td0.textContent || td0.text || td0.innerText;
+							    var newHash = sData.drill.replace("%1", id);
+							    goToHash(newHash); 
+							 }
+						 });			 
+					});
+   			});
+    	    $(window).trigger('hashchange');
+
+    	    function goToHash(newHash){
+			    location.hash = newHash; 
+	    	    $(window).trigger('hashchange');
+			}
+
+
+       		function getTableData(u, callback){
+       	        var k = u ? u : "index.txt";
+       	        $.getJSON(rootUrl + k, callback);
+       	    }
+       	    
+		});
+	</script>
+	</head>
+	<body id="dt_example">
+		<h1 id="title"></h1>
+	    <a id="parent"></a>
+		<div id="div"></div>
+		<div id="links">
+		  <a href="json/index.html">JSON Visualization</a>
+		</div>
+	</body>
 </html>
+
