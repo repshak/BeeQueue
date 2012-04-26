@@ -28,8 +28,8 @@
 					location.hash.substr(1), 
 					function (data){
 						 sData = data;
-						 document.title = data.title;
-						 $('#title').html(data.title);
+						 document.title = data.query;
+						 $('#title').html(data.query);
 						 if(data.parent){
 							 $('#parent').css("display","inline")
 							    .html("Go back to parent")
@@ -41,8 +41,8 @@
 						 $('#table').dataTable( {
 							 iDisplayLength: -1,
 							 aLengthMenu: [],
-						     aaData: data.data,
-						     aoColumns: data.columns,
+						     aaData: data.aaData,
+						     aoColumns: data.aoColumns,
 						     fnDrawCallback: function() {
 					                if (Math.ceil((this.fnSettings().fnRecordsDisplay()) / this.fnSettings()._iDisplayLength) > 1)  {
 					                        $('.dataTables_paginate').css("display", "block"); 
