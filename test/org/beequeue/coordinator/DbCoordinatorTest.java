@@ -19,6 +19,9 @@ package org.beequeue.coordinator;
 import java.io.File;
 import java.io.IOException;
 
+import junit.framework.Assert;
+
+import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.Files;
 import org.beequeue.util.ToStringUtil;
 import org.junit.Test;
@@ -38,7 +41,16 @@ public class DbCoordinatorTest {
 		String ts = ToStringUtil.toString(coord);
 //		System.out.println(ts);
 		Coordiantor c2 = ToStringUtil.toObject(ts, Coordiantor.class);
-		((DbCoordinator)c2).connection();
+		try{
+			TransactionContext.push();
+			((DbCoordinator)c2).connection();
+		}finally{
+			TransactionContext.pop();
+		}
+		try{
+			((DbCoordinator)c2).connection();
+			Assert.fail();
+		}catch (Exception ignore) {}
 		System.out.println(ToStringUtil.toString(c2)); 
 		Files.writeAll( new File("/Users/sergeyk/git/BeeQueue/.build/bq-home/coordinator.json"), ts );
 	}

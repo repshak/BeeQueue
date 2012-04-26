@@ -26,31 +26,47 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beequeue.coordinator.IdFactory.IdRange;
 import org.beequeue.sql.DalException;
+import org.beequeue.sql.JdbcResourceTracker;
+import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.ToStringUtil;
 
 public class DbCoordinator extends Coordiantor {
+	private static final String CONNECTION_TRACKER = "conn";
 	public String driver;
 	public String url;
 	public String user;
 	public String password;
 	public String[] initSql;
-
-	public Connection connection() {
+	
+	public Connection connection() throws DalException {
 		try {
-			Class.forName(driver);
-			Connection connection = DriverManager.getConnection(url,user,password);
-			if(initSql!=null){
-				for (String query : initSql) {
-					connection.createStatement().execute(query);
+			JdbcResourceTracker tracker = TransactionContext.searchResource(
+					JdbcResourceTracker.class, CONNECTION_TRACKER);
+			if (tracker == null) {
+				Connection conn;
+				Class.forName(driver);
+				Connection connection = DriverManager.getConnection(url, user,
+						password);
+				if (initSql != null) {
+					for (String query : initSql) {
+						connection.createStatement().execute(query);
+					}
 				}
+				conn = connection;
+				tracker = new JdbcResourceTracker(CONNECTION_TRACKER, conn);
+				TransactionContext.register(tracker);
 			}
-			return connection;
+			return tracker.getResource();
 		} catch (Exception e) {
 			throw new DalException(e);
 		}
 	}
-/* <xmp>
+	
+	
+
+	/* <xmp>
         "aaData": [
             [ "Trident", "Internet Explorer 4.0", "Win 95+", 4, "X" ],
             [ "Trident", "Internet Explorer 5.0", "Win 95+", 5, "C" ],
@@ -76,6 +92,9 @@ public class DbCoordinator extends Coordiantor {
 } );
 </xmp>
 */
+	public long getNewId(String tableName)throws DalException {
+		return IdFactory.getIdRange(tableName, this).getNext(this);
+	}
 	@Override
 	public String selectAnyTable(String table) {
 		Connection connection = null;
@@ -92,10 +111,9 @@ public class DbCoordinator extends Coordiantor {
 			return queryToJson(rs, q);
 		} catch (SQLException e) {
 			throw new DalException(e);
-		}finally{
-			try{connection.close();}catch (Exception ignore) {}
 		}
 	}
+	
 	public String queryToJson(ResultSet rs, String q) throws SQLException {
 		Map<String,Object> d = new LinkedHashMap<String, Object>();
 		ResultSetMetaData md = rs.getMetaData();
@@ -128,5 +146,12 @@ public class DbCoordinator extends Coordiantor {
 		LinkedHashMap<String, Object> col = new LinkedHashMap<String, Object>();
 		col.put("sTitle", columnName);
 		return col;
+	}
+
+
+	@Override
+	public String query(String q) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

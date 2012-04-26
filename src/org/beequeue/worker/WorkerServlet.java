@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.beequeue.agent.Agent;
 import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.launcher.BeeQueueHome;
+import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.Files;
 import org.beequeue.util.Streams;
 import org.beequeue.util.ToStringUtil;
@@ -50,10 +51,13 @@ public class WorkerServlet  extends HttpServlet {
 	static {
 		scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() { 
-				new Agent(new String[]{ "ps", "mem", "cpu"}).run(); 
+				try{
+					new Agent( "ps", "mem", "cpu" ).run(); 
+				}finally{
+					TransactionContext.pop();
+				}
 			}
 		}, 0, 10, TimeUnit.MINUTES);
-		System.out.println("static-init");
 	}
 	
 	@Override
@@ -71,27 +75,31 @@ public class WorkerServlet  extends HttpServlet {
 		response.setContentType("text/plain");
 		String q = request.getPathInfo();
 		String ctx = request.getServletPath();
-		System.out.println(ctx);
-		System.out.println(q);
-		if( ctx.equals("/host") ){
-			File host = BeeQueueHome.instance.getHost();
-			dumpDataFromFileSystem(host, q, out);
-		}else if( ctx.equals("/home") ){
-			File home = BeeQueueHome.instance.getHome();
-			dumpDataFromFileSystem(home, q, out);
-		}else if( ctx.equals("/db") ){
-			Coordiantor c = getCoordinator();
-			try{
+		try{
+			TransactionContext.push();
+			if( ctx.equals("/host") ){
+				File host = BeeQueueHome.instance.getHost();
+				dumpDataFromFileSystem(host, q, out);
+			}else if( ctx.equals("/home") ){
+				File home = BeeQueueHome.instance.getHome();
+				dumpDataFromFileSystem(home, q, out);
+			}else if( ctx.equals("/db") ){
+				Coordiantor c = getCoordinator();
 				out.println(c.selectAnyTable(q));
-			}catch (Exception e) {
-				throw new ServletException(e);
+			}else if( ctx.equals("/query") ){
+				Coordiantor c = getCoordinator();
+				out.println(c.query(q));
 			}
+		}catch (Exception e) {
+			throw new ServletException(e);
+		}finally{
+			TransactionContext.pop();
 		}
 		
 	}
 
 
-	public Coordiantor getCoordinator() throws IOException, JsonParseException,
+	private Coordiantor getCoordinator() throws IOException, JsonParseException,
 			JsonMappingException {
 		File home = BeeQueueHome.instance.getHome();
 		Coordiantor c  ;

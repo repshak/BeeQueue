@@ -294,6 +294,19 @@
 <primary-key-column name="CONFIG_ID"/>
 </primary-key>
 </table>
+<table id="5ef5485:136ed867bc8:-7f15" name="NN_ID_FACTORY">
+<column-list>
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7f11" mandatory="true" name="TABLE_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7f10" mandatory="false" name="COUNTER">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+</column-list>
+<primary-key id="5ef5485:136ed867bc8:-7f14" name="PK_NN_ID_FACTORY">
+<primary-key-column name="TABLE_NAME"/>
+</primary-key>
+</table>
 </table-list>
 </schema>
 </schema-list>
@@ -321,5 +334,6 @@
 <table-figure refid="43a11a8e:13648c9dafd:-78d9" x="525" y="453"/>
 <table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="702" y="625"/>
 <table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="328" y="134"/>
+<table-figure refid="5ef5485:136ed867bc8:-7f15" x="417" y="294"/>
 </diagram>
 </clay-model>

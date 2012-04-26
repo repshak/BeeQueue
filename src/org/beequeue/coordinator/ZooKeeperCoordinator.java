@@ -24,4 +24,10 @@ public class ZooKeeperCoordinator extends Coordiantor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String query(String q) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

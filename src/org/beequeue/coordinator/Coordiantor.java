@@ -29,6 +29,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 abstract public class Coordiantor {
 
 	abstract public String selectAnyTable(String table) ;
+
+	abstract public String query(String q) ; 
 	
 
 }

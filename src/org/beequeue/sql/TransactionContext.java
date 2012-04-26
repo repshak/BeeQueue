@@ -24,44 +24,44 @@ import java.util.List;
 
 public class TransactionContext {
 	
-    private static ThreadLocal<TransactionContext> daoCtxStore = new ThreadLocal<TransactionContext>() ;
+    private static ThreadLocal<TransactionContext> txCtxStore = new ThreadLocal<TransactionContext>() ;
 
     private boolean rollbackOnly = false;
     List<ResourceTracker> registredResources = null;
-    TransactionContext nested = null ;
+    TransactionContext parent = null ;
 
     private boolean isRoot() {
-      return nested == null;
+      return parent == null;
     }
 
-    public static void checkDaoContext() {
-     if( ! isDaoContextSet() ){
-       throw new RuntimeException("you have to use Dao.Util.* methods only inside of wraped dao");             
-     }
+    public static void checkTransactionContext() {
+	     if( ! isTransactionContextSet() ){
+	       throw new RuntimeException("you have to use it inside of transaction context");             
+	     }
     }
 
-    public static boolean isDaoContextSet() {
-      return TransactionContext.daoCtxStore.get() != null;
+    public static boolean isTransactionContextSet() {
+      return TransactionContext.txCtxStore.get() != null;
     }
     
     public static void push() {
-			TransactionContext prevDaoCtx = getContext();
-			TransactionContext daoCtx = new TransactionContext() ;
-			if( prevDaoCtx != null ){
-				daoCtx.nested = prevDaoCtx ;
-			}else{
-        daoCtx.registredResources = new ArrayList<ResourceTracker>();
-      }
-			daoCtxStore.set( daoCtx );
-		}
+		TransactionContext prevDaoCtx = getContext();
+		TransactionContext daoCtx = new TransactionContext() ;
+		if( prevDaoCtx != null ){
+			daoCtx.parent = prevDaoCtx ;
+		}else{
+	        daoCtx.registredResources = new ArrayList<ResourceTracker>();
+	    }
+		txCtxStore.set( daoCtx );
+	}
 
     public static TransactionContext getContext() {
-      return daoCtxStore.get();
+    	return txCtxStore.get();
     }
      
     @SuppressWarnings("unchecked")
     public static <T extends ResourceTracker> T searchResource(Class<T> clazz, String name) {
-      checkDaoContext();
+      checkTransactionContext();
       TransactionContext ctx = getContext();
       for (ResourceTracker tracker : ctx.getRegistredResources()) {
         if(tracker.getClass().isAssignableFrom(clazz) && tracker.getKey().equals(name)){
@@ -71,45 +71,45 @@ public class TransactionContext {
       return null;
     }
 
-    static void setRollbackOnly() {
-  	 checkDaoContext();
+    public static void setRollbackOnly() {
+  	 checkTransactionContext();
      getContext().rollback();
     }
 
     
-		private void rollback() {
+	private void rollback() {
       if( isRoot() ){
         rollbackOnly = true ;
       }else{
-        nested.rollback();
+        parent.rollback();
       }
     }
 
     public static void pop() {
-			TransactionContext ctx = getContext();
-			if( ctx.isRoot()){
+		TransactionContext ctx = getContext();
+		if( ctx.isRoot()){
         for (ResourceTracker tracker : ctx.getRegistredResources()) {
 					try {
 						tracker.release(ctx.rollbackOnly);
 					} catch (Exception ignore) {
 					}
 				}
-      }
-			daoCtxStore.set(ctx.nested);
-		}
+        }
+		txCtxStore.set(ctx.parent);
+	}
 
     
     private List<ResourceTracker> getRegistredResources() {
       if( isRoot() ){
         return registredResources;
       }else{
-        return nested.getRegistredResources();
+        return parent.getRegistredResources();
       }
     }
 
 
-    static void register(ResourceTracker resource ) {
-			checkDaoContext();
+    public static void register(ResourceTracker resource ) {
+			checkTransactionContext();
 			getContext().getRegistredResources().add(resource);
     }
 }

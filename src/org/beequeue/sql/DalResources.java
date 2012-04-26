@@ -31,17 +31,8 @@ public class DalResources {
   }
   
 	public static void init(DbCoordinator coordinator) {
-		config =coordinator;
+		config = coordinator;
 	}
 
-	public static Connection getConnection() throws DalException{
-      String name = "config";
-	JdbcResourceTracker tracker = TransactionContext.searchResource(JdbcResourceTracker.class,name);
-			if( tracker == null ){
-			  tracker = new JdbcResourceTracker(name,config.connection());
-        TransactionContext.register(tracker);
-      }
-			return tracker.getResource();
-	}
 	
 }
