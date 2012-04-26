@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.beequeue.coordinator.IdFactory.IdRange;
 import org.beequeue.sql.DalException;
 import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.TransactionContext;
