@@ -16,6 +16,8 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.coordinator;
 
+import org.beequeue.coordinator.db.DbCoordinator;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;

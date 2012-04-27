@@ -18,12 +18,27 @@ package org.beequeue.coordinator;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
+import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.Files;
 import org.beequeue.util.ToStringUtil;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -31,8 +46,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class DbCoordinatorTest {
 
-	@Test
-	public void test() throws JsonParseException, JsonMappingException, IOException {
+	private static final String COORDINATOR_JSON = "/Users/sergeyk/git/BeeQueue/bq-home/coordinator.json";
+
+	@Test 
+	@Before
+	public void create() throws JsonParseException, JsonMappingException, IOException {
 		DbCoordinator coord = new DbCoordinator();
 		coord.driver = "org.apache.derby.jdbc.ClientDriver";
 		coord.url = "jdbc:derby://localhost:1527/bee";
@@ -52,7 +70,89 @@ public class DbCoordinatorTest {
 			Assert.fail();
 		}catch (Exception ignore) {}
 		System.out.println(ToStringUtil.toString(c2)); 
-		Files.writeAll( new File("/Users/sergeyk/git/BeeQueue/.build/bq-home/coordinator.json"), ts );
+		Files.writeAll( new File(COORDINATOR_JSON), ts );
+	}
+	
+	
+	@Test 
+	public void newId() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
+		ConsoleHandler ch = setLevelForConsoleHandler(java.util.logging.Level.FINEST);
+		ch.setFormatter(new Formatter() {
+			@Override
+			public String format(LogRecord r) {
+				String date = new SimpleDateFormat("yyyy-MM-dd hh:mm.ss ").format(new Date(r.getMillis()));
+				return date + r.getLevel() + " " + 
+					r.getLoggerName()+"#"+ r.getSourceMethodName()+" "+
+					r.getMessage()+"\n"; 
+			}
+		});
+		final ConcurrentHashMap<String, Long> map = new ConcurrentHashMap<String, Long>(); 
+		final DbCoordinator c = (DbCoordinator)ToStringUtil.toObject(Files.readAll(new File(COORDINATOR_JSON)), Coordiantor.class);
+		ExecutorService pool = Executors.newFixedThreadPool(5);
+		for (int i = 0; i < 50; i++) {
+			pool.submit(
+					new Callable<Void>() {
+						@Override
+						public Void call() throws Exception {
+							String t1 = "T1";
+							String t2 = "T2";
+							try {
+								TransactionContext.push();
+								
+								testNewId(t1);
+								testNewId(t1);
+								testNewId(t1);
+								testNewId(t2);
+								testNewId(t2);
+								testNewId(t1);
+								testNewId(t1);
+								testNewId(t2);
+								testNewId(t1);
+								testNewId(t2);
+								testNewId(t1);
+
+								TransactionContext.pop();
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							return null;
+						}
+
+						public void testNewId( String t) {
+							long newId = c.getNewId(t);
+							String k = t + ":"+newId;
+							Long r = map.putIfAbsent(k, newId);
+							if(r == null){
+								System.out.println(k);
+							}else{
+								System.err.println("Dublicate:" + k);
+								Assert.fail("Dublicate:" + k);
+							}
+						}
+					});
+		}
+		pool.shutdown();
+		pool.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+
 	}
 
+
+	public static  ConsoleHandler setLevelForConsoleHandler(Level level) {
+		Logger topLogger = java.util.logging.Logger.getLogger("");
+		topLogger.setLevel(Level.ALL);
+		ConsoleHandler consoleHandler = null;
+	    for (Handler handler : topLogger.getHandlers()) {
+	        if (handler instanceof ConsoleHandler) {
+	            consoleHandler = (ConsoleHandler) handler;
+	            break;
+	        }
+	    }
+	    if (consoleHandler == null) {
+	        consoleHandler = new ConsoleHandler();
+	        topLogger.addHandler(consoleHandler);
+	    }
+	    consoleHandler.setLevel(level);
+		return consoleHandler;
+	}
 }

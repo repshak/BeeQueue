@@ -21,7 +21,7 @@ package org.beequeue.sql;
 
 import java.sql.Connection;
 
-import org.beequeue.coordinator.DbCoordinator;
+import org.beequeue.coordinator.db.DbCoordinator;
 
 public class DalResources {
 	private static DbCoordinator config =  null ; 

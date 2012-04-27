@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.coordinator;
+package org.beequeue.coordinator.db;
 
 import java.sql.Clob;
 import java.sql.Connection;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.sql.DalException;
 import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.TransactionContext;
