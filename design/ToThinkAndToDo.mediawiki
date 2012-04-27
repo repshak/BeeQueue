@@ -1,14 +1,11 @@
 = ToDo =
-* IdFactory
 * Load tc1.config
+* query and drilldown and action config
 * POJO
 ** Message
 *** Job
 *** Stage
 *** Run
-** HostGroup
-*** Host
-*** Worker
 * json visualization 
 ** modify it to run visualization automatically on all json data pulled on the web
 * $BQ_HOST/worker.csv
@@ -38,12 +35,17 @@
 * DbMapping
 ** DbType (INT,BIGINT*,FLOAT,BOOLEAN*,VARCHAR*,CLOB*,DATE,TIMESTAMP*,BLOB)
 * DataType,Column,Set
+
 == Done ==
+* IdFactory
 * build target tha allow to test and debug web content inline 
 * TestCases
 ** [[TestCase1.mediawiki|TestCase1 - Load Balancing]]
 *** Create config/and script for testcase 
 * POJO
+** HostGroup
+*** Host
+*** Worker
 ** Domain, MessageTemplate, JobTemplate, StageTemplate
 *** configration.json
 * modify WorkerServlet to push json data out
