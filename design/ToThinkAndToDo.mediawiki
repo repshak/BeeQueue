@@ -2,10 +2,10 @@
 * Load tc1.config
 * query and drilldown and action config
 * POJO
-** Message
-*** Job
-*** Stage
-*** Run
+** BeeQueueMessage
+*** BeeQueueJob
+*** BeeQueueStage
+*** BeeQueueRun
 * json visualization 
 ** modify it to run visualization automatically on all json data pulled on the web
 * $BQ_HOST/worker.csv

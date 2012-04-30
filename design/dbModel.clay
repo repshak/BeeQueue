@@ -78,6 +78,9 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-78f4" mandatory="true" name="HOST_GROUP_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
+<column auto-increment="false" column-size="256" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7ea8" mandatory="false" name="GROUP_DESCRIPTION">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-78f7" name="PK_NN_HOST_GROUP">
 <primary-key-column name="HOST_GROUP_CD"/>
@@ -94,7 +97,13 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77bf" mandatory="false" name="HOST_STATUS">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77a3" mandatory="false" name="ACTIVE_WORKER_ID">
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7ee3" mandatory="false" name="HOST_IP">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="128" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7edc" mandatory="false" name="HOST_FQDN">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7e65" mandatory="false" name="CONFIG_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
 </column-list>
@@ -105,8 +114,8 @@
 <foreign-key id="43a11a8e:13648c9dafd:-78b4" name="FK_NN_HOST_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_HOST_GROUP" referenced-table="NN_HOST_GROUP" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
 <foreign-key-column column-name="HOST_GROUP_CD" referenced-key-column-name="HOST_GROUP_CD"/>
 </foreign-key>
-<foreign-key id="43a11a8e:13648c9dafd:-77a5" name="FK_NN_HOST_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_WORKER" referenced-table="NN_WORKER" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="ACTIVE_WORKER_ID" referenced-key-column-name="WORKER_ID"/>
+<foreign-key id="5ef5485:136ed867bc8:-7e67" name="FK_NN_HOST_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_CONFIGURATION" referenced-table="NN_CONFIGURATION" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="CONFIG_ID" referenced-key-column-name="CONFIG_ID"/>
 </foreign-key>
 </foreign-key-list>
 </table>
@@ -267,8 +276,8 @@
 <column auto-increment="false" column-size="1024" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7fc1" mandatory="false" name="USER_SETTINGS">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f57" mandatory="false" name="SYSTEM_USER">
-<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f57" mandatory="false" name="USER_TYPE">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 </column-list>
 <primary-key id="2d42fd58:1365a31ffa5:-7fc8" name="PK_NN_USER">
@@ -307,6 +316,28 @@
 <primary-key-column name="TABLE_NAME"/>
 </primary-key>
 </table>
+<table id="5ef5485:136ed867bc8:-7ee7" name="NN_HOST_STATISTCS">
+<column-list>
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7ec8" mandatory="true" name="HOST_CD">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7ed8" mandatory="true" name="DATA_COLLECTED">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7ed9" mandatory="true" name="STAT_DATA">
+<data-type name="CLOB" selected-variant-pattern="CLOB(%n K)"/>
+</column>
+</column-list>
+<primary-key id="5ef5485:136ed867bc8:-7ee6" name="PK_NN_HOST_STATISTCS">
+<primary-key-column name="HOST_CD"/>
+<primary-key-column name="DATA_COLLECTED"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="5ef5485:136ed867bc8:-7eca" name="FK_NN_HOST_STATISTCS_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_HOST" referenced-table="NN_HOST" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="HOST_CD" referenced-key-column-name="HOST_CD"/>
+</foreign-key>
+</foreign-key-list>
+</table>
 </table-list>
 </schema>
 </schema-list>
@@ -321,12 +352,6 @@
 <table-figure refid="43a11a8e:13648c9dafd:-7b61" x="801" y="439"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78f8" x="37" y="86"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78f1" x="30" y="192"/>
-<fk-figure refid="43a11a8e:13648c9dafd:-77a5">
-<bendpoints>
-<bendpoint height1="81" height2="-85" weight="0.5" width1="56" width2="51"/>
-<bendpoint height1="162" height2="-65" weight="0.5" width1="53" width2="57"/>
-</bendpoints>
-</fk-figure>
 <table-figure refid="43a11a8e:13648c9dafd:-78ed" x="37" y="419"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78e5" x="146" y="588"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78e1" x="435" y="606"/>
@@ -335,5 +360,6 @@
 <table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="702" y="625"/>
 <table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="328" y="134"/>
 <table-figure refid="5ef5485:136ed867bc8:-7f15" x="417" y="294"/>
+<table-figure refid="5ef5485:136ed867bc8:-7ee7" x="224" y="311"/>
 </diagram>
 </clay-model>
