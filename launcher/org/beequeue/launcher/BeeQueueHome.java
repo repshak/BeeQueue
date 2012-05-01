@@ -18,8 +18,10 @@ package org.beequeue.launcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -31,6 +33,7 @@ public class BeeQueueHome {
 	public static final String BQ_HOME = "BQ_HOME";
 	public static final String BQ_WEB = "BQ_WEB";
 	public static final String BQ_HOST = "BQ_HOST";
+	public static final String BQ_WORKER_PID = "BQ_WORKER_PID";
 	
 	public static final BeeQueueHome instance = new BeeQueueHome();
 	
@@ -69,24 +72,41 @@ public class BeeQueueHome {
 				this.web = new File(webEnv).getAbsoluteFile();
 			}
 		}catch (Exception e) {
-			System.err.println("Cannot establish home directory: " + home+" error:" );
-			e.printStackTrace();
-			System.exit(-1);
+			die(e, "Cannot establish home directory: " + home+" error:");
+		}
+		try{
+			String[] split = ManagementFactory.getRuntimeMXBean().getName().split("@");
+			this.pid = Long.parseLong(split[0]);
+		}catch (Exception e) {
+			die(e,"Cannot identify process id.\n error:" );
 		}
 		
 	}
+
+	public void die(Exception e, String msg) {
+		System.err.println(msg );
+		e.printStackTrace();
+		System.exit(-1);
+	}
 	
 	public String[] getEnv(Map<String, String> myenv){
+		Map<String, String> envMap = new HashMap<String, String>(System.getenv());
+		if(myenv!=null) envMap.putAll(myenv);
+		envMap.putAll(getHomeVariables());
 		List<String> envList = new ArrayList<String>();
-		Map<String, String> getenv = new HashMap<String, String>(System.getenv());
-		if(myenv!=null) getenv.putAll(myenv);
-		for (String k : getenv.keySet()) {
-			envList.add(k+"="+getenv.get(k));
+		for (String k : envMap.keySet()) {
+			envList.add(k+"="+envMap.get(k));
 		}
-		envList.add(BQ_HOME+"="+home);
-		envList.add(BQ_WEB+"="+web);
-		envList.add(BQ_HOST+"="+host);
 		return envList.toArray(new String[0]);
+	}
+	
+	public Map<String, String> getHomeVariables( ) {
+		Map<String,String> envMap = new LinkedHashMap<String, String>();
+		envMap.put(BQ_HOME,home.toString());
+		envMap.put(BQ_WEB,web.toString());
+		envMap.put(BQ_HOST,host.toString());
+		envMap.put(BQ_WORKER_PID,String.valueOf(pid));
+		return envMap;
 	}
 
 	public String[] getCmd(String cmd, String runId){

@@ -17,27 +17,12 @@ import org.beequeue.sql.Update;
 import org.beequeue.util.Tuple;
 
 public class IdFactory {
-	private static final JdbcFactory<Long, Object> LONG_JDBC_FACTORY = new JdbcFactory<Long, Object>() {
-		@Override
-		public Long newInstance(ResultSet rs, Object input, Index idx) throws SQLException {
-			return rs.getLong(idx.next());
-		}
-	};
-
-	private static final SqlPrepare<String> STRING_SQL_PREPARE = new SqlPrepare<String>() {
-		@Override
-		public void invoke(PreparedStatement pstmt, String input, Index idx)
-				throws SQLException {
-			pstmt.setString(idx.next(), input);
-			
-		}
-	};
 
 	private static long GRAB_N_NUMBERS_AT_THE_TIME = 10 ;
 	
 	private static Select<Long, String> SELECT_NEXT_NUM = new Select<Long, String>(
 			"SELECT COUNTER from NN_ID_FACTORY where TABLE_NAME = ?", 
-			LONG_JDBC_FACTORY, STRING_SQL_PREPARE);
+			DbConstants.LONG_JDBC_FACTORY, DbConstants.STRING_SQL_PREPARE);
 	
 	private static Update<Tuple<Long,String>> CREATE_TABLE_ENTRY = new Update<Tuple<Long,String>>(
 			"INSERT INTO NN_ID_FACTORY (TABLE_NAME, COUNTER) VALUES (?,?)" , 

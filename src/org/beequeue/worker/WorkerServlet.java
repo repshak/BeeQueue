@@ -24,9 +24,7 @@ import java.io.PrintWriter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,12 +34,8 @@ import org.beequeue.agent.Agent;
 import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.TransactionContext;
-import org.beequeue.util.Files;
 import org.beequeue.util.Streams;
 import org.beequeue.util.ToStringUtil;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class WorkerServlet  extends HttpServlet {
 
@@ -52,7 +46,11 @@ public class WorkerServlet  extends HttpServlet {
 		scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() { 
 				try{
-					new Agent( "ps", "mem", "cpu" ).run(); 
+					TransactionContext.push();
+					new Agent( "ps", "mem", "cpu" ).run();
+					Singletons.getCoordinator().ensureHost(WorkerHelper.instance);
+				}catch (Exception e) {
+					e.printStackTrace();
 				}finally{
 					TransactionContext.pop();
 				}
@@ -60,13 +58,6 @@ public class WorkerServlet  extends HttpServlet {
 		}, 0, 10, TimeUnit.MINUTES);
 	}
 	
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		System.out.println("init");
-	}
-
-	public static AtomicReference<Coordiantor> COORD = new AtomicReference<Coordiantor>();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -84,10 +75,10 @@ public class WorkerServlet  extends HttpServlet {
 				File home = BeeQueueHome.instance.getHome();
 				dumpDataFromFileSystem(home, q, out);
 			}else if( ctx.equals("/db") ){
-				Coordiantor c = getCoordinator();
+				Coordiantor c = Singletons.getCoordinator();
 				out.println(c.selectAnyTable(q));
 			}else if( ctx.equals("/query") ){
-				Coordiantor c = getCoordinator();
+				Coordiantor c = Singletons.getCoordinator();
 				out.println(c.query(q));
 			}
 		}catch (Exception e) {
@@ -99,16 +90,7 @@ public class WorkerServlet  extends HttpServlet {
 	}
 
 
-	private Coordiantor getCoordinator() throws IOException, JsonParseException,
-			JsonMappingException {
-		File home = BeeQueueHome.instance.getHome();
-		Coordiantor c  ;
-		while( (c = COORD.get()) == null){
-			String s = Files.readAll( new File(home,"coordinator.json") );
-			COORD.compareAndSet(null, ToStringUtil.toObject(s, Coordiantor.class));
-		}
-		return c;
-	}
+
 
 
 	public void dumpDataFromFileSystem(File base, String query, PrintWriter out)

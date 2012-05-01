@@ -17,6 +17,7 @@
 package org.beequeue.coordinator;
 
 import org.beequeue.coordinator.db.DbCoordinator;
+import org.beequeue.worker.WorkerHelper;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -28,11 +29,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
     @JsonSubTypes.Type(value=DbCoordinator.class, name="db"),
     @JsonSubTypes.Type(value=ZooKeeperCoordinator.class, name="zk")
 })
-abstract public class Coordiantor {
+public interface Coordiantor {
 
-	abstract public String selectAnyTable(String table) ;
+	String selectAnyTable(String table) ;
 
-	abstract public String query(String q) ; 
+	String query(String q) ; 
+	
+	void ensureHost(WorkerHelper wh);
 	
 
 }

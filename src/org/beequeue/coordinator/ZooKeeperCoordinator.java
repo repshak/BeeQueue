@@ -16,8 +16,10 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.coordinator;
 
+import org.beequeue.worker.WorkerHelper;
 
-public class ZooKeeperCoordinator extends Coordiantor {
+
+public class ZooKeeperCoordinator implements Coordiantor {
 
 	@Override
 	public String selectAnyTable(String table) {
@@ -29,5 +31,11 @@ public class ZooKeeperCoordinator extends Coordiantor {
 	public String query(String q) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void ensureHost(WorkerHelper wh) {
+		// TODO Auto-generated method stub
+		
 	}
 }

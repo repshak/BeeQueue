@@ -94,7 +94,7 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-78b2" mandatory="true" name="HOST_GROUP_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77bf" mandatory="false" name="HOST_STATUS">
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77bf" mandatory="false" name="HOST_STATE">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 <column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7ee3" mandatory="false" name="HOST_IP">

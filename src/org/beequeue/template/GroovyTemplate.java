@@ -24,64 +24,15 @@ import groovy.text.SimpleTemplateEngine;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Map;
 
 import org.beequeue.util.Files;
 import org.codehaus.groovy.control.CompilationFailedException;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
-public class GroovyTemplate {
-	public enum Source {
-		inline{
-			public String getTemplateText(String template, Map<String, ?> context) throws IOException, ClassNotFoundException {
-				return template;
-			}
-		},
-		file{
-			public String getTemplateText(String template, Map<String, ?> context) throws IOException, ClassNotFoundException {
-				return Files.readAll(new File(resolveTemplate(context, template)));
-			}
-			
-		},
-		classPath{
-			public String getTemplateText(String template,Map<String, ?> context) throws IOException, ClassNotFoundException {
-				return Files.readAll(new InputStreamReader(Files.getResourceFromClasspath(resolveTemplate(context, template))));
-			}
-			
-		};
-		abstract public String getTemplateText(String template, Map<String, ?> context) throws IOException, ClassNotFoundException ;
-
-	}
-	private Source source = null;
-	private String template;
-
-
-	
-	public GroovyTemplate(Source source, String template) {
-		this.source = source;
-		this.template = template;
-	}
+public class GroovyTemplate extends ContentReference {
 
 	public GroovyTemplate(String s) {
-		Source[] values = Source.values();
-		for (int i = 0; i < values.length; i++) {
-			if( s.startsWith(values[i].name()+":") ){
-				this.source = values[i];
-			}
-		}
-		if(this.source == null){
-			this.source = Source.inline ;
-			this.template = s;
-		}else{
-			this.template = s.substring(this.source.name().length()+1);
-		}
-	}
-
-	@Override @JsonValue
-	public String toString() {
-		return source +":"+template;
+		initThat(s, ContentSource.inline, this);
 	}
 
 	public boolean generate(Map<String, ?> context, File writeTo)
@@ -101,9 +52,9 @@ public class GroovyTemplate {
 	public String generate(Map<String, ?> context)
 			throws CompilationFailedException, ClassNotFoundException,
 			IOException {
-		String templateText = source.getTemplateText(this.template, context);
-		return resolveTemplate(context, templateText);
+		return resolveTemplate(context, resolveReference(context));
 	}
+
 
 	public static String resolveTemplate(Map<String, ?> context, String templateText)
 			throws ClassNotFoundException, IOException {

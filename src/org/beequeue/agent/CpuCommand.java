@@ -16,18 +16,10 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.agent;
 
-import org.hyperic.sigar.CpuInfo;
-import org.hyperic.sigar.CpuPerc;
 
 public class CpuCommand {
-	public static class Cpu {
-		public CpuInfo info;
-		public CpuPerc total;
-		public CpuPerc[] all;
-	}
-	
 	public static int go(Agent agent) throws Exception {
-		Cpu o = new Cpu();
+		CpuRawData o = new CpuRawData();
 		o.info = agent.sigar.getCpuInfoList()[0];
 		o.all = agent.sigar.getCpuPercList();
 		o.total = agent.sigar.getCpuPerc();
