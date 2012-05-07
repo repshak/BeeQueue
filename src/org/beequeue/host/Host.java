@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.beequeue.worker.HostState;
+import org.beequeue.worker.WorkerState;
 
 
 public class Host {
@@ -26,5 +27,8 @@ public class Host {
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	public WorkerState toWorkerState(){
+		return WorkerState.valueOf(state.name());
 	}
 }

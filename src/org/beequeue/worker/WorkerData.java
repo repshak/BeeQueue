@@ -1,0 +1,68 @@
+package org.beequeue.worker;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+import org.beequeue.agent.CpuRawData;
+import org.beequeue.agent.MemRawData;
+import org.beequeue.agent.ProcRawData;
+import org.beequeue.host.CapacityRatio;
+import org.beequeue.host.Host;
+import org.beequeue.host.HostStatistcs;
+
+public class WorkerData {
+	
+	public static WorkerData instance = new WorkerData();
+	private WorkerData() {
+	}
+	public WorkerConfig config = new WorkerConfig();
+	public Host host;
+	public HostStatistcs hostStat ;
+	public Worker worker ;
+
+	public void calculateNextBeat(List<Worker> allWorkersInTheGroup){
+		long maxBeatTime = -1;
+		double sumBeatTime = 0 ;
+		Set<String> uniqueHosts = new HashSet<String>();
+		for (Iterator it = allWorkersInTheGroup.iterator(); it.hasNext();) {
+			Worker worker = (Worker) it.next();
+			uniqueHosts.add(worker.hostName);
+			maxBeatTime = Math.max(worker.nextBeat, maxBeatTime);
+		}
+		long delta = Math.max(config.maxFireInterval/uniqueHosts.size(), config.minFireInterval) + config.callRandomizationTerm();
+		this.worker.nextBeat = Math.max(maxBeatTime, System.currentTimeMillis()) + delta;
+	}
+	
+	public void calcHostStatistics(CpuRawData cpuData, MemRawData memoryData) {
+		CapacityRatio cpu = new CapacityRatio();
+		cpu.max = cpuData.info.getTotalCores() ;
+		cpu.value = cpu.max * cpuData.total.getCombined();
+		CapacityRatio mem = new CapacityRatio();
+		mem.max = memoryData.mem.getTotal();
+		mem.value = memoryData.mem.getActualUsed();
+		HostStatistcs hostStatistcs = new HostStatistcs();
+		hostStatistcs.memory = mem;
+		hostStatistcs.cpu = cpu;
+		hostStat = hostStatistcs;
+		
+	}
+
+	public void updateStatusOfProcesses(ProcRawData[] statusOfProcesses) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void calculateNextStatus() {
+		this.worker.state = HostStatistcs.HEALTHY_HOST_CHECK.doIt(this.hostStat) ?
+			host.toWorkerState() : WorkerState.PAUSED ;	
+		
+	}
+
+	
+	
+	
+
+}

@@ -17,7 +17,6 @@
 package org.beequeue.worker;
 
 public enum WorkerState {
-	INIT,
 	READY,
 	PAUSED,
 	TERMINATED,

@@ -39,6 +39,8 @@ import org.beequeue.util.ToStringUtil;
 
 public class WorkerServlet  extends HttpServlet {
 
+	private static final Agent AGENT = new Agent();
+
 	private static final long serialVersionUID = 1L;
 
 	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -47,8 +49,31 @@ public class WorkerServlet  extends HttpServlet {
 			public void run() { 
 				try{
 					TransactionContext.push();
-					new Agent( "ps", "mem", "cpu" ).run();
-					Singletons.getCoordinator().ensureHost(WorkerHelper.instance);
+					/* Check if host object initialized and if not make sure that 
+					 * host/group exists in db */
+					Coordiantor coordinator = Singletons.getCoordinator();
+					coordinator.ensureHost(WorkerData.instance);
+					
+					/* Check CPU & Memory and up update 
+					 * statistics */
+					AGENT.runStatistics();
+					coordinator.storeStatistics(WorkerData.instance);
+					
+					/* Check all active workers in the same group,
+					 * calculate next beat time
+					 * Update status of the workers and beet time 
+					 * on the same machine if necessary.
+					 */
+					coordinator.ensureWorker(WorkerData.instance);
+					
+					/* Process all messages and create stages, create runs for 
+					 * unblocked stages. Pick runs to execute. Execute.
+					 */
+
+					/* Run ps. Identify all processes that currently executed.
+					 * Check all processes that finished on host an update ther stages 
+					 * appropriately
+					 */
 				}catch (Exception e) {
 					e.printStackTrace();
 				}finally{

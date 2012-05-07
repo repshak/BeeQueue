@@ -1,5 +1,7 @@
 = ToDo =
-* Load tc1.config
+
+* Load tc1.config into database
+* Load tc1.config 
 * query and drilldown and action config
 * POJO
 ** BeeQueueMessage

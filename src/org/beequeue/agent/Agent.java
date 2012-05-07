@@ -28,7 +28,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.beequeue.launcher.BeeQueueHome;
+import org.beequeue.worker.WorkerData;
 import org.hyperic.sigar.Sigar;
+import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.cmd.Shell;
 
@@ -38,16 +40,10 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class Agent {
 	public final static ObjectMapper om = new ObjectMapper();
 	
-	private static final String KILL_CMD = "kill:";
 	private static final String PS_CMD = "ps";
 	private static final String CPU_CMD = "cpu";
 	private static final String MEM_CMD = "mem";
 
-	public static void main(String[] args) {
-		System.exit(new Agent(args).run());
-	}
-
-	final public List<String> argsList ;
 	final public Shell shell = new Shell();
 	final public Sigar sigar = shell.getSigar();
     final public SigarProxy proxy = shell.getSigarProxy();
@@ -55,38 +51,58 @@ public class Agent {
 
 	public String timestamp;
     
-    public Agent(String... args) {
-    	this.argsList = new ArrayList<String>(Arrays.asList(args));
+	public ProcRawData[] getStatusOfProcesses()
+			throws SigarException {
+		long[] pidList = this.proxy.getProcList();
+		ProcRawData[] ps = new ProcRawData[pidList.length];
+		for (int i = 0; i < pidList.length; i++) {
+			long pid = pidList[i];
+			ps[i]=new ProcRawData(pid,this);
+		}
+		return ps;
+	}
+	
+	public MemRawData getMemoryData() throws SigarException {
+		MemRawData memInfo = new MemRawData();
+		memInfo.mem = this.sigar.getMem();
+		memInfo.swap = this.sigar.getSwap();
+		return memInfo;
+	}
+	
+	
+	public CpuRawData getCpuData() 
+			throws SigarException {
+		CpuRawData o = new CpuRawData();
+		o.info = this.sigar.getCpuInfoList()[0];
+		o.all = this.sigar.getCpuPercList();
+		o.total = this.sigar.getCpuPerc();
+		return o;
+	}
+
+	
+    public final static String SIGNAL = "SIGTERM";
+	public void kill(long[] split) throws SigarException {
+		for (int i = 0; i < split.length; i++) {
+			this.sigar.kill(split[i], SIGNAL);
+		}
 	}
 
 
-	public int run() {
+	public void runStatistics() throws IOException, SigarException {
 		outputDirectory = BeeQueueHome.instance.getHost();
 		if(!outputDirectory.isDirectory() && !outputDirectory.mkdirs() ){
 			System.err.println("Cannot use or create "+ outputDirectory  );
-			return -1;
 		}
 		this.timestamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-		int rc = 0;
-		for (String command : argsList) {
-			try{
-				if(command.equals(PS_CMD)){
-					rc |= PsCommand.go(this);
-				}else if(command.equals(CPU_CMD)){
-					rc |= CpuCommand.go(this);
-				}else if(command.equals(MEM_CMD)){
-					rc |= MemCommand.go(this);
-				}else if(command.startsWith(KILL_CMD)){
-					rc |= KillCommand.go(this, command.substring(KILL_CMD.length()).split(","));
-				}
-			}catch (Exception e) {
-				e.printStackTrace();
-				rc |= -1;
-			}
-			
-		}
-		return rc;
 		
+		ProcRawData[] statusOfProcesses = getStatusOfProcesses();
+		CpuRawData cpuData = getCpuData();
+		MemRawData memoryData = getMemoryData();
+		WorkerData.instance.calcHostStatistics(cpuData,memoryData);
+		WorkerData.instance.updateStatusOfProcesses(statusOfProcesses);
+		dump(PS_CMD,statusOfProcesses);
+		dump(CPU_CMD,cpuData);
+		dump(MEM_CMD,memoryData);
 	}
 
 

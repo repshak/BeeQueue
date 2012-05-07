@@ -16,7 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.coordinator;
 
-import org.beequeue.worker.WorkerHelper;
+import org.beequeue.worker.WorkerData;
 
 
 public class ZooKeeperCoordinator implements Coordiantor {
@@ -34,7 +34,19 @@ public class ZooKeeperCoordinator implements Coordiantor {
 	}
 
 	@Override
-	public void ensureHost(WorkerHelper wh) {
+	public void ensureHost(WorkerData wh) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void storeStatistics(WorkerData wh) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void ensureWorker(WorkerData instance) {
 		// TODO Auto-generated method stub
 		
 	}

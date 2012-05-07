@@ -19,30 +19,29 @@ package org.beequeue.coordinator.db;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.host.Host;
 import org.beequeue.host.HostGroup;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.DalException;
-import org.beequeue.sql.Index;
-import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.JdbcResourceTracker;
-import org.beequeue.sql.Select;
-import org.beequeue.sql.SqlPrepare;
 import org.beequeue.sql.TransactionContext;
-import org.beequeue.sql.Update;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.HostState;
-import org.beequeue.worker.WorkerHelper;
+import org.beequeue.worker.Worker;
+import org.beequeue.worker.WorkerData;
+import org.beequeue.worker.WorkerState;
 
 public class DbCoordinator implements Coordiantor {
 	private static final String CONNECTION_TRACKER = "conn";
@@ -144,90 +143,73 @@ public class DbCoordinator implements Coordiantor {
 
 	
 
-	private static final Select<Host, String> LOAD_HOST = new Select<Host, String>(
-			"SELECT H.HOST_CD, H.HOST_STATE, H.HOST_IP, H.HOST_FQDN, G.HOST_GROUP_CD, G.GROUP_DESCRIPTION " +
-					" FROM NN_HOST H, NN_HOST_GROUP G WHERE H.HOST_CD = ? AND H.HOST_GROUP_CD = G.HOST_GROUP_CD" , new JdbcFactory<Host, String>() {
-				
-				@Override
-				public Host newInstance(ResultSet rs, String input, Index idx)
-						throws SQLException {
-					
-					Host host = new Host();
-					host.hostName = rs.getString(idx.next());
-					host.state = HostState.valueOf(rs.getString(idx.next()));
-					host.ip = rs.getString(idx.next());
-					host.fqdn = rs.getString(idx.next());
-					host.group.name = rs.getString(idx.next());
-					host.group.description = rs.getString(idx.next());
-					return host;
-				}
-			}, DbConstants.STRING_SQL_PREPARE);
-
-	private static final Select<HostGroup, String> LOAD_HOST_GROUP = new Select<HostGroup, String>(
-			"SELECT HOST_GROUP_CD, GROUP_DESCRIPTION " +
-			" FROM NN_HOST_GROUP WHERE HOST_GROUP_CD = ? " , 
-			new JdbcFactory<HostGroup, String>() {
-				@Override
-				public HostGroup newInstance(ResultSet rs, String input, Index idx)
-						throws SQLException {
-					HostGroup group = new HostGroup();
-					group.name = rs.getString(idx.next());
-					group.description = rs.getString(idx.next());
-					return group;
-				}
-			}, DbConstants.STRING_SQL_PREPARE);
-	
-	public static Update<Host> INSERT_HOST = new Update<Host>("INSERT INTO NN_HOST (HOST_CD, HOST_STATE, HOST_IP, HOST_FQDN, HOST_GROUP_CD) " +
-			"VALUES (?,?,?,?,?) ",new SqlPrepare<Host>() {
-		
-		@Override
-		public void invoke(PreparedStatement pstmt, Host input, Index idx)
-				throws SQLException {
-			pstmt.setString(idx.next(), input.hostName);
-			pstmt.setString(idx.next(), input.state.name());
-			pstmt.setString(idx.next(), input.ip);
-			pstmt.setString(idx.next(), input.fqdn);
-			pstmt.setString(idx.next(), input.group.name);
-		}
-	});
-	public static Update<HostGroup> INSERT_HOST_GROUP = new Update<HostGroup>("INSERT INTO NN_HOST_GROUP (HOST_GROUP_CD,GROUP_DESCRIPTION) " +
-			"VALUES (?,?) ",new SqlPrepare<HostGroup>() {
-
-		@Override
-		public void invoke(PreparedStatement pstmt, HostGroup input, Index idx)
-				throws SQLException {
-			pstmt.setString(idx.next(), input.name);
-			pstmt.setString(idx.next(), input.description);
-		}
-	});
 	
 	@Override
-	public void ensureHost(WorkerHelper wh) {
-		String hostName = BeeQueueHome.instance.getHostName();
-		List<Host> r = LOAD_HOST.query(connection(), hostName);
-		if( r.size() == 1 ){
-			wh.host = r.get(0);
-			return;
-		}
-		wh.host = Host.localHost();
-		wh.host.state = HostState.READY;
-		List<HostGroup> groups = LOAD_HOST_GROUP.query(connection(), HostGroup.DEFAULT_GROUP);
-		if( groups.size() == 1 ){
-			wh.host.group = groups.get(0);
-		}else if( groups.size() == 0 ){
-			wh.host.group.name = HostGroup.DEFAULT_GROUP;
-			if( 1 != INSERT_HOST_GROUP.update(connection(), wh.host.group)){
-				TransactionContext.setRollbackOnly();
-				throw new RuntimeException("Cannot save hostgroup.");
+	public void ensureHost(WorkerData wh) {
+		try {
+			String hostName = BeeQueueHome.instance.getHostName();
+			List<Host> r = HostWorkerQueries.LOAD_HOST.query(connection(), hostName);
+			if( r.size() == 1 ){
+				wh.host = r.get(0);
+				return;
 			}
-		}else{
+			wh.host = Host.localHost();
+			wh.host.state = HostState.READY;
+			wh.host.group.name = HostGroup.DEFAULT_GROUP;
+			List<HostGroup> groups = HostWorkerQueries.LOAD_HOST_GROUP.query(connection(), wh.host.group.name );
+			if( groups.size() == 1 ){
+				wh.host.group = groups.get(0);
+			}else if( 0 != groups.size() || 1 != HostWorkerQueries.INSERT_HOST_GROUP.update(connection(), wh.host.group)){
+				throw new DalException("Cannot obtain/save hostgroup.");
+			}
+			if( 1 != HostWorkerQueries.INSERT_HOST.update(connection(), wh.host)){
+				throw new DalException("Cannot save host.");
+			}
+		} catch (RuntimeException e) {
 			TransactionContext.setRollbackOnly();
-			throw new RuntimeException("NWIH");
-		}
-		if( 1 != INSERT_HOST.update(connection(), wh.host)){
-			TransactionContext.setRollbackOnly();
-			throw new RuntimeException("Cannot save host.");
+			throw e;
 		}
 		
+	}
+
+
+	@Override
+	public void storeStatistics(WorkerData wh) {
+		if( 1 == HostWorkerQueries.INSERT_HOST_STATISTICS.update(connection(), wh)){
+			//TODO update worker status
+		}
+		
+	}
+
+
+	@Override
+	public void ensureWorker(WorkerData wh) {
+		//ensure worker
+		if( wh.worker == null ){
+			Worker worker = new Worker();
+			worker.id = getNewId(HostWorkerQueries.WORKER_TABLE);
+			worker.nextBeat = System.currentTimeMillis();
+			worker.pid = BeeQueueHome.instance.getPid();
+			worker.state = wh.host.toWorkerState();
+			worker.hostName = wh.host.hostName;
+			if( 1 == HostWorkerQueries.INSERT_WORKER.update(connection(), worker) ){
+				wh.worker = worker;
+			}else{
+				throw new DalException("Cannot create worker")
+								.withPayload(worker);
+			}
+		}else{
+			wh.worker = HostWorkerQueries.LOAD_WORKER_BY_ID.queryOne(connection(), wh.worker.id);
+		}
+		List<Worker> allWorkersInTheGroup = HostWorkerQueries.LOAD_WORKERS.query(connection(), wh.host.group.name);
+		wh.calculateNextBeat(allWorkersInTheGroup);
+		wh.calculateNextStatus();
+		HostWorkerQueries.UPDATE_WORKER.update(connection(), wh.worker);
+		for (Worker worker : allWorkersInTheGroup) {
+			if( worker.hostName.equals(wh.worker.hostName) && worker.id != wh.worker.id ){
+				worker.state = WorkerState.TERMINATED;
+				HostWorkerQueries.UPDATE_WORKER.update(connection(), worker);
+			}
+		}
 	}
 }

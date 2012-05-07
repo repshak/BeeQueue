@@ -21,7 +21,6 @@
 package org.beequeue.sql;
 
 public class DalException extends RuntimeException {
-
 	/**
 	 * 
 	 */
@@ -44,5 +43,11 @@ public class DalException extends RuntimeException {
 	 */
 	public DalException(Throwable cause) {
 		super(cause);
+	}
+	
+	public Object[] payload = null;
+	public DalException withPayload( Object ... payload){
+		this.payload = payload;
+		return this;
 	}
 }

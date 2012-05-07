@@ -5,4 +5,5 @@ public class Worker {
 	public String hostName;
 	public long pid;
 	public WorkerState state;
+	public long nextBeat;
 }

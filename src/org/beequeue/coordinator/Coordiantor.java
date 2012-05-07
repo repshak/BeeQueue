@@ -17,7 +17,7 @@
 package org.beequeue.coordinator;
 
 import org.beequeue.coordinator.db.DbCoordinator;
-import org.beequeue.worker.WorkerHelper;
+import org.beequeue.worker.WorkerData;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -35,7 +35,12 @@ public interface Coordiantor {
 
 	String query(String q) ; 
 	
-	void ensureHost(WorkerHelper wh);
+	void ensureHost(WorkerData wh);
+	
+	void storeStatistics(WorkerData wh);
+
+	void ensureWorker(WorkerData wh);
+	
 	
 
 }
