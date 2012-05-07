@@ -12,7 +12,7 @@ public class Host {
 	public String fqdn;
 	public String ip;
 	public HostState state;
-	public HostGroup group = new HostGroup();
+	public Cloud cloud = new Cloud();
 	public HostStatistcs stat;
 	
 	public static Host localHost() {

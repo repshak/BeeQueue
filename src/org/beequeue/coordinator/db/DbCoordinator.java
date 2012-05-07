@@ -32,7 +32,7 @@ import java.util.Set;
 
 import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.host.Host;
-import org.beequeue.host.HostGroup;
+import org.beequeue.host.Cloud;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.DalException;
 import org.beequeue.sql.JdbcResourceTracker;
@@ -155,11 +155,11 @@ public class DbCoordinator implements Coordiantor {
 			}
 			wh.host = Host.localHost();
 			wh.host.state = HostState.READY;
-			wh.host.group.name = HostGroup.DEFAULT_GROUP;
-			List<HostGroup> groups = HostWorkerQueries.LOAD_HOST_GROUP.query(connection(), wh.host.group.name );
+			wh.host.cloud.name = Cloud.DEFAULT_NAME;
+			List<Cloud> groups = HostWorkerQueries.LOAD_CLOUD.query(connection(), wh.host.cloud.name );
 			if( groups.size() == 1 ){
-				wh.host.group = groups.get(0);
-			}else if( 0 != groups.size() || 1 != HostWorkerQueries.INSERT_HOST_GROUP.update(connection(), wh.host.group)){
+				wh.host.cloud = groups.get(0);
+			}else if( 0 != groups.size() || 1 != HostWorkerQueries.INSERT_CLOUD.update(connection(), wh.host.cloud)){
 				throw new DalException("Cannot obtain/save hostgroup.");
 			}
 			if( 1 != HostWorkerQueries.INSERT_HOST.update(connection(), wh.host)){
@@ -201,7 +201,7 @@ public class DbCoordinator implements Coordiantor {
 		}else{
 			wh.worker = HostWorkerQueries.LOAD_WORKER_BY_ID.queryOne(connection(), wh.worker.id);
 		}
-		List<Worker> allWorkersInTheGroup = HostWorkerQueries.LOAD_WORKERS.query(connection(), wh.host.group.name);
+		List<Worker> allWorkersInTheGroup = HostWorkerQueries.LOAD_WORKERS.query(connection(), wh.host.cloud.name);
 		wh.calculateNextBeat(allWorkersInTheGroup);
 		wh.calculateNextStatus();
 		HostWorkerQueries.UPDATE_WORKER.update(connection(), wh.worker);

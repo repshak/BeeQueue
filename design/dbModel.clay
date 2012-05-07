@@ -12,25 +12,19 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e2b" mandatory="true" name="DOMAIN_STATE">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7ded" mandatory="true" name="PROPERTIES_ID">
-<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7d24" mandatory="true" name="MSGCONFIG_ID">
-<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
-</column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7c56" mandatory="false" name="UPDATED_TS">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="41" decimal-digits="0" default-value="" id="33e728da:1370b42bc57:-7df0" mandatory="true" name="DOMAIN_CONFIG">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-7f55" name="PK_NN_DOMAIN">
 <primary-key-column name="DOMAIN_CD"/>
 </primary-key>
 <foreign-key-list>
-<foreign-key id="2d42fd58:1365a31ffa5:-7def" name="FK_NN_DOMAIN_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_CONFIGURATION" referenced-table="NN_CONFIGURATION" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="PROPERTIES_ID" referenced-key-column-name="CONFIG_ID"/>
-</foreign-key>
-<foreign-key id="2d42fd58:1365a31ffa5:-7d26" name="FK_NN_DOMAIN_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_CONFIGURATION" referenced-table="NN_CONFIGURATION" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="MSGCONFIG_ID" referenced-key-column-name="CONFIG_ID"/>
+<foreign-key id="33e728da:1370b42bc57:-7df2" name="FK_NN_DOMAIN_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_SHA_STORAGE" referenced-table="NN_SHA_STORAGE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="DOMAIN_CONFIG" referenced-key-column-name="SHA_ID"/>
 </foreign-key>
 </foreign-key-list>
 </table>
@@ -73,25 +67,30 @@
 </foreign-key>
 </foreign-key-list>
 </table>
-<table id="43a11a8e:13648c9dafd:-78f8" name="NN_HOST_GROUP">
+<table id="43a11a8e:13648c9dafd:-78f8" name="NN_CLOUD">
 <column-list>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-78f4" mandatory="true" name="HOST_GROUP_CD">
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-78f4" mandatory="true" name="CLOUD_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="256" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7ea8" mandatory="false" name="GROUP_DESCRIPTION">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+<column auto-increment="false" column-size="41" decimal-digits="0" default-value="" id="33e728da:1370b42bc57:-7f91" mandatory="true" name="CLOUD_CONFIG">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="33e728da:1370b42bc57:-7de0" mandatory="false" name="UPDATED_TS">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 </column-list>
-<primary-key id="43a11a8e:13648c9dafd:-78f7" name="PK_NN_HOST_GROUP">
-<primary-key-column name="HOST_GROUP_CD"/>
+<primary-key id="43a11a8e:13648c9dafd:-78f7" name="PK_NN_CLOUD">
+<primary-key-column name="CLOUD_CD"/>
 </primary-key>
+<foreign-key-list>
+<foreign-key id="33e728da:1370b42bc57:-7f93" name="FK_NN_HOST_GROUP_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_SHA_STORAGE" referenced-table="NN_SHA_STORAGE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="CLOUD_CONFIG" referenced-key-column-name="SHA_ID"/>
+</foreign-key>
+</foreign-key-list>
 </table>
 <table id="43a11a8e:13648c9dafd:-78f1" name="NN_HOST">
 <column-list>
 <column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-78d3" mandatory="true" name="HOST_CD">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
-</column>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-78b2" mandatory="true" name="HOST_GROUP_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77bf" mandatory="false" name="HOST_STATE">
@@ -103,19 +102,16 @@
 <column auto-increment="false" column-size="128" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7edc" mandatory="false" name="HOST_FQDN">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="5ef5485:136ed867bc8:-7e65" mandatory="false" name="CONFIG_ID">
-<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="33e728da:1370b42bc57:-7d6e" mandatory="true" name="CLOUD_CD">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-78f0" name="PK_NN_HOST">
 <primary-key-column name="HOST_CD"/>
 </primary-key>
 <foreign-key-list>
-<foreign-key id="43a11a8e:13648c9dafd:-78b4" name="FK_NN_HOST_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_HOST_GROUP" referenced-table="NN_HOST_GROUP" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="HOST_GROUP_CD" referenced-key-column-name="HOST_GROUP_CD"/>
-</foreign-key>
-<foreign-key id="5ef5485:136ed867bc8:-7e67" name="FK_NN_HOST_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_CONFIGURATION" referenced-table="NN_CONFIGURATION" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="CONFIG_ID" referenced-key-column-name="CONFIG_ID"/>
+<foreign-key id="33e728da:1370b42bc57:-7d70" name="FK_NN_HOST_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_CLOUD" referenced-table="NN_CLOUD" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="CLOUD_CD" referenced-key-column-name="CLOUD_CD"/>
 </foreign-key>
 </foreign-key-list>
 </table>
@@ -132,6 +128,9 @@
 </column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7731" mandatory="false" name="WORKER_STATE" remarks="enum:org.beequeue.host.WorkerState">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="33e728da:1370b42bc57:-7fd7" mandatory="false" name="NEXT_BEAT">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-78ec" name="PK_NN_WORKER">
@@ -284,23 +283,20 @@
 <primary-key-column name="USER_CD"/>
 </primary-key>
 </table>
-<table id="2d42fd58:1365a31ffa5:-7e1c" name="NN_CONFIGURATION">
+<table id="2d42fd58:1365a31ffa5:-7e1c" name="NN_SHA_STORAGE">
 <column-list>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e18" mandatory="true" name="CONFIG_ID">
-<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+<column auto-increment="false" column-size="41" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e18" mandatory="true" name="SHA_ID">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e15" mandatory="true" name="CONFIG_NAME">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+<column auto-increment="false" column-size="100" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e10" mandatory="false" name="DATA">
+<data-type name="BLOB" selected-variant-pattern="BLOB(%n M)"/>
 </column>
-<column auto-increment="false" column-size="64" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e10" mandatory="false" name="CONFIG_DATA">
-<data-type name="CLOB" selected-variant-pattern="CLOB(%n K)"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e0b" mandatory="false" name="CREATED_TS">
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e0b" mandatory="false" name="SWEEPT_ON">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 </column-list>
-<primary-key id="2d42fd58:1365a31ffa5:-7e1b" name="PK_NN_CONFIGURATION">
-<primary-key-column name="CONFIG_ID"/>
+<primary-key id="2d42fd58:1365a31ffa5:-7e1b" name="PK_NN_SHA_STORAGE">
+<primary-key-column name="SHA_ID"/>
 </primary-key>
 </table>
 <table id="5ef5485:136ed867bc8:-7f15" name="NN_ID_FACTORY">
@@ -343,23 +339,18 @@
 </schema-list>
 </database-model>
 <diagram>
-<table-figure refid="43a11a8e:13648c9dafd:-7f56" x="822" y="141"/>
-<fk-figure refid="2d42fd58:1365a31ffa5:-7def">
-<bendpoints>
-<bendpoint height1="-49" height2="-13" weight="0.5" width1="52" width2="-296"/>
-</bendpoints>
-</fk-figure>
-<table-figure refid="43a11a8e:13648c9dafd:-7b61" x="801" y="439"/>
-<table-figure refid="43a11a8e:13648c9dafd:-78f8" x="37" y="86"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7f56" x="731" y="81"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7b61" x="772" y="437"/>
+<table-figure refid="43a11a8e:13648c9dafd:-78f8" x="30" y="69"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78f1" x="30" y="192"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78ed" x="37" y="419"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78e5" x="146" y="588"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78e1" x="435" y="606"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78dd" x="238" y="453"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78d9" x="525" y="453"/>
-<table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="702" y="625"/>
-<table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="328" y="134"/>
-<table-figure refid="5ef5485:136ed867bc8:-7f15" x="417" y="294"/>
-<table-figure refid="5ef5485:136ed867bc8:-7ee7" x="224" y="311"/>
+<table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="780" y="625"/>
+<table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="412" y="86"/>
+<table-figure refid="5ef5485:136ed867bc8:-7f15" x="552" y="302"/>
+<table-figure refid="5ef5485:136ed867bc8:-7ee7" x="275" y="225"/>
 </diagram>
 </clay-model>

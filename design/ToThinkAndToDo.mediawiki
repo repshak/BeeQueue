@@ -1,7 +1,9 @@
 = ToDo =
 
-* Load tc1.config into database
-* Load tc1.config 
+* ShaStore
+** object model
+** db implementation
+* seed domains & clouds tc1.config 
 * query and drilldown and action config
 * POJO
 ** BeeQueueMessage
@@ -39,6 +41,8 @@
 * DataType,Column,Set
 
 == Done ==
+* ShaStore
+** design
 * IdFactory
 * build target tha allow to test and debug web content inline 
 * TestCases
