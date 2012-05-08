@@ -1,5 +1,7 @@
 package org.beequeue.shastore;
 
-public class ShaStoreQueries {
+
+
+public interface ShaStoreQueries {
 
 }

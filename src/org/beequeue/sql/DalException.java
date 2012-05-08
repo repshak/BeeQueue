@@ -20,6 +20,8 @@
  */
 package org.beequeue.sql;
 
+import org.beequeue.util.ToStringUtil;
+
 public class DalException extends RuntimeException {
 	/**
 	 * 
@@ -50,4 +52,14 @@ public class DalException extends RuntimeException {
 		this.payload = payload;
 		return this;
 	}
+	@Override
+	public String getMessage() {
+		if(payload!=null){
+			return super.getMessage() + "\n" +
+					"payload:" +  ToStringUtil.toString(payload);
+		}
+		return super.getMessage();
+	}
+	
+	
 }
