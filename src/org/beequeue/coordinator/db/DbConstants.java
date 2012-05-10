@@ -16,6 +16,13 @@ public interface DbConstants {
 			return rs.getLong(idx.next());
 		}
 	};
+	
+	JdbcFactory<String, Object> STRING_JDBC_FACTORY = new JdbcFactory<String, Object>() {
+		@Override
+		public String newInstance(ResultSet rs, Object input, Index idx) throws SQLException {
+			return rs.getString(idx.next());
+		}
+	};
 
 	SqlPrepare<String> STRING_SQL_PREPARE = new SqlPrepare<String>() {
 		@Override

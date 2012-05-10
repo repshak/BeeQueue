@@ -37,6 +37,27 @@ public class ShaCode {
 	public String toString() {
 		return type.name()+MessageDigestUtils.toHexString(digest);
 	}
+
+	@Override
+	public int hashCode() {
+		return type.ordinal() + digest[0]+digest[1]+digest[3];
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ShaCode) {
+			ShaCode that = (ShaCode) obj;
+			if( this.type == that.type && this.digest.length == that.digest.length){
+				for (int i = 0; i < this.digest.length; i++) {
+					if( this.digest[i] != that.digest[i] ) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 	

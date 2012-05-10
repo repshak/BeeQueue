@@ -64,5 +64,16 @@ public class Strings {
     return false;
   }
 
+	public static String repeat(String repeatThat, String separateWith,
+			int howManyTimes) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < howManyTimes; i++) {
+			if (i > 0) {
+				sb.append(separateWith);
+			}
+			sb.append(repeatThat);
+		}
+		return sb.toString();
+	}
 
 }
