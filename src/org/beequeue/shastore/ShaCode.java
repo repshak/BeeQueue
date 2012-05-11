@@ -1,5 +1,9 @@
 package org.beequeue.shastore;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public class ShaCode {
@@ -60,6 +64,20 @@ public class ShaCode {
 	}
 	
 	
+	private static ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>();
+	public static ShaCode buildShaCode(Resource resource, InputStream in) throws IOException {
+		byte[] buffer = BUFFER.get();
+		if(buffer==null){
+			BUFFER.set(new byte[32*1024]);
+			buffer = BUFFER.get();
+		}
+		MessageDigest md = MessageDigestUtils.md();
+		int countRead ;
+		while((countRead = in.read(buffer))>0){
+			md.update(buffer, 0, countRead);
+		}
+		return new ShaCode(resource,md.digest());
+	}
 	
 
 }

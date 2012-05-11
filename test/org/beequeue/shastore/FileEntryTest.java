@@ -14,9 +14,10 @@ public class FileEntryTest {
 		MessageDigest md = MessageDigestUtils.md();
 		md.update((byte)10);
 		FileEntry fe = new FileEntry( new ShaCode(Resource.F, md.digest()), true, "right/there.txt");
-		FileEntry f2 = FileEntry.valueOf(fe.toString());
-		assertEquals(fe.toString(), f2.toString());
-		System.out.println(fe.toString());
+		String f = fe.toString();
+		FileEntry f2 = FileEntry.valueOf(f);
+		assertEquals(f, f2.toString());
+		System.out.println(f);
 		System.out.println(f2.toString());
 	}
 

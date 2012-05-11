@@ -54,7 +54,7 @@ public class DalException extends RuntimeException {
 	}
 	@Override
 	public String getMessage() {
-		if(payload!=null){
+		if(payload!=null && payload.length > 0 ){
 			return super.getMessage() + "\n" +
 					"payload:" +  ToStringUtil.toString(payload);
 		}
