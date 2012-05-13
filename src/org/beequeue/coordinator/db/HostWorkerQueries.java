@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import org.beequeue.hash.HashKey;
 import org.beequeue.host.Host;
 import org.beequeue.host.Cloud;
-import org.beequeue.shastore.ShaCode;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.Select;
@@ -37,7 +37,7 @@ public interface HostWorkerQueries {
 			host.ip = rs.getString(idx.next());
 			host.fqdn = rs.getString(idx.next());
 			host.cloud.name = rs.getString(idx.next());
-			host.cloud.config.shaCode = ShaCode.valueOf( rs.getString(idx.next()) );
+			host.cloud.config.hashKey = HashKey.valueOf( rs.getString(idx.next()) );
 			return host;
 		}
 	}, DbConstants.STRING_SQL_PREPARE);
@@ -51,7 +51,7 @@ public interface HostWorkerQueries {
 				Index idx) throws SQLException {
 			Cloud group = new Cloud();
 			group.name = rs.getString(idx.next());
-			group.config.shaCode = ShaCode.valueOf(rs.getString(idx.next()));
+			group.config.hashKey = HashKey.valueOf(rs.getString(idx.next()));
 			return group;
 		}
 	}, DbConstants.STRING_SQL_PREPARE);
@@ -81,7 +81,7 @@ public interface HostWorkerQueries {
 		public void invoke(PreparedStatement pstmt, Cloud input,
 				Index idx) throws SQLException {
 			pstmt.setString(idx.next(), input.name);
-			pstmt.setString(idx.next(), input.config.shaCode.toString());
+			pstmt.setString(idx.next(), input.config.hashKey.toString());
 		}
 	});
 

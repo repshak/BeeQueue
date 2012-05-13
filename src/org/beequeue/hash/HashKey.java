@@ -1,4 +1,4 @@
-package org.beequeue.shastore;
+package org.beequeue.hash;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,35 +6,24 @@ import java.security.MessageDigest;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class ShaCode {
-	public static enum Resource {
-		F("FILE"), 
-		D("DIR");
-		
-		public final String description;
-		
-		private Resource(String description){
-			this.description = description;
-		}
-	}
-	
-	final public Resource type;
+public class HashKey {
+	final public HashKeyResource type;
 	final public byte digest[];
 	
 	
-	public ShaCode(Resource type, byte[] digest) {
+	public HashKey(HashKeyResource type, byte[] digest) {
 		this.type = type;
 		this.digest = digest;
 	}
 
-	public ShaCode(Resource valueOf, String substring) {
+	public HashKey(HashKeyResource valueOf, String substring) {
 		this(valueOf,MessageDigestUtils.fromHexString(substring));
 	}
 
 	
-	public static ShaCode valueOf(String s) {
+	public static HashKey valueOf(String s) {
 		String g = s.substring(0, 1);
-		return new ShaCode(Resource.valueOf(g),s.substring(1));
+		return new HashKey(HashKeyResource.valueOf(g),s.substring(1));
 	}
 
 	@Override @JsonValue
@@ -49,8 +38,8 @@ public class ShaCode {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof ShaCode) {
-			ShaCode that = (ShaCode) obj;
+		if (obj instanceof HashKey) {
+			HashKey that = (HashKey) obj;
 			if( this.type == that.type && this.digest.length == that.digest.length){
 				for (int i = 0; i < this.digest.length; i++) {
 					if( this.digest[i] != that.digest[i] ) {
@@ -65,7 +54,7 @@ public class ShaCode {
 	
 	
 	private static ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>();
-	public static ShaCode buildShaCode(Resource resource, InputStream in) throws IOException {
+	public static HashKey buildHashKey(HashKeyResource resource, InputStream in) throws IOException {
 		byte[] buffer = BUFFER.get();
 		if(buffer==null){
 			BUFFER.set(new byte[32*1024]);
@@ -76,7 +65,13 @@ public class ShaCode {
 		while((countRead = in.read(buffer))>0){
 			md.update(buffer, 0, countRead);
 		}
-		return new ShaCode(resource,md.digest());
+		return new HashKey(resource,md.digest());
+	}
+
+	public static HashKey buildHashKey(HashKeyResource resource, byte[] buffer) {
+		MessageDigest md = MessageDigestUtils.md();
+		md.update(buffer);
+		return new HashKey(resource,md.digest());
 	}
 	
 

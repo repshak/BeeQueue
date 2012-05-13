@@ -1,7 +1,8 @@
-package org.beequeue.shastore;
+package org.beequeue.hash;
 
 import static org.junit.Assert.*;
 
+import org.beequeue.hash.MessageDigestUtils;
 import org.junit.Test;
 
 public class MessageDigestUtilsTest {

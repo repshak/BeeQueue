@@ -37,6 +37,7 @@ import junit.framework.Assert;
 import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.Files;
+import org.beequeue.util.LoggingUtil;
 import org.beequeue.util.ToStringUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,24 +71,16 @@ public class DbCoordinatorTest {
 			Assert.fail();
 		}catch (Exception ignore) {}
 		System.out.println(ToStringUtil.toString(c2)); 
-		Files.writeAll( new File(COORDINATOR_JSON), ts );
+//		Files.writeAll( new File(COORDINATOR_JSON), ts );
 	}
 	
 	
 	@Test 
 	public void newId() throws JsonParseException, JsonMappingException, IOException, InterruptedException {
-		ConsoleHandler ch = setLevelForConsoleHandler(java.util.logging.Level.FINEST);
-		ch.setFormatter(new Formatter() {
-			@Override
-			public String format(LogRecord r) {
-				String date = new SimpleDateFormat("yyyy-MM-dd hh:mm.ss ").format(new Date(r.getMillis()));
-				return date + r.getLevel() + " " + 
-					r.getLoggerName()+"#"+ r.getSourceMethodName()+" "+
-					r.getMessage()+"\n"; 
-			}
-		});
+		ConsoleHandler ch = LoggingUtil.setLevelForConsoleHandler(java.util.logging.Level.FINEST);
+		LoggingUtil.setSimpleFormatter(ch);
 		final ConcurrentHashMap<String, Long> map = new ConcurrentHashMap<String, Long>(); 
-		final DbCoordinator c = (DbCoordinator)ToStringUtil.toObject(Files.readAll(new File(COORDINATOR_JSON)), Coordiantor.class);
+		final DbCoordinator c = getCoordinator();
 		ExecutorService pool = Executors.newFixedThreadPool(5);
 		for (int i = 0; i < 50; i++) {
 			pool.submit(
@@ -110,7 +103,7 @@ public class DbCoordinatorTest {
 								testNewId(t1);
 								testNewId(t2);
 								testNewId(t1);
-
+								
 								TransactionContext.pop();
 								
 							} catch (Exception e) {
@@ -138,21 +131,13 @@ public class DbCoordinatorTest {
 	}
 
 
-	public static  ConsoleHandler setLevelForConsoleHandler(Level level) {
-		Logger topLogger = java.util.logging.Logger.getLogger("");
-		topLogger.setLevel(Level.ALL);
-		ConsoleHandler consoleHandler = null;
-	    for (Handler handler : topLogger.getHandlers()) {
-	        if (handler instanceof ConsoleHandler) {
-	            consoleHandler = (ConsoleHandler) handler;
-	            break;
-	        }
-	    }
-	    if (consoleHandler == null) {
-	        consoleHandler = new ConsoleHandler();
-	        topLogger.addHandler(consoleHandler);
-	    }
-	    consoleHandler.setLevel(level);
-		return consoleHandler;
+	public static DbCoordinator getCoordinator() throws JsonParseException,
+			JsonMappingException, IOException {
+		final DbCoordinator c = (DbCoordinator)ToStringUtil.toObject(Files.readAll(new File(COORDINATOR_JSON)), Coordiantor.class);
+		return c;
 	}
+
+
+
+
 }

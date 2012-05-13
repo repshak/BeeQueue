@@ -1,4 +1,4 @@
-package org.beequeue.shastore;
+package org.beequeue.hash;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

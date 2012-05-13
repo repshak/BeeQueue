@@ -16,6 +16,9 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.coordinator;
 
+import java.io.File;
+
+import org.beequeue.hash.HashKey;
 import org.beequeue.worker.WorkerData;
 
 
@@ -47,6 +50,25 @@ public class ZooKeeperCoordinator implements Coordiantor {
 
 	@Override
 	public void ensureWorker(WorkerData instance) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public HashKey push(File file) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void sweep() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pull(HashKey code, File destination, File previousPull) {
 		// TODO Auto-generated method stub
 		
 	}

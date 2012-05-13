@@ -1,4 +1,4 @@
-package org.beequeue.shastore;
+package org.beequeue.hash;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,38 +20,38 @@ import org.beequeue.util.Strings;
 
 
 
-public interface ShaStoreQueries {
+public interface HashStoreQueries {
 
-	JdbcFactory<ShaCode, Object> SHACODE_JDBC_FACTORY = new JdbcFactory<ShaCode, Object>() {
+	JdbcFactory<HashKey, Object> SHACODE_JDBC_FACTORY = new JdbcFactory<HashKey, Object>() {
 		@Override
-		public ShaCode newInstance(ResultSet rs, Object input, Index idx) throws SQLException {
-			return ShaCode.valueOf(rs.getString(idx.next()));
+		public HashKey newInstance(ResultSet rs, Object input, Index idx) throws SQLException {
+			return HashKey.valueOf(rs.getString(idx.next()));
 		}
 	};
 
 
-	SqlPrepare<ShaCode> SHACODE_SQL_PREPARE = new SqlPrepare<ShaCode>() {
+	SqlPrepare<HashKey> SHACODE_SQL_PREPARE = new SqlPrepare<HashKey>() {
 		@Override
-		public void invoke(PreparedStatement pstmt, ShaCode input, Index idx)
+		public void invoke(PreparedStatement pstmt, HashKey input, Index idx)
 				throws SQLException {
 			pstmt.setString(idx.next(), input.toString());
 		}
 	};
 	
-	Select<ShaCode, Set<ShaCode>> CHECK_SHA_CODE = new Select<ShaCode, Set<ShaCode>>(
+	Select<HashKey, Set<HashKey>> CHECK_HASH_KEY = new Select<HashKey, Set<HashKey>>(
 			"SELECT SHA_ID FROM NN_SHA_STORAGE WHERE SHA_ID IN (%%%)",
-			SHACODE_JDBC_FACTORY, new SqlPrepare<Set<ShaCode>>() {
+			SHACODE_JDBC_FACTORY, new SqlPrepare<Set<HashKey>>() {
 				@Override
-				public void invoke(PreparedStatement pstmt, Set<ShaCode> input, Index idx)
+				public void invoke(PreparedStatement pstmt, Set<HashKey> input, Index idx)
 						throws SQLException {
-					for (ShaCode code : input) {
+					for (HashKey code : input) {
 						SHACODE_SQL_PREPARE.invoke(pstmt, code, idx);
 					}
 				}
-			}, (SqlMorph<? super Set<ShaCode>>) new SqlMorph<Set<ShaCode>>() {
+			}, (SqlMorph<? super Set<HashKey>>) new SqlMorph<Set<HashKey>>() {
 			
 				@Override
-				public String change(String sql, Set<ShaCode> input) {
+				public String change(String sql, Set<HashKey> input) {
 					return sql.replace("%%%", Strings.repeat("?"," ,",input.size()));
 				}
 			});
@@ -59,14 +59,14 @@ public interface ShaStoreQueries {
 
 	
 
-	Select<Long, ShaOutput> STREAM_SHA_CODE = 
-			new Select<Long, ShaOutput>(
+	Select<Long, HashOutput> STREAM_CONTENT_OUT = 
+			new Select<Long, HashOutput>(
 		"SELECT CONFIG_DATA FROM NN_SHA_STORAGE WHERE SHA_ID = ?",
-		new JdbcFactory<Long, ShaOutput>() {
+		new JdbcFactory<Long, HashOutput>() {
 		
 		@Override
 		public Long newInstance(ResultSet rs,
-			ShaOutput input, Index idx)
+			HashOutput input, Index idx)
 			throws SQLException {
 			try {
 				InputStream in = rs.getBinaryStream(idx.next());
@@ -76,9 +76,9 @@ public interface ShaStoreQueries {
 			}
 		}
 		}, 
-		new SqlPrepare<ShaOutput>() {
+		new SqlPrepare<HashOutput>() {
 			@Override
-			public void invoke(PreparedStatement pstmt, ShaOutput input, Index idx)
+			public void invoke(PreparedStatement pstmt, HashOutput input, Index idx)
 					throws SQLException {
 				SHACODE_SQL_PREPARE.invoke(pstmt, input.code, idx);
 				
@@ -88,11 +88,11 @@ public interface ShaStoreQueries {
 	
 	
 
-	Update<ShaInput> INSERT_DATA = new Update<ShaInput>(
+	Update<HashInput> STREAM_CONTENT_IN = new Update<HashInput>(
 			"INSERT INTO NN_SHA_STORAGE (SHA_ID,CONFIG_DATA,SWEEPT_ON) VALUES (?,?,CURRENT_TIMESTAMP)", 
-			new SqlPrepare<ShaInput>() {
+			new SqlPrepare<HashInput>() {
 				@Override
-				public void invoke(PreparedStatement pstmt, ShaInput input,
+				public void invoke(PreparedStatement pstmt, HashInput input,
 						Index idx) throws SQLException {
 					SHACODE_SQL_PREPARE.invoke(pstmt, input.code, idx);
 					pstmt.setBinaryStream(idx.next(), input.in);

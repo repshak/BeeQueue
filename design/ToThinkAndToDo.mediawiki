@@ -1,8 +1,9 @@
 = ToDo =
 
-* ShaStore
+* HashStore
 ** object model
 ** db implementation
+*** push
 * seed domains & clouds tc1.config 
 * query and drilldown and action config
 * POJO

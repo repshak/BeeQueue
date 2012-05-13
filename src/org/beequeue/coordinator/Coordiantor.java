@@ -17,6 +17,7 @@
 package org.beequeue.coordinator;
 
 import org.beequeue.coordinator.db.DbCoordinator;
+import org.beequeue.hash.HashStore;
 import org.beequeue.worker.WorkerData;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -29,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
     @JsonSubTypes.Type(value=DbCoordinator.class, name="db"),
     @JsonSubTypes.Type(value=ZooKeeperCoordinator.class, name="zk")
 })
-public interface Coordiantor {
+public interface Coordiantor extends HashStore {
 
 	String selectAnyTable(String table) ;
 

@@ -1,21 +1,21 @@
-package org.beequeue.shastore;
+package org.beequeue.hash;
 
 import java.io.File;
 
-public interface ShaStore {
+public interface HashStore {
 	/**
 	 * Store file or directory 
 	 * @param file
 	 * @return return 
 	 */
-	ShaCode push(File file);
+	HashKey push(File file);
 	
 	/**
 	 * Pull file or directory
 	 * @param code
 	 * @param destination
 	 */
-	void pull(ShaCode code, File destination);
+	void pull(HashKey code, File destination, File previousPull);
 	
 	/**
 	 * update sweept_on timestamp on  all files and directories that 

@@ -16,6 +16,11 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.coordinator.db;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,20 +28,26 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.beequeue.coordinator.Coordiantor;
-import org.beequeue.host.Host;
+import org.beequeue.hash.FileCollection;
+import org.beequeue.hash.FileEntry;
+import org.beequeue.hash.HashKey;
+import org.beequeue.hash.HashKeyResource;
+import org.beequeue.hash.HashOutput;
+import org.beequeue.hash.HashStoreQueries;
 import org.beequeue.host.Cloud;
+import org.beequeue.host.Host;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.DalException;
 import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.TransactionContext;
+import org.beequeue.util.Dirs;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.HostState;
 import org.beequeue.worker.Worker;
@@ -211,5 +222,71 @@ public class DbCoordinator implements Coordiantor {
 				HostWorkerQueries.UPDATE_WORKER.update(connection(), worker);
 			}
 		}
+	}
+
+
+
+	@Override
+	public HashKey push(File file) {
+		try {
+			FileCollection scan = FileCollection.scan(file);
+			if( scan.entries.length == 0 ){
+				return null;
+			}
+			Set<HashKey> hashes = scan.getAllCodes();
+			List<HashKey> inDbAlready = HashStoreQueries.CHECK_HASH_KEY.query(connection(), hashes);
+			hashes.removeAll(inDbAlready);
+			List<FileEntry> entriesToStreamIntoDb =scan.selectByHashes(hashes);
+			for (FileEntry fileEntry : entriesToStreamIntoDb) {
+				HashStoreQueries.STREAM_CONTENT_IN.update(connection(), fileEntry.input(file));
+			}
+			if(scan.isFile()){
+				return scan.getFileKey();
+			}else{
+				HashKey entriesDataKey = scan.getEntriesDataKey();
+				inDbAlready = HashStoreQueries.CHECK_HASH_KEY.query(connection(), Collections.singleton(entriesDataKey));
+				if(inDbAlready.size()==0){
+					HashStoreQueries.STREAM_CONTENT_IN.update(connection(), scan.getEntriesData());
+				}
+				return entriesDataKey;
+			}
+		} catch (FileNotFoundException e) {
+			throw new DalException(e);
+		}
+	}
+
+
+
+
+
+	@Override
+	public void pull(HashKey code, File destination, File preivious) {
+		//TODO add check previous for all data that downloaded already
+		if(code.type==HashKeyResource.F){
+			
+		}else{
+			try {
+				File hashStoreFile = new File(destination, FileCollection.HASH_STORE_FILE);
+				Dirs.ensureParentDirExists(hashStoreFile);
+				HashStoreQueries.STREAM_CONTENT_OUT.query(connection(), 
+						new HashOutput(code, new FileOutputStream(hashStoreFile)));
+				FileCollection tree = FileCollection.read(new FileInputStream(hashStoreFile));
+				for (FileEntry fileEntry : tree.entries) {
+					fileEntry.output(destination);
+					HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),fileEntry.output(destination)); 
+				}
+			} catch (IOException e) {
+				throw new DalException(e);
+			}
+		}
+		
+	}
+
+
+
+	@Override
+	public void sweep() {
+		// TODO Auto-generated method stub
+		
 	}
 }
