@@ -87,8 +87,10 @@ public class FileCollection {
 				newPath.delete(resetNewPathBuilder,Integer.MAX_VALUE);
 				newPath.append(newName);
 				String newPathString = newPath.toString();
-				if(  !IGNORED_DIRECTORIES.contains(newName) 
-					||  new File(base, newPathString).isFile() ) {
+				if( (IGNORED_DIRECTORIES.contains(newName)  &&  new File(base, newPathString).isDirectory())
+					|| (IGNORED_FILES.contains(newName)  &&  new File(base, newPathString).isFile()) ) {
+				    continue; // ignore
+				}else{
 					constructEntries(base, newPathString, threadPool, entries, errors);
 				}
 			}

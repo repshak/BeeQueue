@@ -1,9 +1,4 @@
 = ToDo =
-
-* HashStore
-** object model
-** db implementation
-*** push
 * seed domains & clouds tc1.config 
 * query and drilldown and action config
 * POJO
@@ -42,8 +37,12 @@
 * DataType,Column,Set
 
 == Done ==
-* ShaStore
+* HashStore
 ** design
+** object model
+** db implementation
+*** push
+*** pull(rename and swap)
 * IdFactory
 * build target tha allow to test and debug web content inline 
 * TestCases

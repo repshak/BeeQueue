@@ -68,7 +68,7 @@ public class ZooKeeperCoordinator implements Coordiantor {
 	}
 
 	@Override
-	public void pull(HashKey code, File destination, File previousPull) {
+	public void pull(HashKey code, File destination) {
 		// TODO Auto-generated method stub
 		
 	}

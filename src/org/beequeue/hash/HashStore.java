@@ -15,7 +15,7 @@ public interface HashStore {
 	 * @param code
 	 * @param destination
 	 */
-	void pull(HashKey code, File destination, File previousPull);
+	void pull(HashKey code, File destination);
 	
 	/**
 	 * update sweept_on timestamp on  all files and directories that 

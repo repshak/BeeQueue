@@ -22,7 +22,7 @@ public class FileCollectionTest {
 		
 		HashKey push = c.push(new File(COORDINATOR_JSON));
 		System.out.println(push);
-		c.pull(push,new File(COORDINATOR_JSON+"2"),null);
+		c.pull(push,new File(COORDINATOR_JSON+"2"));
 	
 		TransactionContext.pop();
 

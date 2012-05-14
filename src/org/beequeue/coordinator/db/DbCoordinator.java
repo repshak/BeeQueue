@@ -260,26 +260,43 @@ public class DbCoordinator implements Coordiantor {
 
 
 	@Override
-	public void pull(HashKey code, File destination, File preivious) {
-		//TODO add check previous for all data that downloaded already
+	public void pull(HashKey code, File destination) {
+		File writeTo =  destination.exists() ? addPrefix(destination, "tmp") : destination ;
 		if(code.type==HashKeyResource.F){
-			
+			try {
+				HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),new HashOutput(code, new FileOutputStream(writeTo)) );
+			} catch (FileNotFoundException e) {
+				throw new DalException(e);
+			} 
 		}else{
 			try {
-				File hashStoreFile = new File(destination, FileCollection.HASH_STORE_FILE);
+				File hashStoreFile = new File(writeTo, FileCollection.HASH_STORE_FILE);
 				Dirs.ensureParentDirExists(hashStoreFile);
 				HashStoreQueries.STREAM_CONTENT_OUT.query(connection(), 
 						new HashOutput(code, new FileOutputStream(hashStoreFile)));
 				FileCollection tree = FileCollection.read(new FileInputStream(hashStoreFile));
 				for (FileEntry fileEntry : tree.entries) {
-					fileEntry.output(destination);
+					fileEntry.output(writeTo);
 					HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),fileEntry.output(destination)); 
+				}
+				if(writeTo!=destination){
+					File backup = addPrefix(destination, "backup");
+					destination.renameTo(backup);
+					writeTo.renameTo(destination);
 				}
 			} catch (IOException e) {
 				throw new DalException(e);
 			}
 		}
 		
+	}
+
+
+
+	public File addPrefix(File file, String prefix) {
+		return new File(file.getParentFile(),"." +
+				prefix +
+				"-"+file.getName());
 	}
 
 
