@@ -16,6 +16,8 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.sql;
 
+import org.beequeue.util.BeeException;
+
 /**
  * Interface that keep track of resources that have to be release when dao call is over.
  */
@@ -36,6 +38,6 @@ public abstract class ResourceTracker<T> {
     return resource;
   }
 
-  abstract public void release(boolean doRollBackOnly) throws DalException;
+  abstract public void release(boolean doRollBackOnly) throws BeeException;
 
 }

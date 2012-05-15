@@ -8,20 +8,22 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import org.beequeue.host.Cloud;
-import org.beequeue.sql.DalException;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.Select;
 import org.beequeue.sql.SqlMorph;
 import org.beequeue.sql.SqlPrepare;
 import org.beequeue.sql.Update;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Streams;
 import org.beequeue.util.Strings;
 
 
 
 public interface HashStoreQueries {
+//
 
+	
 	JdbcFactory<HashKey, Object> SHACODE_JDBC_FACTORY = new JdbcFactory<HashKey, Object>() {
 		@Override
 		public HashKey newInstance(ResultSet rs, Object input, Index idx) throws SQLException {
@@ -29,6 +31,39 @@ public interface HashStoreQueries {
 		}
 	};
 
+
+	SqlPrepare<ContentTree> CONTENT_TREE_SQL_PREPARE = new SqlPrepare<ContentTree>() {
+		@Override
+		public void invoke(PreparedStatement pstmt, ContentTree input, Index idx)
+				throws SQLException {
+			pstmt.setString(idx.next(), input.hashKey.toString());
+			pstmt.setString(idx.next(), input.code);
+		}
+	};
+	
+	Update<ContentTree> CONTENT_TREE_HISTORY = new Update<ContentTree>(
+			"INSERT INTO NN_TREE_HISTORY (SHA_ID,UPDATED_TS,TREE_CD) " +
+					"VALUES (?,CURRENT_TIMESTAMP,?)", 
+					CONTENT_TREE_SQL_PREPARE);
+	
+	Update<ContentTree> CONTENT_TREE_SUMMARY = new Update<ContentTree>(
+			"UPDATE NN_TREE SET SHA_ID = ? WHERE TREE_CD = ?", 
+			CONTENT_TREE_SQL_PREPARE);
+
+
+	Select<ContentTree, ContentTree> CHECK_CONTENT_TREE_UPDATE = new Select<ContentTree, ContentTree>(
+			"SELECT SHA_ID,TREE_CD FROM NN_TREE SHA_ID <> ? AND TREE_CD = ?",
+			new JdbcFactory<ContentTree, ContentTree>() {
+				@Override
+				public ContentTree newInstance(ResultSet rs, ContentTree input,
+						Index idx) throws SQLException {
+					ContentTree contentTree = new ContentTree();
+					contentTree.hashKey = SHACODE_JDBC_FACTORY.newInstance(rs, input, idx);
+					contentTree.code = rs.getString(idx.next());
+					return contentTree;
+				}
+			}, CONTENT_TREE_SQL_PREPARE);
+	
 
 	SqlPrepare<HashKey> SHACODE_SQL_PREPARE = new SqlPrepare<HashKey>() {
 		@Override
@@ -72,7 +107,7 @@ public interface HashStoreQueries {
 				InputStream in = rs.getBinaryStream(idx.next());
 				return (long) Streams.copyAndClose(in, input.out);
 			} catch (IOException e) {
-				throw new DalException(e);
+				throw new BeeException(e);
 			}
 		}
 		}, 

@@ -3,7 +3,7 @@ package org.beequeue.hash;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.beequeue.sql.DalException;
+import org.beequeue.util.BeeException;
 
 public class MessageDigestUtils {
 	private static final int HEX_LETTER_BASELINE = 'A' - 10;
@@ -12,7 +12,7 @@ public class MessageDigestUtils {
 		try {
 			return MessageDigest.getInstance("SHA1");
 		} catch (NoSuchAlgorithmException e) {
-			throw new DalException(e);
+			throw new BeeException(e);
 		}
 	}
 	

@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import org.beequeue.time.StopWatch;
+import org.beequeue.util.BeeException;
 
 
 public class Update<I> extends Operation<I> {
@@ -39,7 +40,7 @@ public class Update<I> extends Operation<I> {
 
 
 	public int update(Connection connection, I input)
-	throws DalException {
+	throws BeeException {
     StopWatch sw = new StopWatch();
 		PreparedStatement pstmt = null;
 		try{
@@ -49,7 +50,7 @@ public class Update<I> extends Operation<I> {
 			return rc;
 		} catch (SQLException e) {
 			log.fine("update: ex="+e);
-			throw new DalException(e);
+			throw new BeeException(e);
 		}finally{
 			log.fine("update: time=" + sw.getSeconds());
 			try { pstmt.close(); } catch (Exception ignore) {}
@@ -59,7 +60,7 @@ public class Update<I> extends Operation<I> {
   public void updateOne(Connection connection, I input) {
     int rc = update(connection, input);
     if( 1 != rc ){
-      throw new DalException("expected 1 record to be modified, but not:"+rc);
+      throw new BeeException("expected 1 record to be modified, but not:"+rc);
     }
   }
 

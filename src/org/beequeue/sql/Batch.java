@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import org.beequeue.time.StopWatch;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 
 
@@ -40,7 +41,7 @@ public class Batch<I> extends Operation<I> {
 
 
 	public int[] executeBatch(Connection connection, I input)
-	throws DalException {
+	throws BeeException {
 		StopWatch sw = new StopWatch();
 		PreparedStatement pstmt = null;
 		try{
@@ -51,7 +52,7 @@ public class Batch<I> extends Operation<I> {
 			return rcs;
 		} catch (SQLException e) {
 			log.fine("batch: ex="+e);
-			throw new DalException(e);
+			throw new BeeException(e);
 		}finally{
 			log.fine("batch: time=" + sw.getSeconds());
 			try { pstmt.close(); } catch (Exception ignore) {}

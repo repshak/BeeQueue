@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.beequeue.piles.LazyList;
-import org.beequeue.sql.DalException;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.Select;
@@ -31,6 +30,7 @@ import org.beequeue.sql.SqlFields;
 import org.beequeue.sql.SqlMorph;
 import org.beequeue.sql.SqlPrepare;
 import org.beequeue.sql.Update;
+import org.beequeue.util.BeeException;
 
 public class TableMap<T>  {
   
@@ -59,7 +59,7 @@ public class TableMap<T>  {
       try {
         newInstance = mappedToClass.newInstance();
       } catch (Exception e) {
-        throw new DalException(e);
+        throw new BeeException(e);
       }
     }else{
       EnumFactory<T> enumFactory = record.get(factory);

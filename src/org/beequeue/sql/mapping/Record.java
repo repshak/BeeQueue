@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.beequeue.piles.LazyMap;
-import org.beequeue.sql.DalException;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Morph;
 
 /**
@@ -67,7 +67,7 @@ public class Record {
       T r = newClass.newInstance();
       return build(r);
     } catch (Exception e) {
-      throw new DalException(e);
+      throw new BeeException(e);
     }
   }
 

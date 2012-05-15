@@ -1,7 +1,15 @@
 package org.beequeue.host;
 
-import org.beequeue.hash.HashKey;
 
 public class CloudConfig  {
-	public HashKey hashKey;
+	public String[] hosts;
+
+	public boolean hasHost(String hostname){
+		for (int i = 0; i < hosts.length; i++) {
+			if(hosts[i].equals(hostname)){
+				return true;
+			}
+		}
+		return false;
+	}
 }

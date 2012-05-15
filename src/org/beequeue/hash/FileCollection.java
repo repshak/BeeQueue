@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.beequeue.sql.DalException;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Strings;
 
 public class FileCollection {
@@ -54,10 +54,10 @@ public class FileCollection {
 				}
 			}
 		} catch (Exception e) {
-			throw new DalException(e).withPayload(errors.toArray());
+			throw new BeeException(e).withPayload(errors.toArray());
 		}
 		if(errors.size() > 0){
-			throw new DalException("has errors:").withPayload(errors.toArray());
+			throw new BeeException("has errors:").withPayload(errors.toArray());
 		}
 		FileCollection fileCollection = new FileCollection();
 		fileCollection.entries = entries.toArray(new FileEntry[entries.size()]);
@@ -150,7 +150,7 @@ public class FileCollection {
 			}
 			return fileCollection;
 		} catch (IOException e) {
-			throw new DalException(e);
+			throw new BeeException(e);
 		}finally{
 			try { oin.close(); } catch (Exception ignore) {}
 		}
@@ -170,7 +170,7 @@ public class FileCollection {
 				oout.flush();
 				entriesDataBuffer = out.toByteArray();
 			} catch (IOException e) {
-				throw new DalException(e);
+				throw new BeeException(e);
 			}finally{
 				try {out.close();} catch (Exception ignore) {}
 				try {oout.close();} catch (Exception ignore) {}

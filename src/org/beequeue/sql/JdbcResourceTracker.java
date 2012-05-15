@@ -19,6 +19,8 @@ package org.beequeue.sql;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.beequeue.util.BeeException;
+
 
 public class JdbcResourceTracker extends ResourceTracker<Connection> {
   
@@ -30,13 +32,13 @@ public class JdbcResourceTracker extends ResourceTracker<Connection> {
 
 
 
-  public void release(boolean doRollBackOnly) throws DalException {
+  public void release(boolean doRollBackOnly) throws BeeException {
 		try {
 			if(doRollBackOnly){
 				getResource().rollback();
 			}
 		} catch (SQLException e) {
-			throw new DalException(e);
+			throw new BeeException(e);
 		}finally{
 			try{ getResource().close(); } catch (Exception ignore) {}
 		}

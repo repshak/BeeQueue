@@ -18,43 +18,53 @@
  * Created on Sep 21, 2005 7:28:08 PM
  *
  */
-package org.beequeue.sql;
+package org.beequeue.util;
 
-import org.beequeue.util.ToStringUtil;
+import java.util.ArrayList;
+import java.util.List;
 
-public class DalException extends RuntimeException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4673830527692626847L;
+
+public class BeeException extends RuntimeException {
+	private static final long serialVersionUID = -1;
 	/**
 	 * @param message
 	 */
-	public DalException(String message) {
+	public BeeException(String message) {
 		super(message);
 	}
 	/**
 	 * @param message
 	 * @param cause
 	 */
-	public DalException(String message, Throwable cause) {
+	public BeeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 	/**
 	 * @param cause
 	 */
-	public DalException(Throwable cause) {
+	public BeeException(Throwable cause) {
 		super(cause);
 	}
 	
-	public Object[] payload = null;
-	public DalException withPayload( Object ... payload){
-		this.payload = payload;
+	public static BeeException cast(Throwable e){
+		if(e instanceof BeeException){
+			return (BeeException) e;
+		}
+		return new BeeException(e);
+	}
+	
+	public List<Object> payload = new ArrayList<Object>();
+	public BeeException withPayload( Object ... payload){
+		if(payload!=null){
+			for (int i = 0; i < payload.length; i++) {
+				this.payload.add(payload[i]);
+			}
+		}
 		return this;
 	}
 	@Override
 	public String getMessage() {
-		if(payload!=null && payload.length > 0 ){
+		if(payload.size() > 0 ){
 			return super.getMessage() + "\n" +
 					"payload:" +  ToStringUtil.toString(payload);
 		}

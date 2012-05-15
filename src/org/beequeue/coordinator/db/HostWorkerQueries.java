@@ -22,10 +22,10 @@ import org.beequeue.worker.WorkerState;
 public interface HostWorkerQueries {
 
 	Select<Host, String> LOAD_HOST = new Select<Host, String>(
-	"SELECT H.HOST_CD, H.HOST_STATE, H.HOST_IP, H.HOST_FQDN, " +
-	"G.CLOUD_CD, G.CLOUD_CONFIG " +
-	"FROM NN_HOST H, NN_CLOUD G " +
-	"WHERE H.HOST_CD = ? AND H.CLOUD_CD = G.CLOUD_CD",
+	"SELECT HOST_CD, HOST_STATE, HOST_IP, HOST_FQDN, " +
+	"CLOUD_CD " +
+	"FROM NN_HOST " +
+	"WHERE H.HOST_CD = ? ",
 	new JdbcFactory<Host, String>() {
 		@Override
 		public Host newInstance(ResultSet rs, String input, Index idx)
@@ -37,22 +37,7 @@ public interface HostWorkerQueries {
 			host.ip = rs.getString(idx.next());
 			host.fqdn = rs.getString(idx.next());
 			host.cloud.name = rs.getString(idx.next());
-			host.cloud.config.hashKey = HashKey.valueOf( rs.getString(idx.next()) );
 			return host;
-		}
-	}, DbConstants.STRING_SQL_PREPARE);
-
-	Select<Cloud, String> LOAD_CLOUD = new Select<Cloud, String>(
-	"SELECT CLOUD_CD, CLOUD_CONFIG " +
-	"FROM NN_CLOUD WHERE CLOUD_CD = ? ",
-	new JdbcFactory<Cloud, String>() {
-		@Override
-		public Cloud newInstance(ResultSet rs, String input,
-				Index idx) throws SQLException {
-			Cloud group = new Cloud();
-			group.name = rs.getString(idx.next());
-			group.config.hashKey = HashKey.valueOf(rs.getString(idx.next()));
-			return group;
 		}
 	}, DbConstants.STRING_SQL_PREPARE);
 
@@ -69,19 +54,6 @@ public interface HostWorkerQueries {
 			pstmt.setString(idx.next(), input.ip);
 			pstmt.setString(idx.next(), input.fqdn);
 			pstmt.setString(idx.next(), input.cloud.name);
-		}
-	});
-
-	Update<Cloud> INSERT_CLOUD = new Update<Cloud>(
-	"INSERT INTO NN_CLOUD " +
-	"(CLOUD_CD,CLOUD_CONFIG) " + 
-	"VALUES (?,?) ", 
-	new SqlPrepare<Cloud>() {
-		@Override
-		public void invoke(PreparedStatement pstmt, Cloud input,
-				Index idx) throws SQLException {
-			pstmt.setString(idx.next(), input.name);
-			pstmt.setString(idx.next(), input.config.hashKey.toString());
 		}
 	});
 

@@ -44,12 +44,13 @@ import org.beequeue.hash.HashStoreQueries;
 import org.beequeue.host.Cloud;
 import org.beequeue.host.Host;
 import org.beequeue.launcher.BeeQueueHome;
-import org.beequeue.sql.DalException;
 import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.TransactionContext;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.HostState;
+import org.beequeue.worker.Singletons;
 import org.beequeue.worker.Worker;
 import org.beequeue.worker.WorkerData;
 import org.beequeue.worker.WorkerState;
@@ -62,7 +63,7 @@ public class DbCoordinator implements Coordiantor {
 	public String password;
 	public String[] initSql;
 	
-	public Connection connection() throws DalException {
+	public Connection connection() throws BeeException {
 		try {
 			JdbcResourceTracker tracker = TransactionContext.searchResource(
 					JdbcResourceTracker.class, CONNECTION_TRACKER);
@@ -82,13 +83,13 @@ public class DbCoordinator implements Coordiantor {
 			}
 			return tracker.getResource();
 		} catch (Exception e) {
-			throw new DalException(e);
+			throw new BeeException(e);
 		}
 	}
 	
 	
 
-	public long getNewId(String tableName)throws DalException {
+	public long getNewId(String tableName)throws BeeException {
 		return IdFactory.getIdRange(tableName, this).getNext(this);
 	}
 	
@@ -107,7 +108,7 @@ public class DbCoordinator implements Coordiantor {
 			ResultSet rs = connection.createStatement().executeQuery(q );
 			return queryToJson(rs, q);
 		} catch (SQLException e) {
-			throw new DalException(e);
+			throw new BeeException(e);
 		}
 	}
 	
@@ -166,15 +167,9 @@ public class DbCoordinator implements Coordiantor {
 			}
 			wh.host = Host.localHost();
 			wh.host.state = HostState.READY;
-			wh.host.cloud.name = Cloud.DEFAULT_NAME;
-			List<Cloud> groups = HostWorkerQueries.LOAD_CLOUD.query(connection(), wh.host.cloud.name );
-			if( groups.size() == 1 ){
-				wh.host.cloud = groups.get(0);
-			}else if( 0 != groups.size() || 1 != HostWorkerQueries.INSERT_CLOUD.update(connection(), wh.host.cloud)){
-				throw new DalException("Cannot obtain/save hostgroup.");
-			}
+			wh.host.cloud.name = Singletons.getGlobalConfig().findCloudForHost(wh.host.hostName);
 			if( 1 != HostWorkerQueries.INSERT_HOST.update(connection(), wh.host)){
-				throw new DalException("Cannot save host.");
+				throw new BeeException("Cannot save host.");
 			}
 		} catch (RuntimeException e) {
 			TransactionContext.setRollbackOnly();
@@ -206,7 +201,7 @@ public class DbCoordinator implements Coordiantor {
 			if( 1 == HostWorkerQueries.INSERT_WORKER.update(connection(), worker) ){
 				wh.worker = worker;
 			}else{
-				throw new DalException("Cannot create worker")
+				throw new BeeException("Cannot create worker")
 								.withPayload(worker);
 			}
 		}else{
@@ -251,7 +246,7 @@ public class DbCoordinator implements Coordiantor {
 				return entriesDataKey;
 			}
 		} catch (FileNotFoundException e) {
-			throw new DalException(e);
+			throw new BeeException(e);
 		}
 	}
 
@@ -266,7 +261,7 @@ public class DbCoordinator implements Coordiantor {
 			try {
 				HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),new HashOutput(code, new FileOutputStream(writeTo)) );
 			} catch (FileNotFoundException e) {
-				throw new DalException(e);
+				throw new BeeException(e);
 			} 
 		}else{
 			try {
@@ -285,7 +280,7 @@ public class DbCoordinator implements Coordiantor {
 					writeTo.renameTo(destination);
 				}
 			} catch (IOException e) {
-				throw new DalException(e);
+				throw new BeeException(e);
 			}
 		}
 		

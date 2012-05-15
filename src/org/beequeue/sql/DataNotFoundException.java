@@ -16,7 +16,9 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.sql;
 
-public class DataNotFoundException extends DalException {
+import org.beequeue.util.BeeException;
+
+public class DataNotFoundException extends BeeException {
   private static final long serialVersionUID = 1L;
 
   public DataNotFoundException(String message) {

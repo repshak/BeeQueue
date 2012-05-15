@@ -31,6 +31,7 @@ import org.beequeue.launcher.JarUnpacker.EntryFilter;
 
 public class BeeQueueHome {
 	public static final String BQ_HOME = "BQ_HOME";
+	public static final String BQ_CONFIG = "BQ_CONFIG";
 	public static final String BQ_WEB = "BQ_WEB";
 	public static final String BQ_HOST = "BQ_HOST";
 	public static final String BQ_WORKER_PID = "BQ_WORKER_PID";
@@ -38,6 +39,7 @@ public class BeeQueueHome {
 	public static final BeeQueueHome instance = new BeeQueueHome();
 	
 	private File home;
+	private File config;
 	private File web;
 	private File host;
 	private long pid;
@@ -55,6 +57,9 @@ public class BeeQueueHome {
 			if(!home.isDirectory() && !home.mkdirs()){
 				throw new IOException("Cannot create:"+home);
 			}
+			this.config = new File( home, "config" );
+			this.config.mkdirs();
+
 			this.hostName = java.net.InetAddress.getLocalHost().getHostName();
 			this.host = new File( home, "hosts/"+hostName );
 			this.host.mkdirs();
@@ -105,6 +110,7 @@ public class BeeQueueHome {
 		envMap.put(BQ_HOME,home.toString());
 		envMap.put(BQ_WEB,web.toString());
 		envMap.put(BQ_HOST,host.toString());
+		envMap.put(BQ_CONFIG,config.toString());
 		envMap.put(BQ_WORKER_PID,String.valueOf(pid));
 		return envMap;
 	}
@@ -137,6 +143,10 @@ public class BeeQueueHome {
 		return host;
 	}
 	
+	public File getConfig() {
+		return config;
+	}
+
 	public String getHostName() {
 		return hostName;
 	}

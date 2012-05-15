@@ -22,9 +22,9 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import org.beequeue.piles.LazyList;
-import org.beequeue.sql.DalException;
 import org.beequeue.sql.Index;
 import org.beequeue.util.BeanUtil;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Filter;
 
 
@@ -112,12 +112,12 @@ public class FieldMap<T> {
   }
 
   public void populateBean(Object bean, ResultSet rs, Index idx)
-      throws DalException {
+      throws BeeException {
     try {
       T t = dataType.get(rs, idx);
       populateBean(bean, t);
     } catch (Exception e) {
-      throw new DalException("populateBean: bean=" + bean + " field=" + name, e);
+      throw new BeeException("populateBean: bean=" + bean + " field=" + name, e);
     }
   }
 
@@ -126,12 +126,12 @@ public class FieldMap<T> {
   }
 
   public void bindValue(PreparedStatement pstmt, Index idx, Object bean)
-      throws DalException {
+      throws BeeException {
     try {
       T extractProperty = extractProperty(bean);
       dataType.set(pstmt, idx, extractProperty);
     } catch (Exception e) {
-      throw new DalException("bindValue: bean=" + bean + " field=" + name, e);
+      throw new BeeException("bindValue: bean=" + bean + " field=" + name, e);
     }
   }
 

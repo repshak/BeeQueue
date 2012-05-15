@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.beequeue.time.StopWatch;
+import org.beequeue.util.BeeException;
 
 public class Select<T,I> extends Operation<I> {
 	private static final Logger log = Logger.getLogger(Select.class.getName());
@@ -51,12 +52,12 @@ public class Select<T,I> extends Operation<I> {
 	}
 
 	public List<T> query(Connection connection, I input)
-	throws DalException {
+	throws BeeException {
 		return query(connection,input,Integer.MAX_VALUE);
 	}
 	
 	public List<T> query(Connection connection, I input, int maxCount )
-		throws DalException {
+		throws BeeException {
     StopWatch sw = new StopWatch();
 		PreparedStatement pstmt = null;
 		try {
@@ -80,7 +81,7 @@ public class Select<T,I> extends Operation<I> {
 			}
 		} catch (SQLException e) {
 			log.fine("query: ex="+e);
-			throw new DalException(e);
+			throw new BeeException(e);
 		} finally {
 			log.fine("query: time=" + sw.getSeconds());
 			try { pstmt.close(); } catch (Exception ignore) {}

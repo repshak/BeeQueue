@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.beequeue.sql.DalException;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.Select;
 import org.beequeue.sql.SqlPrepare;
 import org.beequeue.sql.Update;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Tuple;
 
 public class IdFactory {
@@ -68,7 +68,7 @@ public class IdFactory {
 						start = oneOrZero.get(0); stop = start + GRAB_N_NUMBERS_AT_THE_TIME;
 					}
 				}else{
-					throw new DalException("Hell broke loose:"+oneOrZero);
+					throw new BeeException("Hell broke loose:"+oneOrZero);
 				}
 			}
 			return start++; 
