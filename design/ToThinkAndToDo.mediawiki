@@ -1,5 +1,5 @@
 = ToDo =
-* seed domains & clouds tc1.config 
+* load configuration into database and subscribe for updates
 * query and drilldown and action config
 * POJO
 ** BeeQueueMessage
@@ -37,6 +37,7 @@
 * DataType,Column,Set
 
 == Done ==
+* create configuration to seed domains & clouds 
 * HashStore
 ** design
 ** object model
