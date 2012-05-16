@@ -3,6 +3,7 @@ package org.beequeue;
 import java.util.Map;
 
 import org.beequeue.host.CloudConfig;
+import org.beequeue.worker.WorkerConfig;
 
 
 public class GlobalConfig {
@@ -11,6 +12,8 @@ public class GlobalConfig {
 	public String defaultCloud;
 	
 	public Map<String, CloudConfig> clouds ;
+	
+	public WorkerConfig workerConfig = new WorkerConfig();
 	
 	public String findCloudForHost(String hostName) {
 		if(clouds!=null){
@@ -21,6 +24,13 @@ public class GlobalConfig {
 			}
 		}
 		return defaultCloud;
+	}
+
+	public CloudConfig cloudConfig(String cloudname) {
+		if(this.clouds!=null){
+			return this.clouds.get(cloudname);
+		}
+		return null;
 	}
 
 

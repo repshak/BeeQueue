@@ -1,0 +1,34 @@
+{
+  "messages" : [ {
+    "messageName" : "ReportRequest",
+    "columns" : [ "ReportName", "StartDate", "EndDdate" ],
+    "jobs" : [ {
+      "jobName" : "report",
+      "stages" : [ {
+        "stageName" : "run",
+        "dependOnStage" : null,
+        "commands" : {
+          "os:windows" : {
+            "files" : null,
+            "cmd" : "inline:$reportRoot/bin/report.bat $ReportName $StartDate $EndDate"
+          },
+          "os:*" : {
+            "files" : null,
+            "cmd" : "inline:$reportRoot/bin/report.sh $ReportName $StartDate $EndDate"
+          }
+        },
+        "retryStrategy" : {
+          "maxTries" : 1,
+          "delayBetweenTries" : 15
+        }
+      } ],
+      "filters" : [ {
+        "expression" : "true"
+      } ]
+    } ]
+  } ],
+  "properties" : {
+    "dp1" : "10",
+    "dp2" : "20"
+  }
+}

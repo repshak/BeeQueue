@@ -1,0 +1,22 @@
+{
+	"defaultCloud": "SF",
+	"clouds" : {
+		"SF" : {
+			"domains": [ 
+				{ 
+				"name": "tc1", 
+				"config": "file:$BQ_CONFIG/domains/tc1.json" 
+				} 
+			]
+		}, 
+		"LON" : { 
+			"hosts": [ "lonlnx025" ], 
+			"domains": [
+			{ 
+				"name": "tc2", 
+				"config": "file:$BQ_CONFIG/domains/tc2.json" 
+				} 
+				]
+		}
+	} 
+}

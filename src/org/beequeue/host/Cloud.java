@@ -6,8 +6,8 @@ public class Cloud {
 	public String name;
 	
 	public CloudConfig config() {
-		return Singletons.singleton("$BQ_CONFIG/clouds/"+name+"/cloud.json", CloudConfig.class);
-	}
+		return Singletons.getGlobalConfig().cloudConfig(name);	}
+
 
 	
 
