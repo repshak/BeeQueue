@@ -1,5 +1,6 @@
 = ToDo =
-* load configuration into database and subscribe for updates
+
+* eluminate dublicate in content tree history 
 * query and drilldown and action config
 * POJO
 ** BeeQueueMessage
@@ -37,6 +38,7 @@
 * DataType,Column,Set
 
 == Done ==
+* load configuration into database and subscribe for updates
 * create configuration to seed domains & clouds 
 * HashStore
 ** design

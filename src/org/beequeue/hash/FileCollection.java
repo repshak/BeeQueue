@@ -4,14 +4,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -60,7 +62,9 @@ public class FileCollection {
 			throw new BeeException("has errors:").withPayload(errors.toArray());
 		}
 		FileCollection fileCollection = new FileCollection();
-		fileCollection.entries = entries.toArray(new FileEntry[entries.size()]);
+		FileEntry[] array = entries.toArray(new FileEntry[entries.size()]);
+		Arrays.sort(array);
+		fileCollection.entries = array;
 		return fileCollection;
 	}
 
@@ -119,12 +123,12 @@ public class FileCollection {
 		}
 	}
 
-	public List<FileEntry> selectByHashes(Set<HashKey> hashes) {
-		List<FileEntry> selected = new ArrayList<FileEntry>();
+	public Map<HashKey,FileEntry> selectByHashes(Set<HashKey> hashes) {
+		Map<HashKey,FileEntry> selected = new LinkedHashMap<HashKey,FileEntry>();
 		for (int i = 0; i < entries.length; i++) {
 			FileEntry e = entries[i];
 			if( hashes.contains(e.code) ){
-				selected.add(e);
+				selected.put(e.code,e);
 			}
 		}
 		return selected;
@@ -136,6 +140,14 @@ public class FileCollection {
 
 	public HashKey getFileKey() {
 		return entries[0].code;
+	}
+
+	public static FileCollection read(File f){
+		try {
+			return read(new FileInputStream(f));
+		} catch (FileNotFoundException e) {
+			throw new BeeException(e);
+		}
 	}
 
 	public static FileCollection read(InputStream in){
@@ -165,7 +177,7 @@ public class FileCollection {
 				oout = new ObjectOutputStream(out);
 				oout.writeInt(entries.length);
 				for (int i = 0; i < entries.length; i++) {
-					oout.writeUTF(entries[0].toString());
+					oout.writeUTF(entries[i].toString());
 				}
 				oout.flush();
 				entriesDataBuffer = out.toByteArray();

@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.beequeue.coordinator.Coordiantor;
+import org.beequeue.hash.ContentTree;
 import org.beequeue.hash.FileCollection;
 import org.beequeue.hash.FileEntry;
 import org.beequeue.hash.HashKey;
@@ -45,6 +47,7 @@ import org.beequeue.host.Cloud;
 import org.beequeue.host.Host;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.JdbcResourceTracker;
+import org.beequeue.sql.SqlUtil;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
@@ -231,8 +234,8 @@ public class DbCoordinator implements Coordiantor {
 			Set<HashKey> hashes = scan.getAllCodes();
 			List<HashKey> inDbAlready = HashStoreQueries.CHECK_HASH_KEY.query(connection(), hashes);
 			hashes.removeAll(inDbAlready);
-			List<FileEntry> entriesToStreamIntoDb =scan.selectByHashes(hashes);
-			for (FileEntry fileEntry : entriesToStreamIntoDb) {
+			Map<HashKey,FileEntry> entriesToStreamIntoDb =scan.selectByHashes(hashes);
+			for (FileEntry fileEntry : entriesToStreamIntoDb.values() ) {
 				HashStoreQueries.STREAM_CONTENT_IN.update(connection(), fileEntry.input(file));
 			}
 			if(scan.isFile()){
@@ -240,6 +243,7 @@ public class DbCoordinator implements Coordiantor {
 			}else{
 				HashKey entriesDataKey = scan.getEntriesDataKey();
 				inDbAlready = HashStoreQueries.CHECK_HASH_KEY.query(connection(), Collections.singleton(entriesDataKey));
+				System.out.println("push:"+ToStringUtil.toString(scan.entries));
 				if(inDbAlready.size()==0){
 					HashStoreQueries.STREAM_CONTENT_IN.update(connection(), scan.getEntriesData());
 				}
@@ -270,12 +274,14 @@ public class DbCoordinator implements Coordiantor {
 				HashStoreQueries.STREAM_CONTENT_OUT.query(connection(), 
 						new HashOutput(code, new FileOutputStream(hashStoreFile)));
 				FileCollection tree = FileCollection.read(new FileInputStream(hashStoreFile));
+				System.out.println("pull:"+ToStringUtil.toString(tree.entries));
 				for (FileEntry fileEntry : tree.entries) {
 					fileEntry.output(writeTo);
 					HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),fileEntry.output(destination)); 
 				}
 				if(writeTo!=destination){
 					File backup = addPrefix(destination, "backup");
+					Dirs.deleteDirectory(backup);
 					destination.renameTo(backup);
 					writeTo.renameTo(destination);
 				}
@@ -300,5 +306,40 @@ public class DbCoordinator implements Coordiantor {
 	public void sweep() {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+
+	@Override
+	public HashKey push(File source, String content) {
+		ContentTree contentTree = new ContentTree();
+		contentTree.code = content;
+		contentTree.hashKey = push(source);
+		SqlUtil.doUpdateInsertUpdate( connection(), 
+				HashStoreQueries.UPDATE_CONTENT_TREE_SUMMARY, 
+				HashStoreQueries.INSERT_CONTENT_TREE_SUMMARY, 
+				contentTree );
+		HashStoreQueries.CONTENT_TREE_HISTORY.update(connection(), contentTree);
+		return contentTree.hashKey ;
+	}
+
+
+
+	@Override
+	public boolean sync(String content, File destination) {
+		File hashStoreFile = new File(destination, FileCollection.HASH_STORE_FILE);
+		ContentTree contentTree = new ContentTree();
+		contentTree.code = content;
+		if(hashStoreFile.exists()){
+			FileCollection scan = FileCollection.read(hashStoreFile);
+			contentTree.hashKey = scan.getEntriesDataKey();
+		}
+		List<ContentTree> query = HashStoreQueries.CHECK_CONTENT_TREE_UPDATE.query(connection(),contentTree);
+		if(query.size()==0){
+			return false;
+		}
+		ContentTree toDownloadTree = query.get(0);
+		pull(toDownloadTree.hashKey,destination);
+		return true;
 	}
 }

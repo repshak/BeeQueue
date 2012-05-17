@@ -7,16 +7,20 @@ import java.io.FileOutputStream;
 
 import org.beequeue.util.Dirs;
 
-public class FileEntry {
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public class FileEntry implements Comparable<FileEntry>{
 
 	public final HashKey code;
 	public final boolean executible;
 	public final String path;
+	public final String s;
 	
 	public FileEntry(HashKey code, boolean executible, String path) {
 		this.code = code;
 		this.executible = executible;
 		this.path = path;
+		this.s = "" + code + "," + (executible ? "x" : "-") + "," + path ;
 	}
 	
 	public static FileEntry valueOf(String s){
@@ -38,44 +42,29 @@ public class FileEntry {
 	public File file(File base) {
 		return new File(base,path);
 	}
-
-	@Override
+	
+	@Override @JsonValue
 	public String toString() {
-		return "" + code + "," + (executible ? "x" : "-") + "," + path;
+		return s;
 	}
 	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		result = prime * result + (executible ? 1231 : 1237);
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		return result;
+		return s.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		FileEntry that = (FileEntry) obj;
-		if (code == null) {
-			if (that.code != null)
-				return false;
-		} else if (!code.equals(that.code))
-			return false;
-		if (executible != that.executible)
-			return false;
-		if (path == null) {
-			if (that.path != null)
-				return false;
-		} else if (!path.equals(that.path))
-			return false;
-		return true;
+		if (obj instanceof FileEntry) {
+			FileEntry that = (FileEntry) obj;
+			return this.s.equals(that.s);
+		}
+		return false;
+	}
+
+	@Override
+	public int compareTo(FileEntry that) {
+		return this.s.compareTo(that.s);
 	}
 
 		

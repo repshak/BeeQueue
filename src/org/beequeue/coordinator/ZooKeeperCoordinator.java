@@ -72,4 +72,16 @@ public class ZooKeeperCoordinator implements Coordiantor {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public HashKey push(File source, String content) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean sync(String content, File destination) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

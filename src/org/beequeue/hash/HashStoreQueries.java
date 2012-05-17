@@ -36,7 +36,7 @@ public interface HashStoreQueries {
 		@Override
 		public void invoke(PreparedStatement pstmt, ContentTree input, Index idx)
 				throws SQLException {
-			pstmt.setString(idx.next(), input.hashKey.toString());
+			pstmt.setString(idx.next(), input.hashKey == null ? "" : input.hashKey.toString());
 			pstmt.setString(idx.next(), input.code);
 		}
 	};
@@ -46,13 +46,17 @@ public interface HashStoreQueries {
 					"VALUES (?,CURRENT_TIMESTAMP,?)", 
 					CONTENT_TREE_SQL_PREPARE);
 	
-	Update<ContentTree> CONTENT_TREE_SUMMARY = new Update<ContentTree>(
+	Update<ContentTree> UPDATE_CONTENT_TREE_SUMMARY = new Update<ContentTree>(
 			"UPDATE NN_TREE SET SHA_ID = ? WHERE TREE_CD = ?", 
+			CONTENT_TREE_SQL_PREPARE);
+
+	Update<ContentTree> INSERT_CONTENT_TREE_SUMMARY = new Update<ContentTree>(
+			"INSERT INTO NN_TREE (SHA_ID,TREE_CD) VALUES (?,?)", 
 			CONTENT_TREE_SQL_PREPARE);
 
 
 	Select<ContentTree, ContentTree> CHECK_CONTENT_TREE_UPDATE = new Select<ContentTree, ContentTree>(
-			"SELECT SHA_ID,TREE_CD FROM NN_TREE SHA_ID <> ? AND TREE_CD = ?",
+			"SELECT SHA_ID,TREE_CD FROM NN_TREE WHERE SHA_ID <> ? AND TREE_CD = ?",
 			new JdbcFactory<ContentTree, ContentTree>() {
 				@Override
 				public ContentTree newInstance(ResultSet rs, ContentTree input,
@@ -96,7 +100,7 @@ public interface HashStoreQueries {
 
 	Select<Long, HashOutput> STREAM_CONTENT_OUT = 
 			new Select<Long, HashOutput>(
-		"SELECT CONFIG_DATA FROM NN_SHA_STORAGE WHERE SHA_ID = ?",
+		"SELECT DATA FROM NN_SHA_STORAGE WHERE SHA_ID = ?",
 		new JdbcFactory<Long, HashOutput>() {
 		
 		@Override
@@ -124,7 +128,7 @@ public interface HashStoreQueries {
 	
 
 	Update<HashInput> STREAM_CONTENT_IN = new Update<HashInput>(
-			"INSERT INTO NN_SHA_STORAGE (SHA_ID,CONFIG_DATA,SWEEPT_ON) VALUES (?,?,CURRENT_TIMESTAMP)", 
+			"INSERT INTO NN_SHA_STORAGE (SHA_ID,DATA,SWEEPT_ON) VALUES (?,?,CURRENT_TIMESTAMP)", 
 			new SqlPrepare<HashInput>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, HashInput input,

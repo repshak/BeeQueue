@@ -12,17 +12,33 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class FileCollectionTest {
-	private static final String COORDINATOR_JSON = "/Users/sergeyk/git/BeeQueue/bq-home";
-
+	private static final String SEED_TREE = "test/seed";
+	
 	@Test
 	public void test() 
 			throws JsonParseException, JsonMappingException, IOException {
 		DbCoordinator c = DbCoordinatorTest.getCoordinator();
 		TransactionContext.push();
 		
-		HashKey push = c.push(new File(COORDINATOR_JSON));
+		HashKey push = c.push(new File(SEED_TREE));
 		System.out.println(push);
-		c.pull(push,new File(COORDINATOR_JSON+"2"));
+		c.pull(push,new File(SEED_TREE.replaceAll("test/", "test-out/")));
+		
+		TransactionContext.pop();
+		
+	}
+
+	@Test
+	public void tesToo() 
+			throws JsonParseException, JsonMappingException, IOException {
+		DbCoordinator c = DbCoordinatorTest.getCoordinator();
+		TransactionContext.push();
+		
+		HashKey push = c.push(new File(SEED_TREE),"config");
+		System.out.println(push);
+		String pathname = SEED_TREE.replaceAll("test/", "test-out/")+"Too";
+		System.out.println(c.sync("config",new File(pathname)));
+		System.out.println(c.sync("config",new File(pathname)));
 	
 		TransactionContext.pop();
 

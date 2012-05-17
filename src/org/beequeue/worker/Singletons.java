@@ -42,11 +42,10 @@ public class Singletons {
 			} catch (Exception e) {
 				throw BeeException.cast(e);
 			}
-			
 		}
+		
 		private Class<T> singletonType ;
 		private T instance;
-		
 	}
 	
 	public static Coordiantor getCoordinator() {
@@ -54,6 +53,7 @@ public class Singletons {
 	}
 	
 	public static GlobalConfig getGlobalConfig() {
+		
 		return Singletons.singleton(GlobalConfig.LOAD_FROM, GlobalConfig.class);
 	}
 	
@@ -61,6 +61,4 @@ public class Singletons {
 		SingletonReference<?> reference = JSON_SINGLETONS.get(path);
 		if(reference!=null) reference.refresh();
 	}
-
-
 }

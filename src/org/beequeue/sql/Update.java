@@ -27,7 +27,7 @@ import org.beequeue.util.BeeException;
 
 public class Update<I> extends Operation<I> {
 	private static final Logger log = Logger.getLogger(Select.class.getName());
-
+	
 
 	public Update(String sql, SqlPrepare<I> setParams, SqlMorph<? super I> sqlTransition) {
 		super(sql, setParams, sqlTransition);
