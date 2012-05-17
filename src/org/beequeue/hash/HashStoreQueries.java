@@ -37,7 +37,7 @@ public interface HashStoreQueries {
 		public void invoke(PreparedStatement pstmt, ContentTree input, Index idx)
 				throws SQLException {
 			pstmt.setString(idx.next(), input.hashKey == null ? "" : input.hashKey.toString());
-			pstmt.setString(idx.next(), input.code);
+			pstmt.setString(idx.next(), input.name);
 		}
 	};
 	
@@ -63,7 +63,7 @@ public interface HashStoreQueries {
 						Index idx) throws SQLException {
 					ContentTree contentTree = new ContentTree();
 					contentTree.hashKey = SHACODE_JDBC_FACTORY.newInstance(rs, input, idx);
-					contentTree.code = rs.getString(idx.next());
+					contentTree.name = rs.getString(idx.next());
 					return contentTree;
 				}
 			}, CONTENT_TREE_SQL_PREPARE);

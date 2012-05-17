@@ -1,6 +1,5 @@
 = ToDo =
 
-* eluminate dublicate in content tree history 
 * query and drilldown and action config
 * POJO
 ** BeeQueueMessage

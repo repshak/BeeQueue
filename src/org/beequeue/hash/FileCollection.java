@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -167,6 +166,34 @@ public class FileCollection {
 			try { oin.close(); } catch (Exception ignore) {}
 		}
 	}
+	
+	public static HashKey calcHashKey(File dir) {
+		HashKey hk = null;
+		if(dir.isDirectory()) {
+			File hashStoreFile = new File(dir, FileCollection.HASH_STORE_FILE);
+			if(hashStoreFile.exists()){
+				try {
+					hk = HashKey.buildHashKey(
+							HashKeyResource.D, 
+							new FileInputStream(hashStoreFile) );
+				} catch (Exception e) {
+					throw BeeException.cast(e);
+				}
+			}else{
+				FileCollection scan = scan(dir);
+				hk = scan.getEntriesDataKey();
+			}
+		}
+		return hk;
+	}
+
+	public static ContentTree buildContentTree(String contentName, File local) {
+		ContentTree contentTree = new ContentTree();
+		contentTree.name = contentName;
+		contentTree.hashKey = calcHashKey(local);
+		return contentTree;
+	}
+	
 	
 	private byte[] ensureEntriesData(){
 		if(entriesDataBuffer == null){

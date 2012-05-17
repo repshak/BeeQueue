@@ -18,6 +18,7 @@ package org.beequeue.coordinator;
 
 import java.io.File;
 
+import org.beequeue.hash.ContentTree;
 import org.beequeue.hash.HashKey;
 import org.beequeue.worker.WorkerData;
 
@@ -74,14 +75,15 @@ public class ZooKeeperCoordinator implements Coordiantor {
 	}
 
 	@Override
-	public HashKey push(File source, String content) {
+	public ContentTree push(File source, String content) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean sync(String content, File destination) {
+	public ContentTree sync(ContentTree contentTree, File destination) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
+
 }

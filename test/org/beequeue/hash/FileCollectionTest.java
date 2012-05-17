@@ -34,11 +34,12 @@ public class FileCollectionTest {
 		DbCoordinator c = DbCoordinatorTest.getCoordinator();
 		TransactionContext.push();
 		
-		HashKey push = c.push(new File(SEED_TREE),"config");
+		ContentTree push = c.push(new File(SEED_TREE),"config");
 		System.out.println(push);
 		String pathname = SEED_TREE.replaceAll("test/", "test-out/")+"Too";
-		System.out.println(c.sync("config",new File(pathname)));
-		System.out.println(c.sync("config",new File(pathname)));
+		File destination = new File(pathname);
+		System.out.println(c.sync(FileCollection.buildContentTree("config",destination),destination));
+		System.out.println(c.sync(FileCollection.buildContentTree("config",destination),destination));
 	
 		TransactionContext.pop();
 

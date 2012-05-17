@@ -311,35 +311,29 @@ public class DbCoordinator implements Coordiantor {
 
 
 	@Override
-	public HashKey push(File source, String content) {
+	public ContentTree push(File source, String content) {
 		ContentTree contentTree = new ContentTree();
-		contentTree.code = content;
+		contentTree.name = content;
 		contentTree.hashKey = push(source);
 		SqlUtil.doUpdateInsertUpdate( connection(), 
 				HashStoreQueries.UPDATE_CONTENT_TREE_SUMMARY, 
 				HashStoreQueries.INSERT_CONTENT_TREE_SUMMARY, 
 				contentTree );
 		HashStoreQueries.CONTENT_TREE_HISTORY.update(connection(), contentTree);
-		return contentTree.hashKey ;
+		return contentTree ;
 	}
 
-
-
-	@Override
-	public boolean sync(String content, File destination) {
-		File hashStoreFile = new File(destination, FileCollection.HASH_STORE_FILE);
-		ContentTree contentTree = new ContentTree();
-		contentTree.code = content;
-		if(hashStoreFile.exists()){
-			FileCollection scan = FileCollection.read(hashStoreFile);
-			contentTree.hashKey = scan.getEntriesDataKey();
-		}
+	public ContentTree sync(ContentTree contentTree, File destination) {
 		List<ContentTree> query = HashStoreQueries.CHECK_CONTENT_TREE_UPDATE.query(connection(),contentTree);
 		if(query.size()==0){
-			return false;
+			return null;
 		}
 		ContentTree toDownloadTree = query.get(0);
 		pull(toDownloadTree.hashKey,destination);
-		return true;
+		return toDownloadTree;
 	}
+	
+
+
+
 }

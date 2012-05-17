@@ -9,17 +9,17 @@ public interface HashStore {
 	 * datastore
 	 * @param dir source dir
 	 * @param content name of content tree
-	 * @return hashkey
+	 * @return content tree 
 	 */
-	HashKey push(File source, String content);
+	ContentTree push(File source, String content);
 	
 	/**
 	 * Synchronize destination with datastore 
 	 * @param content
 	 * @param destination
-	 * @return true if changes detected and downloaded 
+	 * @return new ContentTree if changes are detected, or <code>null</code> otherwise 
 	 */
-	boolean sync(String content, File destination);
+	ContentTree sync(ContentTree contentTree, File destination);
 	
 	/**
 	 * Store file or directory 
