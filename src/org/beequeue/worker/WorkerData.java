@@ -8,18 +8,22 @@ import java.util.Set;
 import org.beequeue.agent.CpuRawData;
 import org.beequeue.agent.MemRawData;
 import org.beequeue.agent.ProcRawData;
+import org.beequeue.hash.ContentTree;
 import org.beequeue.host.CapacityRatio;
 import org.beequeue.host.Host;
 import org.beequeue.host.HostStatistcs;
 
 public class WorkerData {
 	
+	private static final String BEE_QUEUE_CONFIG = "BeeQueue.config";
 	public static WorkerData instance = new WorkerData();
 	private WorkerData() {
+		config.name = BEE_QUEUE_CONFIG;
 	}
 	public Host host;
 	public HostStatistcs hostStat ;
 	public Worker worker ;
+	public ContentTree config = new ContentTree();
 
 	public void calculateNextBeat(List<Worker> allWorkersInTheGroup){
 		long maxBeatTime = -1;

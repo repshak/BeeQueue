@@ -7,7 +7,8 @@ import org.beequeue.worker.WorkerConfig;
 
 
 public class GlobalConfig {
-	public static final String LOAD_FROM = "$BQ_CONFIG/global.json";
+	public static final String $BQ_CONFIG = "$BQ_CONFIG";
+	public static final String LOAD_FROM = $BQ_CONFIG + "/global.json";
 	
 	public String defaultCloud;
 	

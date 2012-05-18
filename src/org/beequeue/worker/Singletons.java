@@ -1,5 +1,6 @@
 package org.beequeue.worker;
 
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -60,5 +61,15 @@ public class Singletons {
 	public static void refresh(String path) {
 		SingletonReference<?> reference = JSON_SINGLETONS.get(path);
 		if(reference!=null) reference.refresh();
+	}
+
+	public static void refreshAll(String startWith) {
+		for (String k : JSON_SINGLETONS.keySet()) {
+			if( k.startsWith(startWith) ){
+				JSON_SINGLETONS.get(k).refresh();
+			}
+			
+		}
+		
 	}
 }

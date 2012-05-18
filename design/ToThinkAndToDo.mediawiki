@@ -18,7 +18,7 @@
 *** conditional unpack only if version, in bq.properties does not match already downloaded, delete old one
 *** establish system wide configuration is in $BQ_HOME/system.json
 ** test agent on windows.
-* coordination datasource configuration is in $BQ_HOME/system.json
+* Eat you own dog food: use BeeQueue as build/ci subsytem.
 
 == ToTest ==
 * TestCases
@@ -27,16 +27,14 @@
 
 == ToThink ==
 
-* Record somewhere that runs are failing on stage, job and message levels
+* Record somewhere that how many runs are failing/succeeding on stage, job and message levels
 * Host - Architecture - Datastores rules to match host to particular stage
 * How job that mark message/job complete, and 
 * How to set deadline if that did not happened on time
 * Scheduling/Matching logic to assign job to Message
-* DbMapping
-** DbType (INT,BIGINT*,FLOAT,BOOLEAN*,VARCHAR*,CLOB*,DATE,TIMESTAMP*,BLOB)
-* DataType,Column,Set
 
 == Done ==
+
 * load configuration into database and subscribe for updates
 * create configuration to seed domains & clouds 
 * HashStore

@@ -30,8 +30,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.beequeue.GlobalConfig;
 import org.beequeue.agent.Agent;
 import org.beequeue.coordinator.Coordiantor;
+import org.beequeue.hash.ContentTree;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.Streams;
@@ -49,9 +51,19 @@ public class WorkerServlet  extends HttpServlet {
 			public void run() { 
 				try{
 					TransactionContext.push();
+					
 					/* Check if host object initialized and if not make sure that 
 					 * host/group exists in db */
 					Coordiantor coordinator = Singletons.getCoordinator();
+					/**
+					 * if configuration was updated and load all updates
+					 */
+					ContentTree sync = coordinator.sync(WorkerData.instance.config, BeeQueueHome.instance.getConfig());
+					if(sync != null){
+						WorkerData.instance.config = sync;
+						Singletons.refreshAll(GlobalConfig.$BQ_CONFIG);
+					}
+					
 					coordinator.ensureHost(WorkerData.instance);
 					
 					/* Check CPU & Memory and up update 
