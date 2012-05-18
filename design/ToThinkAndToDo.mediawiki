@@ -1,11 +1,14 @@
 = ToDo =
-
-* query and drilldown and action config
+* BeatLogic
+** encapsulate logic from WorkerServlet.Runable into BeatLogic object
+** Process all messages and create stages, create runs for unblocked stages. Pick runs to execute. Execute.
+** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
 * POJO
 ** BeeQueueMessage
 *** BeeQueueJob
 *** BeeQueueStage
 *** BeeQueueRun
+* query and drilldown and action config
 * json visualization 
 ** modify it to run visualization automatically on all json data pulled on the web
 * $BQ_HOST/worker.csv
