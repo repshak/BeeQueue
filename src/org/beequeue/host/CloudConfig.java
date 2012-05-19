@@ -8,7 +8,10 @@ public class CloudConfig  {
 	/**
 	 * Indicate if host belong to this cloud
 	 * @param hostname
-	 * @return <code>Booolean.TRUE</code> if belong, <code>Booolean.FALSE</code> if not. <code>null</code> - if undefined in case of default cloud 
+	 * @return <code>Booolean.TRUE</code> if belong, <br />
+	 * 		   <code>Booolean.FALSE</code> if not. <br />
+	 *         <code>null</code> - if undefined. Only makes sense 
+	 *         in case of default cloud 
 	 */
 	public Boolean doesHostBelong(String hostname){
 		if(hosts==null)return null;

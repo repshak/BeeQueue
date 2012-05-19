@@ -17,5 +17,7 @@
 package org.beequeue.msg;
 
 public enum DomainState {
-	SHELVED, UP, DOWN
+	DEJA_VU, 
+	UP, 
+	DOWN
 }

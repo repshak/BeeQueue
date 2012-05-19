@@ -2,11 +2,6 @@
 * BeatLogic
 ** Process all messages and create stages, create runs for unblocked stages. Pick runs to execute. Execute.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
-* POJO
-** BeeQueueMessage
-*** BeeQueueJob
-*** BeeQueueStage
-*** BeeQueueRun
 * Visualization
 ** query and drilldown and action config
 ** json visualization 

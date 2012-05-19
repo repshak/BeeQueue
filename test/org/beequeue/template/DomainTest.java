@@ -30,8 +30,7 @@ public class DomainTest {
 
 	@Test
 	public void testCase2() throws JsonParseException, JsonMappingException, IOException {
-		Domain d = new Domain();
-		d.domainName = "test1" ;
+		DomainTemplate d = new DomainTemplate();
 		d.properties.put("length", "10" );
 		d.properties.put("width", "20" );
 		d.messages = new MessageTemplate[] {
@@ -51,14 +50,13 @@ public class DomainTest {
 		};
 		
 		String s = ToStringUtil.toString(d);
-		Assert.assertEquals(s,ToStringUtil.toString(ToStringUtil.toObject(s, Domain.class)));
+		Assert.assertEquals(s,ToStringUtil.toString(ToStringUtil.toObject(s, DomainTemplate.class)));
 		
 //		System.out.println(s);
 	}
 	@Test
 	public void testCase1() throws JsonParseException, JsonMappingException, IOException {
-		Domain d = new Domain();
-		d.domainName = "tc1-Balance" ;
+		DomainTemplate d = new DomainTemplate();
 		d.properties.put("dp1", "10" );
 		d.properties.put("dp2", "20" );
 		d.messages = new MessageTemplate[] {
@@ -83,7 +81,7 @@ public class DomainTest {
 		
 		String s = ToStringUtil.toString(d);
 		System.out.println(s);
-		Assert.assertEquals(s,ToStringUtil.toString(ToStringUtil.toObject(s, Domain.class)));
+		Assert.assertEquals(s,ToStringUtil.toString(ToStringUtil.toObject(s, DomainTemplate.class)));
 		
 	}
 
