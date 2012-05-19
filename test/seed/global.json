@@ -1,5 +1,5 @@
 {
-	"defaultCloud": "SF",
+	"defaultCloud" : "SF",
 	"clouds" : {
 		"SF" : {
 			"domains": [ "tc1" ]

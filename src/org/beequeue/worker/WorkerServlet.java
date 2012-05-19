@@ -41,58 +41,13 @@ import org.beequeue.util.ToStringUtil;
 
 public class WorkerServlet  extends HttpServlet {
 
-	private static final Agent AGENT = new Agent();
-
+	private static BeatLogic beatLogic = new BeatLogic(); 
 	private static final long serialVersionUID = 1L;
 
+	
 	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	static {
-		scheduler.scheduleAtFixedRate(new Runnable() {
-			public void run() { 
-				try{
-					TransactionContext.push();
-					
-					/* Check if host object initialized and if not make sure that 
-					 * host/group exists in db */
-					Coordiantor coordinator = Singletons.getCoordinator();
-					/**
-					 * if configuration was updated and load all updates
-					 */
-					ContentTree sync = coordinator.sync(WorkerData.instance.config, BeeQueueHome.instance.getConfig());
-					if(sync != null){
-						WorkerData.instance.config = sync;
-						Singletons.refreshAll(GlobalConfig.$BQ_CONFIG);
-					}
-					
-					coordinator.ensureHost(WorkerData.instance);
-					
-					/* Check CPU & Memory and up update 
-					 * statistics */
-					AGENT.runStatistics();
-					coordinator.storeStatistics(WorkerData.instance);
-					
-					/* Check all active workers in the same group,
-					 * calculate next beat time
-					 * Update status of the workers and beet time 
-					 * on the same machine if necessary.
-					 */
-					coordinator.ensureWorker(WorkerData.instance);
-					
-					/* Process all messages and create stages, create runs for 
-					 * unblocked stages. Pick runs to execute. Execute.
-					 */
-
-					/* Run ps. Identify all processes that currently executed.
-					 * Check all processes that finished on host an update ther stages 
-					 * appropriately
-					 */
-				}catch (Exception e) {
-					e.printStackTrace();
-				}finally{
-					TransactionContext.pop();
-				}
-			}
-		}, 0, 10, TimeUnit.MINUTES);
+		scheduler.scheduleAtFixedRate(beatLogic , 0, 15, TimeUnit.SECONDS);
 	}
 	
 

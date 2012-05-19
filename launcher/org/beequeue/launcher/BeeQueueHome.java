@@ -44,6 +44,7 @@ public class BeeQueueHome {
 	private File host;
 	private long pid;
 	private String hostName;
+	private int port = 7532;
 	
 	private BeeQueueHome() {
 		try{
@@ -85,12 +86,16 @@ public class BeeQueueHome {
 		}catch (Exception e) {
 			die(e,"Cannot identify process id.\n error:" );
 		}
-		
 	}
-
-	public void die(Exception e, String msg) {
+	
+	public File jvmCsv(int port){
+		return new File(host,"jvm."+port+".csv");
+	}
+	
+	
+	public static void die(Exception e, String msg) {
 		System.err.println(msg );
-		e.printStackTrace();
+		if(e!=null) e.printStackTrace();
 		System.exit(-1);
 	}
 	
@@ -153,6 +158,12 @@ public class BeeQueueHome {
 
 	public long getPid() {
 		return pid;
+	}
+	public int getPort() {
+		return port;
+	}
+	void setPort(int port) {
+		this.port = port;
 	}
 
 }

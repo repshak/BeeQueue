@@ -18,9 +18,9 @@ package org.beequeue.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
+import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 
 public class Operation<I> {
@@ -39,21 +39,20 @@ public class Operation<I> {
 		this.morph = sqlMorph ; 
 	}
 
-	protected PreparedStatement prepare(Connection connection, I input)
-	throws SQLException {
+	protected PreparedStatement prepare(Connection connection, I input){
 		PreparedStatement pstmt = createStatement(connection, input);
 		try{
 			if(prepare != null){
 				prepare.invoke(pstmt,input, new Index());
 			}
 			return pstmt;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try { pstmt.close(); } catch (Exception ignore) {}
-			throw e;
+			throw BeeException.cast(e);
 		}
 	}
 	
-	protected  PreparedStatement createStatement(Connection connection, I input) throws SQLException {
+	protected  PreparedStatement createStatement(Connection connection, I input) {
 		String sqlToRun = this.sql;
 		if (morph != null) {
 			sqlToRun = morph.change(sqlToRun,input);
@@ -62,8 +61,11 @@ public class Operation<I> {
 		if(input != null){
 			log.fine("input:"+ToStringUtil.toString(input));
 		}
-		PreparedStatement pstmt = connection.prepareStatement(sqlToRun);
-		return pstmt;
+		try {
+			return connection.prepareStatement(sqlToRun);
+		} catch (Exception e) {
+			throw BeeException.cast(e).withPayload(sqlToRun);
+		}
 	}
 
 }

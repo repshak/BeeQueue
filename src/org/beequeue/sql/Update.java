@@ -18,7 +18,6 @@ package org.beequeue.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import org.beequeue.time.StopWatch;
@@ -48,9 +47,9 @@ public class Update<I> extends Operation<I> {
 			int rc = pstmt.executeUpdate();
 			log.fine("update: rc="+rc);
 			return rc;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			log.fine("update: ex="+e);
-			throw new BeeException(e);
+			throw BeeException.cast(e);
 		}finally{
 			log.fine("update: time=" + sw.getSeconds());
 			try { pstmt.close(); } catch (Exception ignore) {}
@@ -60,7 +59,7 @@ public class Update<I> extends Operation<I> {
   public void updateOne(Connection connection, I input) {
     int rc = update(connection, input);
     if( 1 != rc ){
-      throw new BeeException("expected 1 record to be modified, but not:"+rc);
+      throw new BeeException("expected 1 record to be modified, but not:"+rc).withPayload(sql);
     }
   }
 

@@ -15,7 +15,7 @@ import org.beequeue.host.HostStatistcs;
 
 public class WorkerData {
 	
-	private static final String BEE_QUEUE_CONFIG = "BeeQueue.config";
+	public static final String BEE_QUEUE_CONFIG = "BeeQueue.config";
 	public static WorkerData instance = new WorkerData();
 	private WorkerData() {
 		config.name = BEE_QUEUE_CONFIG;
@@ -24,6 +24,8 @@ public class WorkerData {
 	public HostStatistcs hostStat ;
 	public Worker worker ;
 	public ContentTree config = new ContentTree();
+	
+	
 
 	public void calculateNextBeat(List<Worker> allWorkersInTheGroup){
 		long maxBeatTime = -1;
@@ -61,6 +63,10 @@ public class WorkerData {
 		this.worker.state = HostStatistcs.HEALTHY_HOST_CHECK.doIt(this.hostStat) ?
 			host.toWorkerState() : WorkerState.PAUSED ;	
 		
+	}
+
+	public boolean nextBeat() {
+		return worker == null || System.currentTimeMillis() >= worker.nextBeat;
 	}
 
 	

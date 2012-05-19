@@ -5,9 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import org.beequeue.hash.HashKey;
 import org.beequeue.host.Host;
-import org.beequeue.host.Cloud;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.Select;
@@ -22,10 +20,9 @@ import org.beequeue.worker.WorkerState;
 public interface HostWorkerQueries {
 
 	Select<Host, String> LOAD_HOST = new Select<Host, String>(
-	"SELECT HOST_CD, HOST_STATE, HOST_IP, HOST_FQDN, " +
-	"CLOUD_CD " +
+	"SELECT HOST_CD, HOST_STATE, HOST_IP, HOST_FQDN, CLOUD_CD " +
 	"FROM NN_HOST " +
-	"WHERE H.HOST_CD = ? ",
+	"WHERE HOST_CD = ? ",
 	new JdbcFactory<Host, String>() {
 		@Override
 		public Host newInstance(ResultSet rs, String input, Index idx)
@@ -119,8 +116,7 @@ public interface HostWorkerQueries {
 	"SELECT WORKER_ID,W.HOST_CD,PID,WORKER_STATE,NEXT_BEAT " +
 	"FROM NN_WORKER W, NN_HOST H " +
 	"WHERE H.HOST_CD=W.HOST_CD " +
-	"AND (WORKER_STATE IN ('READY','PAUSED')" +
-	"AND H.CLOUD_CD = ?", 
+	"AND (WORKER_STATE IN ('READY','PAUSED') AND H.CLOUD_CD = ?)", 
 	WORKER_FACTORY ,
 	DbConstants.STRING_SQL_PREPARE);
 

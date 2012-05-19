@@ -19,7 +19,7 @@ public class GlobalConfig {
 	public String findCloudForHost(String hostName) {
 		if(clouds!=null){
 			for (String cloud : clouds.keySet()) {
-				if(clouds.get(cloud).hasHost(hostName) ){
+				if(Boolean.TRUE.equals(clouds.get(cloud).doesHostBelong(hostName)) ){
 					return cloud;
 				}
 			}

@@ -15,7 +15,8 @@ public enum ContentSource {
 	},
 	file{
 		public String getTemplateText(String template, Map<String, ?> context) throws IOException, ClassNotFoundException {
-			return Files.readAll(new File(GroovyTemplate.resolveTemplate(context, template)));
+			String resolveTemplate = GroovyTemplate.resolveTemplate(context, template);
+			return Files.readAll(new File(resolveTemplate));
 		}
 		
 	},

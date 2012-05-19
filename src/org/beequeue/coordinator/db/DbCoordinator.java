@@ -274,8 +274,7 @@ public class DbCoordinator implements Coordiantor {
 				FileCollection tree = FileCollection.read(new FileInputStream(hashStoreFile));
 				System.out.println("pull:"+ToStringUtil.toString(tree.entries));
 				for (FileEntry fileEntry : tree.entries) {
-					fileEntry.output(writeTo);
-					HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),fileEntry.output(destination)); 
+					System.out.println(HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),fileEntry.output(writeTo))); 
 				}
 				if(writeTo!=destination){
 					File backup = addPrefix(destination, "backup");

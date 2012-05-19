@@ -1,6 +1,5 @@
 = ToDo =
 * BeatLogic
-** encapsulate logic from WorkerServlet.Runable into BeatLogic object
 ** Process all messages and create stages, create runs for unblocked stages. Pick runs to execute. Execute.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
 * POJO
@@ -8,25 +7,22 @@
 *** BeeQueueJob
 *** BeeQueueStage
 *** BeeQueueRun
-* query and drilldown and action config
-* json visualization 
-** modify it to run visualization automatically on all json data pulled on the web
-* $BQ_HOST/worker.csv
-** maintain for worker that running
-** cleanup dead workers info (workers that did not update its status form more then 1 hour).
-** header: pid,ts,active, available_cpu,total_cpu,available_ram,total_ram,status
-** shutdown other bq.jar if its already running on this machine 
-* Deployment bq.jar
-** BQ_HOME
-*** conditional unpack only if version, in bq.properties does not match already downloaded, delete old one
-*** establish system wide configuration is in $BQ_HOME/system.json
-** test agent on windows.
-* Eat you own dog food: use BeeQueue as build/ci subsytem.
+* Visualization
+** query and drilldown and action config
+** json visualization 
+*** modify it to run visualization automatically on all json data pulled on the web
+** log visualization
 
 == ToTest ==
-* TestCases
+* Eat you own dog food: use BeeQueue as build/ci subsytem.
+** on macosx
+** on linux
+** on windows.
+* automatically test agent statistics and killing 
+* Implement TestCases
 ** [[TestCase1.mediawiki|TestCase1 - Load Balancing]]
 ** [[TestCase2.mediawiki|TestCase2 - Swinng pool chlorination and water level]]
+
 
 == ToThink ==
 
@@ -35,9 +31,17 @@
 * How job that mark message/job complete, and 
 * How to set deadline if that did not happened on time
 * Scheduling/Matching logic to assign job to Message
+* Deployment bq.jar: conditional unpack only if version, in bq.properties does not match already downloaded, delete old one
 
 == Done ==
 
+* BUG with file synchronization
+* $BQ_HOST/jvm.#port#.csv
+** maintain for worker that running
+** cleanup dead workers info (workers that did not update its status form more then 1 hour).
+** shutdown other bq.jar if its already running on this machine 
+* BeatLogic
+** encapsulate logic from WorkerServlet.Runable into BeatLogic object
 * load configuration into database and subscribe for updates
 * create configuration to seed domains & clouds 
 * HashStore

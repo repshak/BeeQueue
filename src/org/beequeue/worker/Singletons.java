@@ -25,7 +25,7 @@ public class Singletons {
 			}
 			return c.instance;
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw BeeException.cast(e);
 		}
 	}
 	
@@ -37,11 +37,12 @@ public class Singletons {
 		}
 		
 		public T refresh() {
+			String resolve = null;
 			try {
-				String resolve = resolveReference(BeeQueueHome.instance.getHomeVariables());
+				resolve = resolveReference(BeeQueueHome.instance.getHomeVariables());
 				return instance = ToStringUtil.toObject(resolve, singletonType);
 			} catch (Exception e) {
-				throw BeeException.cast(e);
+				throw BeeException.cast(e).withPayload(resolve,this);
 			}
 		}
 		

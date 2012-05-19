@@ -19,7 +19,6 @@ package org.beequeue.sql;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -51,13 +50,11 @@ public class Select<T,I> extends Operation<I> {
 	  }
 	}
 
-	public List<T> query(Connection connection, I input)
-	throws BeeException {
+	public List<T> query(Connection connection, I input) {
 		return query(connection,input,Integer.MAX_VALUE);
 	}
 	
-	public List<T> query(Connection connection, I input, int maxCount )
-		throws BeeException {
+	public List<T> query(Connection connection, I input, int maxCount ) {
     StopWatch sw = new StopWatch();
 		PreparedStatement pstmt = null;
 		try {
@@ -79,9 +76,9 @@ public class Select<T,I> extends Operation<I> {
 			} finally {
 				try { rs.close(); } catch (Exception ignore) { }
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			log.fine("query: ex="+e);
-			throw new BeeException(e);
+			throw BeeException.cast(e);
 		} finally {
 			log.fine("query: time=" + sw.getSeconds());
 			try { pstmt.close(); } catch (Exception ignore) {}
