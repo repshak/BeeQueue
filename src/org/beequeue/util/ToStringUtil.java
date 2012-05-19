@@ -46,7 +46,12 @@ public class ToStringUtil {
 
 	public static <T> T toObject(String s, Class<T> type)
 			throws JsonParseException, JsonMappingException, IOException {
-		return MAPPER.readValue(s, type);
+		T readValue = MAPPER.readValue(s, type);
+		if (readValue instanceof Initializable) {
+			Initializable toInit = (Initializable) readValue;
+			toInit.init();
+		}
+		return readValue;
 	}
 
 }

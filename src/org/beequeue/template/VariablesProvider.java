@@ -14,13 +14,11 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.agent;
+package org.beequeue.template;
 
-import org.hyperic.sigar.Mem;
-import org.hyperic.sigar.Swap;
+import java.util.Map;
 
-public class MemRawData {
-	public Mem mem;
-	public Swap swap;
-	
+public interface VariablesProvider {
+	Map<String, ?> getVariables() ;
+
 }

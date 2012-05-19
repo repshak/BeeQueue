@@ -14,13 +14,11 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.agent;
-
-import org.hyperic.sigar.Mem;
-import org.hyperic.sigar.Swap;
-
-public class MemRawData {
-	public Mem mem;
-	public Swap swap;
-	
+package org.beequeue.util;
+/**
+ * When {@link Initializable} is instantiated thru {@code ToStringUtil}, 
+ * {@link #init()} will be called after all parameters were injected. 
+ */
+public interface Initializable {
+  void init();
 }

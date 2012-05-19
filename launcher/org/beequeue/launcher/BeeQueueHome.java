@@ -27,9 +27,10 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 
 import org.beequeue.launcher.JarUnpacker.EntryFilter;
+import org.beequeue.template.VariablesProvider;
 
 
-public class BeeQueueHome {
+public class BeeQueueHome implements VariablesProvider{
 	public static final String BQ_HOME = "BQ_HOME";
 	public static final String BQ_CONFIG = "BQ_CONFIG";
 	public static final String BQ_WEB = "BQ_WEB";
@@ -164,6 +165,11 @@ public class BeeQueueHome {
 	}
 	void setPort(int port) {
 		this.port = port;
+	}
+
+	@Override
+	public Map<String, ?> getVariables() {
+		return getHomeVariables();
 	}
 
 }
