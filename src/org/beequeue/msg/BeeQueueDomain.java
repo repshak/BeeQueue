@@ -16,6 +16,20 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.msg;
 
+import org.beequeue.util.Morph;
+
 public class BeeQueueDomain {
+	public String name;
+	public DomainState state;
+	
+	public static Morph<String, BeeQueueDomain> TO_DOMAIN = new Morph<String, BeeQueueDomain>() {
+		
+		@Override
+		public BeeQueueDomain doIt(String input) {
+			BeeQueueDomain domain = new BeeQueueDomain();
+			domain.name = input;
+			return domain;
+		}
+	};
 
 }

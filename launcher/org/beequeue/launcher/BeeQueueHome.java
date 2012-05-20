@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 
 import org.beequeue.launcher.JarUnpacker.EntryFilter;
-import org.beequeue.template.VariablesProvider;
 
 
 public class BeeQueueHome implements VariablesProvider{

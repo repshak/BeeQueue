@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.template;
+package org.beequeue.launcher;
 
 import java.util.Map;
 

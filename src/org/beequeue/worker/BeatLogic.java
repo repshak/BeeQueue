@@ -16,6 +16,10 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.worker;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.beequeue.GlobalConfig;
 import org.beequeue.agent.Agent;
 import org.beequeue.coordinator.Coordiantor;
@@ -23,7 +27,10 @@ import org.beequeue.hash.ContentTree;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.launcher.BeeQueueJvmHelpeer;
 import org.beequeue.launcher.BeeQueueJvmStatus;
+import org.beequeue.msg.BeeQueueDomain;
+import org.beequeue.piles.LazyList;
 import org.beequeue.sql.TransactionContext;
+import org.beequeue.template.DomainTemplate;
 
 public class BeatLogic implements Runnable{
 	Agent agent = new Agent();
@@ -57,6 +64,9 @@ public class BeatLogic implements Runnable{
 		/* Process all messages and create stages, create runs for 
 		 * unblocked stages. Pick runs to execute. Execute.
 		 */
+		Map<String, DomainTemplate> activeDomains = Singletons.getGlobalConfig().activeDomains();
+		List<BeeQueueDomain> domains = LazyList.morph(BeeQueueDomain.TO_DOMAIN,  activeDomains.keySet());		
+		coordinator.ensureDomains(domains);
 
 		/* Run ps. Identify all processes that currently executed.
 		 * Check all processes that finished on host an update ther stages 
@@ -77,6 +87,7 @@ public class BeatLogic implements Runnable{
 				TransactionContext.pop();
 			}
 		}
+		System.gc();
 	}
 	
 

@@ -1,4 +1,5 @@
 = ToDo =
+* command line tool to generate new messages.
 * BeatLogic
 ** Process all messages and create stages, create runs for unblocked stages. Pick runs to execute. Execute.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
@@ -37,6 +38,7 @@
 ** shutdown other bq.jar if its already running on this machine 
 * BeatLogic
 ** encapsulate logic from WorkerServlet.Runable into BeatLogic object
+** ensureDomains
 * load configuration into database and subscribe for updates
 * create configuration to seed domains & clouds 
 * HashStore

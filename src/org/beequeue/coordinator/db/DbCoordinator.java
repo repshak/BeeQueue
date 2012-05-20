@@ -44,6 +44,8 @@ import org.beequeue.hash.HashOutput;
 import org.beequeue.hash.HashStoreQueries;
 import org.beequeue.host.Host;
 import org.beequeue.launcher.BeeQueueHome;
+import org.beequeue.msg.BeeQueueDomain;
+import org.beequeue.msg.DomainState;
 import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.SqlUtil;
 import org.beequeue.sql.TransactionContext;
@@ -328,6 +330,49 @@ public class DbCoordinator implements Coordiantor {
 		ContentTree toDownloadTree = query.get(0);
 		pull(toDownloadTree.hashKey,destination);
 		return toDownloadTree;
+	}
+
+
+
+	@Override
+	public void ensureDomains(List<BeeQueueDomain> activeDomains) {
+		List<BeeQueueDomain> insert = new ArrayList<BeeQueueDomain>();
+		List<BeeQueueDomain> update = new ArrayList<BeeQueueDomain>();
+		List<BeeQueueDomain> dejavu = new ArrayList<BeeQueueDomain>();
+		List<BeeQueueDomain> query = DomainQueries.LOAD_DOMAINS.query(connection(), null);
+		for (BeeQueueDomain fromDb : query) {
+			boolean match = false; 
+			for (BeeQueueDomain active : activeDomains) {
+				if(fromDb.name.equals(active.name)){
+					active.state = fromDb.state == DomainState.DEJA_VU ? DomainState.UP : fromDb.state ;
+					if(active.state != fromDb.state){
+						update.add(active);
+					}
+					match = true;
+					break;
+				}
+			}
+			if(!match){
+				if( fromDb.state != DomainState.DEJA_VU ){
+					fromDb.state = DomainState.DEJA_VU;
+					update.add(fromDb);
+				}
+				dejavu.add(fromDb);
+			}
+		}
+		for (BeeQueueDomain active : activeDomains) {
+			if(active.state == null){
+				active.state = DomainState.UP;
+				insert.add(active);
+			}
+		}
+		for (BeeQueueDomain beeQueueDomain : insert) {
+			DomainQueries.INSERT_DOMAIN.update(connection(), beeQueueDomain);
+		}
+		for (BeeQueueDomain beeQueueDomain : update) {
+			DomainQueries.UPDATE_DOMAIN.update(connection(), beeQueueDomain);
+			
+		}
 	}
 	
 

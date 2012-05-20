@@ -16,8 +16,11 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.coordinator;
 
+import java.util.List;
+
 import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.hash.HashStore;
+import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.worker.WorkerData;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -42,6 +45,8 @@ public interface Coordiantor extends HashStore {
 	void storeStatistics(WorkerData wh);
 
 	void ensureWorker(WorkerData wh);
+
+	void ensureDomains(List<BeeQueueDomain> domains);
 	
 	
 

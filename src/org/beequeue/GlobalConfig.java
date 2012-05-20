@@ -21,9 +21,10 @@ import java.util.Map;
 
 import org.beequeue.host.CloudConfig;
 import org.beequeue.launcher.BeeQueueHome;
+import org.beequeue.launcher.VariablesProvider;
 import org.beequeue.template.DomainTemplate;
-import org.beequeue.template.VariablesProvider;
 import org.beequeue.util.Initializable;
+import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.Singletons;
 import org.beequeue.worker.WorkerConfig;
 
@@ -83,11 +84,16 @@ public class GlobalConfig implements Initializable {
 					}
 				}
 			}
+			//System.out.println(ToStringUtil.toString(activeDomains));
 		}
 	}
 	
 	private Map<String,DomainTemplate> activeDomains = new LinkedHashMap<String, DomainTemplate>();
+	public Map<String, DomainTemplate> activeDomains() {
+		return activeDomains;
+	}
 
+	
 
 	
 }

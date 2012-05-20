@@ -17,9 +17,11 @@
 package org.beequeue.coordinator;
 
 import java.io.File;
+import java.util.List;
 
 import org.beequeue.hash.ContentTree;
 import org.beequeue.hash.HashKey;
+import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.worker.WorkerData;
 
 
@@ -84,6 +86,12 @@ public class ZooKeeperCoordinator implements Coordiantor {
 	public ContentTree sync(ContentTree contentTree, File destination) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void ensureDomains(List<BeeQueueDomain> domains) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

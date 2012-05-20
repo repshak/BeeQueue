@@ -23,9 +23,9 @@ import java.util.concurrent.ConcurrentMap;
 import org.beequeue.GlobalConfig;
 import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.launcher.BeeQueueHome;
+import org.beequeue.launcher.VariablesProvider;
 import org.beequeue.template.ContentReference;
 import org.beequeue.template.ContentSource;
-import org.beequeue.template.VariablesProvider;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 
