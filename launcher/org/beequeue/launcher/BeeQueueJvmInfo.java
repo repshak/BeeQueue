@@ -52,7 +52,7 @@ public class BeeQueueJvmInfo {
 	}
 	
 	public boolean doNotSave() {
-		return this.status.ordinal() >= BeeQueueJvmStatus.TERMINATED.ordinal() 
+		return this.status.ordinal() >= BeeQueueJvmStatus.LISTENING.ordinal() 
 			&& this.last_time_alive < (System.currentTimeMillis() - 600000L);
 	}
 	

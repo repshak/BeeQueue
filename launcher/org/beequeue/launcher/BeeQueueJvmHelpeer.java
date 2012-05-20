@@ -54,6 +54,7 @@ public class BeeQueueJvmHelpeer {
 		try {
 			w = new FileWriter(BeeQueueHome.instance.jvmCsv(port));
 			for (BeeQueueJvmInfo v : list) {
+				if( v.doNotSave() )continue;
 				w.write(v.toString());
 				w.write("\n");
 			}

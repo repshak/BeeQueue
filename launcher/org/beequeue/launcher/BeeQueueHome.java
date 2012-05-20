@@ -166,6 +166,18 @@ public class BeeQueueHome implements VariablesProvider{
 		this.port = port;
 	}
 
+	List<File> getClassPathElements(){
+		List<File> list = new ArrayList<File>();
+		list.add(new File(getWeb(),"WEB-INF/classes"));
+		File libDir = new File(getWeb(),"WEB-INF/lib");
+		String[] libs = libDir.list();
+		for (int i = 0; i < libs.length; i++) {
+			String lib = libs[i];
+			if(lib.endsWith(".jar")) list.add(new File(libDir,lib));
+		}
+		return list;
+	}
+	
 	@Override
 	public Map<String, ?> getVariables() {
 		return getHomeVariables();

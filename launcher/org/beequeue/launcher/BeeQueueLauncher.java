@@ -18,18 +18,75 @@ package org.beequeue.launcher;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
+import java.util.List;
+import java.util.regex.Matcher;
+
+import org.beequeue.launcher.BeeQueueCommandLineInterface.Entry;
 
 import winstone.Launcher;
 
 public class BeeQueueLauncher {
+	 
+	private static boolean runScheduler = true ;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		System.out.println("BQ_HOME:"+BeeQueueHome.instance.getHome());
-		File webDir = BeeQueueHome.instance.getWeb();
-		System.out.println("BQ_WEB:"+webDir);
-		//TODO pars args and --> BeeQueueHome.instance.setPort(port);
+		BeeQueueHome bqh = BeeQueueHome.instance;
+		
+		BeeQueueCommandLineInterface cli = new BeeQueueCommandLineInterface(
+			new Entry(
+						"-runServer=(\\d+)",
+						"run server on specific port. By default application it always run server using port 7532." 
+			){
+				@Override void extract(Matcher m, List<String> rest, BeeQueueCommandLineInterface cli) {
+					BeeQueueHome.instance.setPort(Integer.parseInt(m.group(1)));
+					if(rest.size()>0){
+						System.err.println("ERROR: runServer dont take additional arguments");
+						cli.printHelp = true;
+					}
+				}
+			},
+			new Entry(
+					"-command=(\\w+)",
+					"Run command" 
+		){
+			@Override void extract(Matcher m, List<String> rest, BeeQueueCommandLineInterface cli) {
+				runScheduler = false;
+				BeeQueueRunCommand.runMain(m.group(1), rest);
+			}
+		}
+		)
+		.description(
+				"",
+				"  BeeQueue - event queue and workflow execution engine",
+				"  more info: https://github.com/repshak/BeeQueue",
+				"",
+				""
+				);
+		
+		List<String> extraArgs = cli.process(args);
+		//run default action
+		if(runScheduler){
+			if(extraArgs.size()>0){
+				System.err.println("EROOR: not sure what to do with extra args:"+extraArgs);
+				System.err.println();
+				cli.printHelp();
+			}else{
+				System.out.println("BQ_HOME:"+bqh.getHome());
+				runScheduler();
+			}
+		}
+	}
+
+	
+	public static void runScheduler() throws InterruptedException,
+			IOException {
+		makeSureThatPortAvailable();
+		String newArgs[] = { "--webroot="+BeeQueueHome.instance.getWeb(), "--httpPort="+BeeQueueHome.instance.getPort() , "--ajp13Port=-1" };
+		Launcher.main(newArgs);
+	}
+
+	public static void makeSureThatPortAvailable() throws InterruptedException {
 		File jvmCsv = BeeQueueHome.instance.jvmCsv(BeeQueueHome.instance.getPort());
 		BeeQueueJvmHelpeer jvmStatus = new BeeQueueJvmHelpeer(BeeQueueHome.instance.getPort());
 		if( jvmStatus.starting != null ){
@@ -51,8 +108,6 @@ public class BeeQueueLauncher {
 		if(!portAvailable){
 			BeeQueueHome.die(null, "Gave up to get port. Kill process mannualy, also you may inspect file:"+ jvmCsv);
 		}
-		String newArgs[] = { "--webroot="+webDir, "--httpPort="+BeeQueueHome.instance.getPort() , "--ajp13Port=-1" };
-		Launcher.main(newArgs);
 	}
 	
 	private static boolean killAllWorkersExceptItself() {
