@@ -16,6 +16,18 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.msg;
 
+import java.sql.Timestamp;
+
 public class BeeQueueRun {
+	public long id;
+	public long stageId;
+	public long jobId;
+	public long msgId;
+	public long workerId;
+	public String pid;
+	public RunState state;
+	public String cmd;
+	public Timestamp upTimeStamp;
+	public Timestamp downTimeStamp;
 
 }

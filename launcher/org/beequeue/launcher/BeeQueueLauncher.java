@@ -48,7 +48,10 @@ public class BeeQueueLauncher {
 			},
 			new Entry(
 					"-command=(\\w+)",
-					"Run command" 
+					"Run command like: -command=<cmdName> [<arg0> <arg1>] " ,
+					"" ,
+					"For list of commands and its' arguments see:" ,
+					"https://github.com/repshak/BeeQueue/tree/master/src/org/beequeue/command" 
 		){
 			@Override void extract(Matcher m, List<String> rest, BeeQueueCommandLineInterface cli) {
 				runScheduler = false;
@@ -123,15 +126,9 @@ public class BeeQueueLauncher {
 	        ss = new ServerSocket(BeeQueueHome.instance.getPort());
 	        ss.setReuseAddress(true);
 	        return true;
-	    } catch (IOException e) {
+	    } catch (IOException ignore) {
 	    } finally {
-	        if (ss != null) {
-	            try {
-	                ss.close();
-	            } catch (IOException e) {
-	                /* should not be thrown */
-	            }
-	        }
+            try { ss.close(); } catch (Exception ignore) {}
 	    }
 	    return false;
 	}

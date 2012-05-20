@@ -45,6 +45,8 @@ import org.beequeue.hash.HashStoreQueries;
 import org.beequeue.host.Host;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.msg.BeeQueueDomain;
+import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueMessageDrilldown;
 import org.beequeue.msg.DomainState;
 import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.SqlUtil;
@@ -373,6 +375,30 @@ public class DbCoordinator implements Coordiantor {
 			DomainQueries.UPDATE_DOMAIN.update(connection(), beeQueueDomain);
 			
 		}
+	}
+
+
+
+	@Override
+	public void storeMessage(BeeQueueMessage msg) {
+		if( msg.id > 0 ){
+			MessageQueries.UPDATE_MESSAGE_STATE.update(connection(),msg);
+		}else{
+			msg.id = getNewId(MessageQueries.NN_MESSAGE);
+			MessageQueries.INSERT_MESSAGE.update(connection(),msg);
+		}
+	}
+
+
+
+	@Override
+	public BeeQueueMessageDrilldown checkMessage(long messageId) {
+		BeeQueueMessageDrilldown d = new BeeQueueMessageDrilldown();
+		d.msg = MessageQueries.LOAD_MESSAGE.query(connection(), messageId).get(0);
+		d.jobs = MessageQueries.LOAD_MESSAGE_JOBS.query(connection(), messageId);
+		d.stages = MessageQueries.LOAD_MESSAGE_STAGES.query(connection(), messageId);
+		d.runs = MessageQueries.LOAD_MESSAGE_RUNS.query(connection(), messageId);
+		return d;
 	}
 	
 

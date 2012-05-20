@@ -21,6 +21,8 @@ import java.util.List;
 import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.hash.HashStore;
 import org.beequeue.msg.BeeQueueDomain;
+import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueMessageDrilldown;
 import org.beequeue.worker.WorkerData;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -47,6 +49,10 @@ public interface Coordiantor extends HashStore {
 	void ensureWorker(WorkerData wh);
 
 	void ensureDomains(List<BeeQueueDomain> domains);
+
+	void storeMessage(BeeQueueMessage msg);
+
+	BeeQueueMessageDrilldown checkMessage(long messageId);
 	
 	
 

@@ -1,5 +1,4 @@
 = ToDo =
-* command line tool to generate new messages.
 * BeatLogic
 ** Process all messages and create stages, create runs for unblocked stages. Pick runs to execute. Execute.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
@@ -31,6 +30,7 @@
 
 == Done ==
 
+* command line tool to generate new messages.
 * BUG with file synchronization
 * $BQ_HOST/jvm.#port#.csv
 ** maintain for worker that running

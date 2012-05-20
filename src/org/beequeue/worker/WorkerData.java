@@ -21,13 +21,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.beequeue.GlobalConfig;
 import org.beequeue.agent.CpuRawData;
 import org.beequeue.agent.MemRawData;
 import org.beequeue.agent.ProcRawData;
+import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.hash.ContentTree;
 import org.beequeue.host.CapacityRatio;
 import org.beequeue.host.Host;
 import org.beequeue.host.HostStatistcs;
+import org.beequeue.launcher.BeeQueueHome;
 
 public class WorkerData {
 	
@@ -83,6 +86,14 @@ public class WorkerData {
 
 	public boolean nextBeat() {
 		return worker == null || System.currentTimeMillis() >= worker.nextBeat;
+	}
+
+	public void checkGlobalConfig(Coordiantor coordinator) {
+		ContentTree sync = coordinator.sync(WorkerData.instance.config, BeeQueueHome.instance.getConfig());
+		if(sync != null){
+			this.config = sync;
+			Singletons.refreshAll(GlobalConfig.$BQ_CONFIG);
+		}
 	}
 
 	

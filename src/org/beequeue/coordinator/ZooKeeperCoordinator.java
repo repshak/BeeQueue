@@ -22,6 +22,8 @@ import java.util.List;
 import org.beequeue.hash.ContentTree;
 import org.beequeue.hash.HashKey;
 import org.beequeue.msg.BeeQueueDomain;
+import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueMessageDrilldown;
 import org.beequeue.worker.WorkerData;
 
 
@@ -92,6 +94,18 @@ public class ZooKeeperCoordinator implements Coordiantor {
 	public void ensureDomains(List<BeeQueueDomain> domains) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void storeMessage(BeeQueueMessage msg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BeeQueueMessageDrilldown checkMessage(long messageId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

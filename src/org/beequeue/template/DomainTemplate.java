@@ -22,4 +22,14 @@ import java.util.Map;
 public class DomainTemplate {
 	public MessageTemplate[] messages;
 	public Map<String,String> properties = new LinkedHashMap<String, String>();
+
+	public MessageTemplate findMessageTemplate(String name) {
+		for (int i = 0; i < messages.length; i++) {
+			MessageTemplate mt = messages[i];
+			if( mt.messageName.equals(name)){
+				return mt; 
+			}
+		}
+		return null;
+	}
 }

@@ -46,6 +46,13 @@ public class SqlUtil {
 		}
 		return sb.toString();
 	}
+
+	public static boolean toBoolean(String s) {
+		return " TtYy".indexOf(s.charAt(0)) > 0;
+	}
+	public static String fromBoolean(boolean b) {
+		return b ? "Y" : "N";
+	}
   
 
 }

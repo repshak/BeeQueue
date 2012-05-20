@@ -19,6 +19,7 @@ package org.beequeue.util;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -44,14 +45,29 @@ public class ToStringUtil {
 		}
 	}
 
-	public static <T> T toObject(String s, Class<T> type)
-			throws JsonParseException, JsonMappingException, IOException {
-		T readValue = MAPPER.readValue(s, type);
-		if (readValue instanceof Initializable) {
-			Initializable toInit = (Initializable) readValue;
-			toInit.init();
+	public static <T> T toObject(String s, Class<T> type)  {
+		try {
+			T readValue = MAPPER.readValue(s, type);
+			if (readValue instanceof Initializable) {
+				Initializable toInit = (Initializable) readValue;
+				toInit.init();
+			}
+			return readValue;
+		} catch (Exception e) {
+			throw new BeeException(e);
 		}
-		return readValue;
+	}
+	public static <T> T toObject(String s, TypeReference<T> type){
+		try {
+			T readValue = MAPPER.readValue(s, type);
+			if (readValue instanceof Initializable) {
+				Initializable toInit = (Initializable) readValue;
+				toInit.init();
+			}
+			return readValue;
+		} catch (Exception e) {
+			throw new BeeException(e);
+		}
 	}
 
 }

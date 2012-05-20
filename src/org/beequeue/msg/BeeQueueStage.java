@@ -18,4 +18,11 @@ package org.beequeue.msg;
 
 public class BeeQueueStage {
 
+	public long id;
+	public long jobId;
+	public long msgId;
+	public StageState state;
+	public long retriesLeft;
+	public String stageName;
+
 }

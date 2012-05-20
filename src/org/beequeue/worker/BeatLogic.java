@@ -39,11 +39,7 @@ public class BeatLogic implements Runnable{
 	public void doLaundryList(Coordiantor coordinator) throws Exception{
 		/* if configuration was updated and load all updates
 		 */
-		ContentTree sync = coordinator.sync(WorkerData.instance.config, BeeQueueHome.instance.getConfig());
-		if(sync != null){
-			WorkerData.instance.config = sync;
-			Singletons.refreshAll(GlobalConfig.$BQ_CONFIG);
-		}
+		WorkerData.instance.checkGlobalConfig(coordinator);
 		
 		/* Check if host object initialized and if not make sure that 
 		 * host/group exists in db */

@@ -31,13 +31,10 @@
 <column auto-increment="false" column-size="4000" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7bcb" mandatory="true" name="MSG_PARAMETERS" remarks="stringable:org.beequeue.MessageData">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7903" mandatory="true" name="MSG_TEMPLATE_ID">
-<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
-</column>
 <column auto-increment="false" column-size="4000" decimal-digits="0" default-value="" id="505fd8:1364125ae19:-7bd8" mandatory="false" name="CONTEXT_SETTINGS" remarks="stringable:org.beequeue.MessageContextSettings">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f5c" mandatory="true" name="USER_CD">
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f5c" mandatory="false" name="USER_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e36" mandatory="true" name="DOMAIN_CD">

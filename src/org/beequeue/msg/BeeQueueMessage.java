@@ -17,14 +17,14 @@
 package org.beequeue.msg;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class BeeQueueMessage extends LinkedHashMap<String, String> {
-	private static final long serialVersionUID = 1L;
-
-	public BeeQueueMessage set(String k, String v){
-		this.put(k, v);
-		return this;
-	}
-	
+public class BeeQueueMessage {
+	public String domain;
+	public String name;
+	public MessageState state;
+	public Map<String, String> parameters = new LinkedHashMap<String, String>();
+	public Map<String, String> contextSettings = null;
+	public long id;
 
 }
