@@ -1,6 +1,7 @@
 = ToDo =
 * BeatLogic
-** Process all messages and create stages, create runs for unblocked stages. Pick runs to execute. Execute.
+** Evaluate blocked stages.
+** create runs for unblocked stages. Pick runs to execute. Execute.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
 * Visualization
 ** query and drilldown and action config
@@ -39,6 +40,7 @@
 * BeatLogic
 ** encapsulate logic from WorkerServlet.Runable into BeatLogic object
 ** ensureDomains
+** Process all messages and create stages, 
 * load configuration into database and subscribe for updates
 * create configuration to seed domains & clouds 
 * HashStore

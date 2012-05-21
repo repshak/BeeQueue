@@ -16,6 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.msg;
 
+import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -26,5 +27,11 @@ public class BeeQueueMessage {
 	public Map<String, String> parameters = new LinkedHashMap<String, String>();
 	public Map<String, String> contextSettings = null;
 	public long id;
+	public Timestamp lock;
+	public Timestamp current;
+	
+	public Timestamp newLock() {
+		return new Timestamp(current.getTime()+10000L);
+	}
 
 }

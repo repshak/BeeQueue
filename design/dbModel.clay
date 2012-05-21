@@ -40,6 +40,9 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e36" mandatory="true" name="DOMAIN_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="CURRENT_TIMESTAMP" id="41a224b8:1376b6c811d:-7fb0" mandatory="false" name="LOCK_TS">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
 </column-list>
 <primary-key id="43a11a8e:13648c9dafd:-7b60" name="PK_NN_MESSAGE">
 <primary-key-column name="MSG_ID"/>
@@ -201,9 +204,6 @@
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77f1" mandatory="true" name="MSG_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-75ea" mandatory="false" name="TS">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-75e9" mandatory="false" name="JOB_STATE" remarks="enum:chaosctrl.jobcontrol.JobState">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>

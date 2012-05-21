@@ -108,4 +108,10 @@ public class ZooKeeperCoordinator implements Coordiantor {
 		return null;
 	}
 
+	@Override
+	public void processEmittedMessages() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

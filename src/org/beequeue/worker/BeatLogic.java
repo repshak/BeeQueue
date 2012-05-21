@@ -57,12 +57,13 @@ public class BeatLogic implements Runnable{
 		 */
 		coordinator.ensureWorker(WorkerData.instance);
 		
-		/* Process all messages and create stages, create runs for 
-		 * unblocked stages. Pick runs to execute. Execute.
-		 */
 		Map<String, DomainTemplate> activeDomains = Singletons.getGlobalConfig().activeDomains();
 		List<BeeQueueDomain> domains = LazyList.morph(BeeQueueDomain.TO_DOMAIN,  activeDomains.keySet());		
 		coordinator.ensureDomains(domains);
+		/* Process all messages and create stages, create runs for 
+		 * unblocked stages. Pick runs to execute. Execute.
+		 */
+		coordinator.processEmittedMessages();
 
 		/* Run ps. Identify all processes that currently executed.
 		 * Check all processes that finished on host an update ther stages 

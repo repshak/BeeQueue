@@ -40,28 +40,45 @@ import org.beequeue.util.ToStringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public interface MessageQueries {
+
 	public static final String NN_MESSAGE = "NN_MESSAGE";
 
+	public static final String SELECT_MESSAGE = "SELECT MSG_ID,MSG_NAME,MSG_STATE,MSG_PARAMETERS,CONTEXT_SETTINGS,USER_CD,DOMAIN_CD,LOCK_TS,CURRENT_TIMESTAMP FROM NN_MESSAGE ";
+	public static final JdbcFactory<BeeQueueMessage, Object> MESSAGE_FACTORY = new JdbcFactory<BeeQueueMessage, Object>() {
+		@Override
+		public BeeQueueMessage newInstance(ResultSet rs, Object input, Index idx)
+				throws SQLException {
+			BeeQueueMessage msg = new BeeQueueMessage();
+			msg.id = rs.getLong(idx.next());
+			msg.name = rs.getString(idx.next());
+			msg.state = MessageState.valueOf(rs.getString(idx.next()));
+			msg.parameters = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
+			msg.contextSettings = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
+			idx.next();
+			msg.domain = rs.getString(idx.next());
+			msg.lock = rs.getTimestamp(idx.next());
+			msg.current = rs.getTimestamp(idx.next());
+			return msg;
+		}
+	};
+
+	public static final String NN_JOB = "NN_JOB";
+
+	public static final String NN_STAGE = "NN_STAGE";
+
 	Select<BeeQueueMessage, Long> LOAD_MESSAGE = new Select<BeeQueueMessage, Long>(
-			"SELECT MSG_ID,MSG_NAME,MSG_STATE,MSG_PARAMETERS,CONTEXT_SETTINGS,USER_CD,DOMAIN_CD FROM NN_MESSAGE WHERE MSG_ID = ?",
-			new JdbcFactory<BeeQueueMessage, Object>() {
-				@Override
-				public BeeQueueMessage newInstance(ResultSet rs, Object input, Index idx)
-						throws SQLException {
-					BeeQueueMessage msg = new BeeQueueMessage();
-					msg.id = rs.getLong(idx.next());
-					msg.name = rs.getString(idx.next());
-					msg.state = MessageState.valueOf(rs.getString(idx.next()));
-					msg.parameters = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
-					msg.contextSettings = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
-					idx.next();
-					msg.domain = rs.getString(idx.next());
-					return msg;
-				}
-			}, DbConstants.LONG_SQL_PREPARE);
+			SELECT_MESSAGE +  "WHERE MSG_ID = ?",
+			MESSAGE_FACTORY
+			, DbConstants.LONG_SQL_PREPARE);
+	
+	Select<BeeQueueMessage, Void> PICK_EMMITED_MESSAGES = new Select<BeeQueueMessage, Void>(
+			SELECT_MESSAGE + "WHERE LOCK_TS < CURRENT_TIMESTAMP AND MSG_STATE = \'"+MessageState.EMITTED+"\'",
+			MESSAGE_FACTORY
+			, null);
+	
 	
 	Select<BeeQueueJob, Long> LOAD_MESSAGE_JOBS = new Select<BeeQueueJob, Long>(
-	"SELECT JOB_ID,MSG_ID,TS,JOB_STATE,RESPONSIBLE,JOB_NAME FROM NN_JOB WHERE MSG_ID = ?",
+	"SELECT JOB_ID,MSG_ID,JOB_STATE,RESPONSIBLE,JOB_NAME FROM NN_JOB WHERE MSG_ID = ?",
 	new JdbcFactory<BeeQueueJob, Object>() {
 		@Override
 		public BeeQueueJob newInstance(ResultSet rs, Object input, Index idx)
@@ -69,7 +86,6 @@ public interface MessageQueries {
 			BeeQueueJob job = new BeeQueueJob();
 			job.id = rs.getLong(idx.next());
 			job.msgId = rs.getLong(idx.next());
-			job.timeStamp = rs.getTimestamp(idx.next());
 			job.state = JobState.valueOf(rs.getString(idx.next()));
 			job.responsible = SqlUtil.toBoolean(rs.getString(idx.next()));
 			job.jobName = rs.getString(idx.next());
@@ -120,7 +136,7 @@ public interface MessageQueries {
 	}, DbConstants.LONG_SQL_PREPARE);
 
 	Update<BeeQueueMessage> INSERT_MESSAGE = new Update<BeeQueueMessage>(
-			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_PARAMETERS,CONTEXT_SETTINGS,USER_CD,DOMAIN_CD) VALUES (?,?,?,?,? ,? ,?)",
+			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_PARAMETERS,CONTEXT_SETTINGS,USER_CD,DOMAIN_CD) VALUES (?,?,?,?,?,?,?)",
 			new SqlPrepare<BeeQueueMessage>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
@@ -135,14 +151,43 @@ public interface MessageQueries {
 				}
 			});
 	
+	Update<BeeQueueJob> INSERT_JOB = new Update<BeeQueueJob>(
+			"INSERT INTO NN_JOB (JOB_ID,MSG_ID,JOB_STATE,RESPONSIBLE,JOB_NAME) VALUES (?,?,?,?,?)",
+			new SqlPrepare<BeeQueueJob>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueJob input, Index idx)
+						throws SQLException {
+					pstmt.setLong(idx.next(), input.id);
+					pstmt.setLong(idx.next(), input.msgId);
+					pstmt.setString(idx.next(), input.state.name());
+					pstmt.setString(idx.next(), SqlUtil.fromBoolean(input.responsible));
+					pstmt.setString(idx.next(), input.jobName );
+				}
+			});
+	Update<BeeQueueStage> INSERT_STAGE = new Update<BeeQueueStage>(
+			"INSERT INTO NN_STAGE (STAGE_ID,JOB_ID,STAGE_STATE,RETRIES_LEFT,STAGE_NAME) VALUES (?,?,?,?,?)",
+			new SqlPrepare<BeeQueueStage>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueStage input, Index idx)
+						throws SQLException {
+					pstmt.setLong(idx.next(), input.id);
+					pstmt.setLong(idx.next(), input.jobId);
+					pstmt.setString(idx.next(), input.state.name());
+					pstmt.setLong(idx.next(), input.retriesLeft);
+					pstmt.setString(idx.next(), input.stageName );
+				}
+			});
+	
 	Update<BeeQueueMessage> UPDATE_MESSAGE_STATE = new Update<BeeQueueMessage>(
-			"UPDATE " + NN_MESSAGE + " SET MSG_STATE=? WHERE MSG_ID=?", 
+			"UPDATE " + NN_MESSAGE + " SET MSG_STATE=?, LOCK_TS=? WHERE MSG_ID=? AND LOCK_TS = ? ", 
 			new SqlPrepare<BeeQueueMessage>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
 						throws SQLException {
 					pstmt.setString(idx.next(), input.state.name());
+					pstmt.setTimestamp(idx.next(), input.newLock());
 					pstmt.setLong(idx.next(), input.id);
+					pstmt.setTimestamp(idx.next(), input.lock);
 				}
 			});
 

@@ -45,12 +45,19 @@ import org.beequeue.hash.HashStoreQueries;
 import org.beequeue.host.Host;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.msg.BeeQueueDomain;
+import org.beequeue.msg.BeeQueueJob;
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.msg.DomainState;
+import org.beequeue.msg.JobState;
+import org.beequeue.msg.MessageState;
+import org.beequeue.msg.StageState;
 import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.SqlUtil;
 import org.beequeue.sql.TransactionContext;
+import org.beequeue.template.JobTemplate;
+import org.beequeue.template.StageTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
 import org.beequeue.util.ToStringUtil;
@@ -399,6 +406,44 @@ public class DbCoordinator implements Coordiantor {
 		d.stages = MessageQueries.LOAD_MESSAGE_STAGES.query(connection(), messageId);
 		d.runs = MessageQueries.LOAD_MESSAGE_RUNS.query(connection(), messageId);
 		return d;
+	}
+
+
+
+	@Override
+	public void processEmittedMessages() {
+		List<BeeQueueMessage> query = MessageQueries.PICK_EMMITED_MESSAGES.query(connection(), null);
+		for (BeeQueueMessage msg : query) {
+			if(1 == MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
+				JobTemplate[] jobs = Singletons.getGlobalConfig().activeDomains().get(msg.domain).findMessageTemplate(msg.name).jobs;
+				for (int i = 0; i < jobs.length; i++) {
+					JobTemplate jt = jobs[i];
+					BeeQueueJob job = new BeeQueueJob();
+					job.id = getNewId(MessageQueries.NN_JOB);
+					job.msgId = msg.id;
+					job.jobName = jt.jobName;
+					job.state = JobState.IN_PROCESS;
+					MessageQueries.INSERT_JOB.update(connection(), job);
+					StageTemplate[] stageTemplates = jt.stages;
+					for (int j = 0; j < stageTemplates.length; j++) {
+						BeeQueueStage stage = new BeeQueueStage();
+						stage.id = getNewId(MessageQueries.NN_STAGE);
+						stage.jobId = job.id;
+						StageTemplate st = stageTemplates[j];
+						stage.retriesLeft = st.retryStrategy.maxTries;
+						stage.state = StageState.BLOCKED ;
+						stage.stageName = st.stageName;
+						MessageQueries.INSERT_STAGE.update(connection(), stage);
+					}
+				}
+				msg.state = MessageState.IN_PROCESS;
+				msg.lock = msg.newLock();
+				if( 1 != MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg) ){
+					throw new BeeException("cannot update status").withPayload(msg);
+				}
+			}
+		}
+		
 	}
 	
 

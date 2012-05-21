@@ -53,6 +53,8 @@ public interface Coordiantor extends HashStore {
 	void storeMessage(BeeQueueMessage msg);
 
 	BeeQueueMessageDrilldown checkMessage(long messageId);
+
+	void processEmittedMessages();
 	
 	
 

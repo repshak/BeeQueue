@@ -16,7 +16,6 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.msg;
 
-import java.sql.Timestamp;
 
 public class BeeQueueJob {
 	public long id;
@@ -24,6 +23,5 @@ public class BeeQueueJob {
 	public JobState state;
 	public boolean responsible;
 	public String jobName;
-	public Timestamp timeStamp;
 
 }
