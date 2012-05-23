@@ -1,6 +1,5 @@
 = ToDo =
-* command to push configuration to cloud
-** Build better test case: test scripts that produce std output/ std error . use cpu and memory heavily.
+* Build better test case: test scripts that produce std output/ std error . use cpu and memory heavily.
 * BeatLogic
 ** Execute run template and collect logs.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
@@ -33,6 +32,7 @@
 
 == Done ==
 
+* command to push configuration to cloud
 * BeatLogic
 ** create runs for unblocked stages. Pick runs to execute. 
 ** encapsulate logic from WorkerServlet.Runable into BeatLogic object
