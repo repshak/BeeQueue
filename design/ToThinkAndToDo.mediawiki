@@ -1,8 +1,10 @@
 = ToDo =
+* command to push configuration to cloud
+** Build better test case: test scripts that produce std output/ std error . use cpu and memory heavily.
 * BeatLogic
-** Evaluate blocked stages.
-** create runs for unblocked stages. Pick runs to execute. Execute.
+** Execute run template and collect logs.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
+** Evaluate blocked stages.
 * Visualization
 ** query and drilldown and action config
 ** json visualization 
@@ -31,16 +33,17 @@
 
 == Done ==
 
+* BeatLogic
+** create runs for unblocked stages. Pick runs to execute. 
+** encapsulate logic from WorkerServlet.Runable into BeatLogic object
+** ensureDomains
+** Process all messages and create stages, 
 * command line tool to generate new messages.
 * BUG with file synchronization
 * $BQ_HOST/jvm.#port#.csv
 ** maintain for worker that running
 ** cleanup dead workers info (workers that did not update its status form more then 1 hour).
 ** shutdown other bq.jar if its already running on this machine 
-* BeatLogic
-** encapsulate logic from WorkerServlet.Runable into BeatLogic object
-** ensureDomains
-** Process all messages and create stages, 
 * load configuration into database and subscribe for updates
 * create configuration to seed domains & clouds 
 * HashStore
