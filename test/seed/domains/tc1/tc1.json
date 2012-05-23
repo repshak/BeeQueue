@@ -10,11 +10,11 @@
         "commands" : {
           "os:windows" : {
             "files" : null,
-            "cmd" : "inline:$reportRoot/bin/report.bat $ReportName $StartDate $EndDate"
+            "cmd" : "inline:$BQ_DOMAIN/test1.bat $ReportName $StartDate $EndDate"
           },
           "os:*" : {
             "files" : null,
-            "cmd" : "inline:$reportRoot/bin/report.sh $ReportName $StartDate $EndDate"
+            "cmd" : "inline:$BQ_DOMAIN/test1.sh $ReportName $StartDate $EndDate"
           }
         },
         "retryStrategy" : {

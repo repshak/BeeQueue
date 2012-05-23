@@ -10,6 +10,6 @@
 		}
 	},
 	"properties" : { 
-		"reportRoot" : "$USER_HOME/report" 
+		"reportRoot" : "$HOME/report" 
 	}
 }
