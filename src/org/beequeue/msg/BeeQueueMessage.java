@@ -20,6 +20,11 @@ import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beequeue.template.DomainTemplate;
+import org.beequeue.template.MessageTemplate;
+import org.beequeue.util.Creator;
+import org.beequeue.worker.Singletons;
+
 public class BeeQueueMessage {
 	public String domain;
 	public String name;
@@ -32,6 +37,19 @@ public class BeeQueueMessage {
 	
 	public Timestamp newLock() {
 		return new Timestamp(current.getTime()+10000L);
+	}
+
+	public DomainTemplate domainTemplate(){
+		return Creator.IgnoreExceptions.create(new Creator<DomainTemplate>() { 
+			public DomainTemplate create() throws Exception { 
+				return Singletons.getGlobalConfig().activeDomains().get(domain);
+			}});
+	}
+	public MessageTemplate messageTemplate(){
+		return Creator.IgnoreExceptions.create(new Creator<MessageTemplate>() { 
+			public MessageTemplate create() throws Exception { 
+				return domainTemplate().messageTemplate(name);
+			}});
 	}
 
 }

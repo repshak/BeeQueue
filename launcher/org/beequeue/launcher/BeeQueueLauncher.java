@@ -55,7 +55,7 @@ public class BeeQueueLauncher {
 		){
 			@Override void extract(Matcher m, List<String> rest, BeeQueueCommandLineInterface cli) {
 				runScheduler = false;
-				BeeQueueRunCommand.runMain(m.group(1), rest);
+				BeeQueueCommand.runMain(m.group(1), rest);
 			}
 		}
 		)

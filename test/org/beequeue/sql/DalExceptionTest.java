@@ -26,7 +26,7 @@ public class DalExceptionTest {
 
 	@Test
 	public void test() {
-		new BeeException("abc").withPayload(new DbCoordinator()).printStackTrace();
+		new BeeException("abc").addPayload(new DbCoordinator()).printStackTrace();
 	}
 
 }

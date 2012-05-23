@@ -23,6 +23,8 @@ import org.beequeue.hash.HashStore;
 import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueRun;
+import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.worker.WorkerData;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -55,7 +57,9 @@ public interface Coordiantor extends HashStore {
 	BeeQueueMessageDrilldown checkMessage(long messageId);
 
 	void processEmittedMessages();
-	
-	
+
+	BeeQueueStage pickStageToRun();
+
+	void storeRun(BeeQueueRun run);
 
 }

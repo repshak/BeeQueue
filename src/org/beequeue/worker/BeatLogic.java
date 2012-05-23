@@ -16,19 +16,20 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.worker;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.beequeue.GlobalConfig;
 import org.beequeue.agent.Agent;
 import org.beequeue.coordinator.Coordiantor;
-import org.beequeue.hash.ContentTree;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.launcher.BeeQueueJvmHelpeer;
 import org.beequeue.launcher.BeeQueueJvmStatus;
 import org.beequeue.msg.BeeQueueDomain;
+import org.beequeue.msg.BeeQueueRun;
+import org.beequeue.msg.BeeQueueStage;
+import org.beequeue.msg.RunState;
 import org.beequeue.piles.LazyList;
+import org.beequeue.run.RunHelper;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.template.DomainTemplate;
 
@@ -64,6 +65,15 @@ public class BeatLogic implements Runnable{
 		 * unblocked stages. Pick runs to execute. Execute.
 		 */
 		coordinator.processEmittedMessages();
+		
+		BeeQueueStage readyToRun = coordinator.pickStageToRun();
+		if(readyToRun!=null){
+			RunHelper runHelper = new RunHelper(readyToRun,WorkerData.instance.worker);
+			coordinator.storeRun(runHelper.run);
+			runHelper.start();
+		}
+		
+		
 
 		/* Run ps. Identify all processes that currently executed.
 		 * Check all processes that finished on host an update ther stages 

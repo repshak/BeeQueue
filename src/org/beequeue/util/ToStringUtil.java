@@ -18,6 +18,8 @@ package org.beequeue.util;
 
 import java.io.IOException;
 
+import org.beequeue.msg.BeeQueueStage;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -68,6 +70,13 @@ public class ToStringUtil {
 		} catch (Exception e) {
 			throw new BeeException(e);
 		}
+	}
+
+	public static void out(Object o) {
+		System.out.println(toString(o));
+	}
+	public static void err(Object o) {
+		System.err.println(toString(o));
 	}
 
 }

@@ -48,6 +48,7 @@ import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.msg.BeeQueueJob;
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.msg.DomainState;
 import org.beequeue.msg.JobState;
@@ -166,8 +167,6 @@ public class DbCoordinator implements Coordiantor {
 	}
 
 	
-
-	
 	@Override
 	public void ensureHost(WorkerData wh) {
 		try {
@@ -214,7 +213,7 @@ public class DbCoordinator implements Coordiantor {
 				wh.worker = worker;
 			}else{
 				throw new BeeException("Cannot create worker")
-								.withPayload(worker);
+								.addPayload(worker);
 			}
 		}else{
 			wh.worker = HostWorkerQueries.LOAD_WORKER_BY_ID.queryOne(connection(), wh.worker.id);
@@ -263,29 +262,21 @@ public class DbCoordinator implements Coordiantor {
 		}
 	}
 
-
-
-
-
 	@Override
 	public void pull(HashKey code, File destination) {
 		File writeTo =  destination.exists() ? addPrefix(destination, "tmp") : destination ;
-		if(code.type==HashKeyResource.F){
-			try {
-				HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),new HashOutput(code, new FileOutputStream(writeTo)) );
-			} catch (FileNotFoundException e) {
-				throw new BeeException(e);
-			} 
-		}else{
-			try {
+		try {
+			if(code.type==HashKeyResource.F){
+					HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),new HashOutput(code, new FileOutputStream(writeTo)) );
+			}else{
 				File hashStoreFile = new File(writeTo, FileCollection.HASH_STORE_FILE);
 				Dirs.ensureParentDirExists(hashStoreFile);
 				HashStoreQueries.STREAM_CONTENT_OUT.query(connection(), 
 						new HashOutput(code, new FileOutputStream(hashStoreFile)));
 				FileCollection tree = FileCollection.read(new FileInputStream(hashStoreFile));
-				System.out.println("pull:"+ToStringUtil.toString(tree.entries));
 				for (FileEntry fileEntry : tree.entries) {
-					System.out.println(HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),fileEntry.output(writeTo))); 
+					HashStoreQueries.STREAM_CONTENT_OUT.query(connection(),fileEntry.output(writeTo));
+					fileEntry.updateAttributes(writeTo);
 				}
 				if(writeTo!=destination){
 					File backup = addPrefix(destination, "backup");
@@ -293,9 +284,9 @@ public class DbCoordinator implements Coordiantor {
 					destination.renameTo(backup);
 					writeTo.renameTo(destination);
 				}
-			} catch (IOException e) {
-				throw new BeeException(e);
 			}
+		} catch (Exception e) {
+			throw BeeException.cast(e);
 		}
 		
 	}
@@ -415,7 +406,7 @@ public class DbCoordinator implements Coordiantor {
 		List<BeeQueueMessage> query = MessageQueries.PICK_EMMITED_MESSAGES.query(connection(), null);
 		for (BeeQueueMessage msg : query) {
 			if(1 == MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
-				JobTemplate[] jobs = Singletons.getGlobalConfig().activeDomains().get(msg.domain).findMessageTemplate(msg.name).jobs;
+				JobTemplate[] jobs = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name).jobs;
 				for (int i = 0; i < jobs.length; i++) {
 					JobTemplate jt = jobs[i];
 					BeeQueueJob job = new BeeQueueJob();
@@ -427,11 +418,11 @@ public class DbCoordinator implements Coordiantor {
 					StageTemplate[] stageTemplates = jt.stages;
 					for (int j = 0; j < stageTemplates.length; j++) {
 						BeeQueueStage stage = new BeeQueueStage();
-						stage.id = getNewId(MessageQueries.NN_STAGE);
+						stage.stageId = getNewId(MessageQueries.NN_STAGE);
 						stage.jobId = job.id;
 						StageTemplate st = stageTemplates[j];
 						stage.retriesLeft = st.retryStrategy.maxTries;
-						stage.state = StageState.BLOCKED ;
+						stage.state = st.dependOnStage == null  || st.dependOnStage.length == 0 ? StageState.READY : StageState.BLOCKED ;
 						stage.stageName = st.stageName;
 						MessageQueries.INSERT_STAGE.update(connection(), stage);
 					}
@@ -439,12 +430,42 @@ public class DbCoordinator implements Coordiantor {
 				msg.state = MessageState.IN_PROCESS;
 				msg.lock = msg.newLock();
 				if( 1 != MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg) ){
-					throw new BeeException("cannot update status").withPayload(msg);
+					throw new BeeException("cannot update status").addPayload(msg);
 				}
 			}
 		}
 		
 	}
+
+
+
+	@Override
+	public BeeQueueStage pickStageToRun() {
+		for (BeeQueueStage readyStage : MessageQueries.LOAD_READY_STAGES.query(connection(), null)) {
+			readyStage.retriesLeft--;
+			readyStage.newState = StageState.RUNNING;
+			if(1 == MessageQueries.UPDATE_STAGE_STATUS.update(connection(), readyStage)){
+				readyStage.state = readyStage.newState;
+				return readyStage;
+			}
+		}
+		return null;
+	}
+
+
+
+	@Override
+	public void storeRun(BeeQueueRun run) {
+		if(run.id > 0){
+			MessageQueries.UPDATE_RUN.update(connection(), run);
+		}else{
+			run.id = getNewId(MessageQueries.NN_RUN);
+			MessageQueries.INSERT_RUN.update(connection(), run);
+		}
+	}
+
+
+
 	
 
 

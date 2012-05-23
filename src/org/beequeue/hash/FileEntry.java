@@ -83,5 +83,11 @@ public class FileEntry implements Comparable<FileEntry>{
 		return this.s.compareTo(that.s);
 	}
 
+	public void updateAttributes(File writeTo) {
+		if(executible){
+			file(writeTo).setExecutable(true);
+		}
+	}
+
 		
 }

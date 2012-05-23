@@ -16,10 +16,29 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.template;
 
-public class MessageTemplate {
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.beequeue.util.Initializable;
+
+public class MessageTemplate implements Initializable {
 	public String messageName;
 	public String [] columns;
 	public JobTemplate[] jobs;
+	private Map<String,JobTemplate> jobMap = new LinkedHashMap<String, JobTemplate>();
+	
+	@Override
+	public void init() {
+		for (int i = 0; i < jobs.length; i++) {
+			JobTemplate jt = jobs[i];
+			jobMap.put(jt.jobName, jt);
+			jt.init();
+		}
+	}	
+	
+	public JobTemplate jobTemplate(String name){
+		return jobMap.get(name);
+	}
 	
 
 }

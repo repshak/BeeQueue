@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
-public class BeeQueueRunCommand {
+public class BeeQueueCommand {
 	private static final String COMMANDS_PACKAGE = "org.beequeue.command.";
 	protected static final String JAVA_CLASS_PATH = "java.class.path";
 

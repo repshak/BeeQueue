@@ -64,7 +64,7 @@ public class Singletons {
 				resolve = resolveReference(variablesProvider.getVariables());
 				return instance = ToStringUtil.toObject(resolve, singletonType);
 			} catch (Exception e) {
-				throw BeeException.cast(e).withPayload(resolve,this);
+				throw BeeException.cast(e).addPayload(resolve,this);
 			}
 		}
 

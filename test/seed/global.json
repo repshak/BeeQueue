@@ -8,5 +8,8 @@
 			"hosts": [ "lonlnx025" ], 
 			"domains": [ "tc2", "tc1" ]
 		}
-	} 
+	},
+	"properties" : { 
+		"reportRoot" : "$USER_HOME/report" 
+	}
 }

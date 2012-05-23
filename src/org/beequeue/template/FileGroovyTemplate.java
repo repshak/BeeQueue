@@ -28,7 +28,7 @@ public class FileGroovyTemplate {
 	GroovyTemplate fileName;
 	GroovyTemplate body;
 	
-	  public Tuple<File,Boolean> generate(Map<String,?> context, File writeTo) throws IOException, CompilationFailedException, ClassNotFoundException {
+	  public Tuple<File,Boolean> generate(Map<String,?> context, File writeTo)  {
 		    String file = fileName.generate(context);
 		    File fileToWriteTo = new File(file);
 			boolean newContentGenerated = body.generate(context, fileToWriteTo);

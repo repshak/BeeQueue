@@ -24,6 +24,8 @@ import org.beequeue.hash.HashKey;
 import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueRun;
+import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.worker.WorkerData;
 
 
@@ -110,6 +112,18 @@ public class ZooKeeperCoordinator implements Coordiantor {
 
 	@Override
 	public void processEmittedMessages() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BeeQueueStage pickStageToRun() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void storeRun(BeeQueueRun run) {
 		// TODO Auto-generated method stub
 		
 	}

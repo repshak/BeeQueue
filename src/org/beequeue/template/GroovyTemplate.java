@@ -23,11 +23,12 @@ package org.beequeue.template;
 import groovy.text.SimpleTemplateEngine;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Files;
-import org.codehaus.groovy.control.CompilationFailedException;
+import org.beequeue.util.ToStringUtil;
 
 public class GroovyTemplate extends ContentReference {
 
@@ -35,31 +36,39 @@ public class GroovyTemplate extends ContentReference {
 		initThat(s, ContentSource.inline, this);
 	}
 
-	public boolean generate(Map<String, ?> context, File writeTo)
-			throws IOException, CompilationFailedException,
-			ClassNotFoundException {
-		String content = generate(context);
-		boolean same = false;
-		if (writeTo.exists()) {
-			same = Files.readAll(writeTo).equals(content);
+	public boolean generate(Map<String, ?> context, File writeTo) {
+		try {
+			String content = generate(context);
+			boolean same = false;
+			if (writeTo.exists()) {
+				same = Files.readAll(writeTo).equals(content);
+			}
+			if (!same) {
+				Files.writeAll(writeTo, content);
+			}
+			return !same;
+		} catch (Exception e) {
+			throw BeeException.cast(e);
 		}
-		if (!same) {
-			Files.writeAll(writeTo, content);
-		}
-		return !same;
 	}
 
-	public String generate(Map<String, ?> context)
-			throws CompilationFailedException, ClassNotFoundException,
-			IOException {
-		return resolveTemplate(context, resolveReference(context));
+	public String generate(Map<String, ?> context){
+		try {
+			String resolveReference = resolveReference(context);
+			return resolveTemplate(context, resolveReference);
+		} catch (Exception e) {
+			throw BeeException.cast(e);
+		}
 	}
 
 
-	public static String resolveTemplate(Map<String, ?> context, String templateText)
-			throws ClassNotFoundException, IOException {
-		SimpleTemplateEngine engine = new SimpleTemplateEngine(false);
-		return engine.createTemplate(templateText).make(context).toString();
+	public static String resolveTemplate(Map<String, ?> context, String templateText) {
+		try {
+			SimpleTemplateEngine engine = new SimpleTemplateEngine(false);
+			return engine.createTemplate(templateText).make(new LinkedHashMap<String, Object>(context)).toString();
+		} catch (Exception e) {
+			throw BeeException.cast(e).addPayload(context,templateText);
+		}
 	}
 
 

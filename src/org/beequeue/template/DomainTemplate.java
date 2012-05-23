@@ -19,17 +19,35 @@ package org.beequeue.template;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DomainTemplate {
+import org.beequeue.util.Initializable;
+
+public class DomainTemplate implements Initializable {
 	public MessageTemplate[] messages;
 	public Map<String,String> properties = new LinkedHashMap<String, String>();
+	
+	private Map<String,String> addOnProperties = new LinkedHashMap<String, String>();
+	public Map<String, String> addOnProperties() {
+		return addOnProperties;
+	}
+	public Map<String, String> allProperties() {
+		LinkedHashMap<String, String> all = new LinkedHashMap<String, String>();
+		all.putAll(properties);
+		all.putAll(addOnProperties);
+		return all;
+	}
+	
+	private Map<String,MessageTemplate> messageMap = new LinkedHashMap<String, MessageTemplate>();
+	
+	public MessageTemplate messageTemplate(String name) {
+		return messageMap.get(name);
+	}
 
-	public MessageTemplate findMessageTemplate(String name) {
+	@Override
+	public void init() {
 		for (int i = 0; i < messages.length; i++) {
 			MessageTemplate mt = messages[i];
-			if( mt.messageName.equals(name)){
-				return mt; 
-			}
+			messageMap.put(mt.messageName, mt);
+			mt.init();
 		}
-		return null;
 	}
 }

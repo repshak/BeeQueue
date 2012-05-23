@@ -16,6 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,20 +25,18 @@ import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.launcher.VariablesProvider;
 import org.beequeue.template.DomainTemplate;
 import org.beequeue.util.Initializable;
-import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.Singletons;
 import org.beequeue.worker.WorkerConfig;
 
-import com.sun.org.apache.xalan.internal.xsltc.DOM;
-
 
 public class GlobalConfig implements Initializable {
+	private static final String BQ_DOMAIN = "BQ_DOMAIN";
 	public static final String $BQ_CONFIG = "$BQ_CONFIG";
 	public static final String LOAD_FROM = $BQ_CONFIG + "/global.json";
 	
 	public String defaultCloud;
-	
 	public Map<String, CloudConfig> clouds ;
+	public Map<String,String> properties = new LinkedHashMap<String, String>() ;
 	
 	public WorkerConfig workerConfig = new WorkerConfig();
 	
@@ -69,16 +68,17 @@ public class GlobalConfig implements Initializable {
 						final String domainName = cloudConfig.domains[i];
 						if(!activeDomains.containsKey(domainName)){
 							String configReference = "$" + BeeQueueHome.BQ_CONFIG + "/domains/"+domainName+"/"+domainName+".json";
+							final String domainDir = new File(BeeQueueHome.instance.getConfig(), "domains/"+domainName).toString();
 							VariablesProvider domainSpecificVariables = new VariablesProvider() {
 								@Override
 								public Map<String, ?> getVariables() {
 									Map<String, String> homeVariables = BeeQueueHome.instance.getHomeVariables();
-									String domainDir = homeVariables.get(BeeQueueHome.BQ_CONFIG)+"/domains/"+domainName;
-									homeVariables.put("BQ_DOMAIN", domainDir );
+									homeVariables.put(BQ_DOMAIN, domainDir );
 									return homeVariables;
 								}
 							};
 							DomainTemplate dt = Singletons.singleton(configReference, DomainTemplate.class,domainSpecificVariables);
+							dt.addOnProperties().put(BQ_DOMAIN, domainDir);
 							activeDomains.put(domainName, dt);
 						}
 					}

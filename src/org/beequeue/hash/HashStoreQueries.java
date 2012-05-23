@@ -139,9 +139,6 @@ public interface HashStoreQueries {
 				
 			}
 		});
-	
-	
-	
 
 	Update<HashInput> STREAM_CONTENT_IN = new Update<HashInput>(
 			"INSERT INTO NN_SHA_STORAGE (SHA_ID,DATA,SWEEPT_ON) VALUES (?,?,CURRENT_TIMESTAMP)", 

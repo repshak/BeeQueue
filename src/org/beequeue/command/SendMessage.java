@@ -28,7 +28,7 @@ public class SendMessage {
 				if(dt==null){
 					die("Cont find domain:"+msg.domain+" here:", activeDomains.keySet());
 				}
-				MessageTemplate mt = dt.findMessageTemplate(msg.name);
+				MessageTemplate mt = dt.messageTemplate(msg.name);
 				if(mt==null){
 					die("Can't find message:"+msg.name+" here:", dt.messages );
 				}

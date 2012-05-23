@@ -16,6 +16,9 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.msg;
 
+import org.beequeue.template.JobTemplate;
+import org.beequeue.util.Creator;
+
 
 public class BeeQueueJob {
 	public long id;
@@ -23,5 +26,13 @@ public class BeeQueueJob {
 	public JobState state;
 	public boolean responsible;
 	public String jobName;
+	public BeeQueueMessage message;
+	
+	public JobTemplate jobTemplate(){
+		return Creator.IgnoreExceptions.create(new Creator<JobTemplate>() { 
+			public JobTemplate create() throws Exception { 
+				return message.messageTemplate().jobTemplate(jobName);
+			}});
+	}
 
 }

@@ -133,7 +133,7 @@ public class BeeQueueHome implements VariablesProvider{
 		File runDir = new File(host,"runs/"+runId);
 		runDir.mkdirs();
 		cmdList.add(cmd+" >"+runDir+"/log 2>"+ runDir+"/err" );
-		return cmdList.toArray(new String[0]);
+		return cmdList.toArray(new String[cmdList.size()]);
 	}
 
 	public File getHome() {

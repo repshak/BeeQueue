@@ -16,13 +16,24 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.msg;
 
+import org.beequeue.template.StageTemplate;
+import org.beequeue.util.Creator;
+
 public class BeeQueueStage {
 
-	public long id;
+	public long stageId;
 	public long jobId;
-	public long msgId;
 	public StageState state;
 	public long retriesLeft;
 	public String stageName;
-
+	public BeeQueueJob job = null;
+	public StageState newState;
+	
+	public StageTemplate stageTemplate(){
+		return Creator.IgnoreExceptions.create(new Creator<StageTemplate>() { 
+			public StageTemplate create() throws Exception { 
+				return job.jobTemplate().stageTemplate(stageName);
+			}});
+	}
+	
 }

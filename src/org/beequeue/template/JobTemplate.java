@@ -15,14 +15,34 @@
  
  *  ===== END LICENSE ====== */
 package org.beequeue.template;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.beequeue.util.Initializable;
+
 /**
  * JobTemplate has many stages, they may depend on each other, but no circular dependencies allowed. 
  * 
  * @author sergeyk
  *
  */
-public class JobTemplate {
+public class JobTemplate implements Initializable{
 	public String jobName;
 	public StageTemplate[] stages;
 	public MessageFilter filters[] = {new MessageFilter("true")};
+	private Map<String,StageTemplate> stageMap = new LinkedHashMap<String, StageTemplate>();
+	@Override
+	public void init() {
+		for (int i = 0; i < stages.length; i++) {
+			StageTemplate st = stages[i];
+			stageMap.put(st.stageName, st);
+			st.init();
+		}
+		
+	}
+	
+	public StageTemplate stageTemplate(String name){
+		return stageMap.get(name);
+	}
 }
