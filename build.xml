@@ -66,6 +66,11 @@
     		<classpath refid="lib.cp" />
     		<classpath location="${warjar}" />
     	</javac>
+    	<copy todir="${classes}">
+    		<fileset dir="${src}">
+    			<exclude name="**/*.java" />
+    		</fileset>
+    	</copy>
     	<copy todir="${weblib}">
     		<fileset dir="${lib}/bin">
     			<include name="*jar" />

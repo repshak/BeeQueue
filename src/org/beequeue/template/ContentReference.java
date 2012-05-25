@@ -19,6 +19,8 @@ package org.beequeue.template;
 import java.io.IOException;
 import java.util.Map;
 
+import org.beequeue.util.BeeException;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public abstract class  ContentReference {
@@ -59,9 +61,12 @@ public abstract class  ContentReference {
 		return source +":"+template;
 	}
 	
-	protected String resolveReference(Map<String,?> context) throws IOException,
-	ClassNotFoundException {
-		return source.getTemplateText(this.template, context);
+	protected String resolveReference(Map<String,?> context) {
+		try {
+			return source.getTemplateText(this.template, context);
+		} catch (Exception e) {
+			throw BeeException.cast(e).addPayload(this.template,context);
+		}
 	}
 
 

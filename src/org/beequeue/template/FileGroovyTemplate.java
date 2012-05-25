@@ -28,7 +28,7 @@ public class FileGroovyTemplate {
 	GroovyTemplate fileName;
 	GroovyTemplate body;
 	
-	  public Tuple<File,Boolean> generate(Map<String,?> context, File writeTo)  {
+	  public Tuple<File,Boolean> generate(Map<String,?> context)  {
 		    String file = fileName.generate(context);
 		    File fileToWriteTo = new File(file);
 			boolean newContentGenerated = body.generate(context, fileToWriteTo);

@@ -99,16 +99,6 @@ public class BeeQueueHome implements VariablesProvider{
 		System.exit(-1);
 	}
 	
-	public String[] getEnv(Map<String, String> myenv){
-		Map<String, String> envMap = new HashMap<String, String>(System.getenv());
-		if(myenv!=null) envMap.putAll(myenv);
-		envMap.putAll(getHomeVariables());
-		List<String> envList = new ArrayList<String>();
-		for (String k : envMap.keySet()) {
-			envList.add(k+"="+envMap.get(k));
-		}
-		return envList.toArray(new String[0]);
-	}
 	
 	public Map<String, String> getHomeVariables( ) {
 		Map<String,String> envMap = new LinkedHashMap<String, String>();
@@ -120,21 +110,6 @@ public class BeeQueueHome implements VariablesProvider{
 		return envMap;
 	}
 
-	public String[] getCmd(String cmd, String runId){
-		List<String> cmdList = new ArrayList<String>();
-		String osName = System.getProperty("os.name").toLowerCase();
-		if(osName.indexOf("win") >= 0){
-			cmdList.add("cmd");
-			cmdList.add("/c");
-		}else{
-			cmdList.add("/bin/bash");
-			cmdList.add("-c");
-		}
-		File runDir = new File(host,"runs/"+runId);
-		runDir.mkdirs();
-		cmdList.add(cmd+" >"+runDir+"/log 2>"+ runDir+"/err" );
-		return cmdList.toArray(new String[cmdList.size()]);
-	}
 
 	public File getHome() {
 		return home;

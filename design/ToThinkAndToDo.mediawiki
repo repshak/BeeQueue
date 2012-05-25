@@ -1,6 +1,5 @@
 = ToDo =
 * BeatLogic
-** Execute run template and collect logs.
 ** Run ps. Identify all processes that currently executed.  Check all processes that finished on host an update their stages appropriately.
 ** Evaluate blocked stages.
 * Visualization
@@ -35,6 +34,7 @@
 ** test scripts that produce std output/ std error , and spawn other processes
 * command to push configuration to cloud
 * BeatLogic
+** Execute run template and collect logs.
 ** create runs for unblocked stages. Pick runs to execute. 
 ** encapsulate logic from WorkerServlet.Runable into BeatLogic object
 ** ensureDomains

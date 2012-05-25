@@ -1,0 +1,5 @@
+#!/bin/bash
+cd $BQ_RUN_DIR
+nohup $CMD > out.log 2> err.log 
+echo \$? > rc.log
+

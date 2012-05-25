@@ -62,6 +62,6 @@ public class Files {
 	}
 
 	public static InputStream getResourceFromClasspath(String cp) {
-		return Object.class.getResourceAsStream(cp);
+		return Files.class.getResourceAsStream(cp);
 	}
 }
