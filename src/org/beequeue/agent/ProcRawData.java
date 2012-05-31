@@ -19,6 +19,7 @@ package org.beequeue.agent;
 import java.util.Map;
 
 import org.beequeue.util.Creator;
+import org.beequeue.util.Strings;
 import org.hyperic.sigar.ProcCpu;
 import org.hyperic.sigar.ProcCredName;
 import org.hyperic.sigar.ProcMem;
@@ -36,7 +37,9 @@ public class ProcRawData {
 	public ProcCpu cpu ;
 	public ProcCredName username ;
 	
-	
+	public String allArgs(){
+		return args != null && args.length > 0 ? Strings.join(" ", args) : name ; 
+	}
 
 	public ProcRawData() {
 	}

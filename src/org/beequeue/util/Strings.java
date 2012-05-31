@@ -76,4 +76,15 @@ public class Strings {
 		return sb.toString();
 	}
 
+	public static String join(String delimeter, String[] args) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < args.length; i++) {
+			if(i > 0 ){
+				sb.append(delimeter);
+			}
+			sb.append(args[i]);
+		}
+		return sb.toString();
+	}
+
 }

@@ -13,6 +13,7 @@ import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.msg.RunState;
+import org.beequeue.msg.StageState;
 import org.beequeue.template.CommandTemplate;
 import org.beequeue.template.GroovyTemplate;
 import org.beequeue.util.BeeException;
@@ -22,21 +23,21 @@ import org.beequeue.worker.Worker;
 
 public class RunHelper {
 	
+	public static final String BQ_RUN_ID = "BQ_RUN_ID";
+	public static final String BQ_RUN_DIR = "BQ_RUN_DIR";
+
 	private static final class Grabler extends Thread {
 		private Process p;
-
 		private Grabler(Process p) {
 			this.p = p;
-			setDaemon(true);
+			this.setDaemon(true);
 		}
-
 		public void run() {
 			try {
 				InputStream in = p.getInputStream();
 				while(in.read()!=-1);
 				p.waitFor();
-			} catch (Exception ignore) {
-			}
+			} catch (Exception ignore) {}
 			
 		}
 	}
@@ -51,8 +52,7 @@ public class RunHelper {
 		this.run = new BeeQueueRun();
 		run.stageId = stage.stageId;
 		run.workerId = worker.id;
-		run.state = RunState.RUNNING;
-		run.cmd = findOsSpecificTemplate().cmd.generate(buildStageContext());
+		run.state = RunState.PREPARE_TO_RUN;
 	}
 
 
@@ -71,8 +71,8 @@ public class RunHelper {
 	public Map<String, String> buildRunContext(File runDir, long id) {
 		Map<String, String> vars = buildDomainConfig();
 		vars.putAll(stage.job.message.parameters );
-		vars.put("BQ_RUN_DIR", runDir.toString());
-		vars.put("BQ_RUN_ID", String.valueOf(id));
+		vars.put(BQ_RUN_DIR, runDir.toString());
+		vars.put(BQ_RUN_ID, String.valueOf(id));
 		return vars;
 	}
 
@@ -87,8 +87,10 @@ public class RunHelper {
 	
 	public void start() {
 		try {
+			run.cmd = findOsSpecificTemplate().cmd.generate(buildStageContext());
 			File runDir = new File(BeeQueueHome.instance.getHost(),"runs/"+run.id);
 			runDir.mkdirs();
+			run.dir = runDir.toString();
 			GroovyTemplate runShTemplate = new GroovyTemplate("classPath:/org/beequeue/run/run.sh.gt" );
 			Map<String, String> context = buildRunContext(runDir,run.id);
 			ProcessBuilder pb = new ProcessBuilder();
@@ -102,6 +104,8 @@ public class RunHelper {
 			Thread.sleep(300L);
 			final Process p = pb.start();
 			new Grabler(p).start();
+			run.state = RunState.RUNNING;
+			stage.newState = StageState.RUNNING;
 		} catch (Exception e) {
 			throw BeeException.cast(e);
 		}

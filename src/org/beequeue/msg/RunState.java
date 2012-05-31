@@ -18,6 +18,7 @@ package org.beequeue.msg;
 
 public enum RunState {
 	WAIT,
+	PREPARE_TO_RUN,
 	RUNNING,
 	TO_KILL,
 	KILLED,

@@ -116,16 +116,25 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-77d1" mandatory="true" name="WORKER_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-772e" mandatory="false" name="PID">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
-</column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-772d" mandatory="false" name="RUN_STATE" remarks="enum:chaosctrl.jobcontrol.RunState">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="4000" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-772c" mandatory="false" name="CMD">
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-772e" mandatory="false" name="PID">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7733" mandatory="true" name="UP_TS">
+<column auto-increment="false" column-size="256" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f11" mandatory="false" name="PS_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="256" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f6a" mandatory="false" name="RUN_DIR">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="4000" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-772c" mandatory="false" name="RUN_CMD">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f67" mandatory="true" name="START_TS">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7733" mandatory="false" name="UP_TS">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7732" mandatory="false" name="DOWN_TS">
@@ -337,24 +346,59 @@
 </foreign-key>
 </foreign-key-list>
 </table>
+<table id="41a224b8:1376b6c811d:-7f45" name="NN_PROCESS">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f20" mandatory="true" name="RUN_ID">
+<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+</column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f3b" mandatory="true" name="PID">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7eff" mandatory="false" name="PPID">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="256" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f3e" mandatory="false" name="PS_NAME">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f04" mandatory="true" name="START_TS">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f3a" mandatory="false" name="UP_TS">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="41a224b8:1376b6c811d:-7f39" mandatory="false" name="DOWN_TS">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+</column-list>
+<primary-key id="41a224b8:1376b6c811d:-7f44" name="PK_NN_PROCESS">
+<primary-key-column name="RUN_ID"/>
+<primary-key-column name="PID"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="41a224b8:1376b6c811d:-7f22" name="FK_NN_CHILD_RUN_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_RUN" referenced-table="NN_RUN" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="RUN_ID" referenced-key-column-name="RUN_ID"/>
+</foreign-key>
+</foreign-key-list>
+</table>
 </table-list>
 </schema>
 </schema-list>
 </database-model>
 <diagram>
 <table-figure refid="43a11a8e:13648c9dafd:-7f56" x="783" y="77"/>
-<table-figure refid="43a11a8e:13648c9dafd:-7b61" x="772" y="437"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7b61" x="771" y="406"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78f1" x="30" y="192"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78ed" x="37" y="419"/>
-<table-figure refid="43a11a8e:13648c9dafd:-78e5" x="146" y="588"/>
-<table-figure refid="43a11a8e:13648c9dafd:-78e1" x="435" y="606"/>
-<table-figure refid="43a11a8e:13648c9dafd:-78dd" x="238" y="453"/>
-<table-figure refid="43a11a8e:13648c9dafd:-78d9" x="525" y="453"/>
-<table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="780" y="625"/>
-<table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="543" y="73"/>
+<table-figure refid="43a11a8e:13648c9dafd:-78e5" x="270" y="548"/>
+<table-figure refid="43a11a8e:13648c9dafd:-78e1" x="508" y="574"/>
+<table-figure refid="43a11a8e:13648c9dafd:-78dd" x="268" y="423"/>
+<table-figure refid="43a11a8e:13648c9dafd:-78d9" x="524" y="422"/>
+<table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="779" y="594"/>
+<table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="591" y="72"/>
 <table-figure refid="5ef5485:136ed867bc8:-7f15" x="65" y="81"/>
-<table-figure refid="5ef5485:136ed867bc8:-7ee7" x="264" y="275"/>
-<table-figure refid="33e728da:1370b42bc57:-7d54" x="324" y="70"/>
-<table-figure refid="33e728da:1370b42bc57:-7cc5" x="412" y="171"/>
+<table-figure refid="5ef5485:136ed867bc8:-7ee7" x="255" y="313"/>
+<table-figure refid="33e728da:1370b42bc57:-7d54" x="250" y="74"/>
+<table-figure refid="33e728da:1370b42bc57:-7cc5" x="430" y="257"/>
+<table-figure refid="41a224b8:1376b6c811d:-7f45" x="30" y="560"/>
 </diagram>
 </clay-model>

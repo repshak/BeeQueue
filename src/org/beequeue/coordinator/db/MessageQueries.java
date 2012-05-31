@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 
 import org.beequeue.msg.BeeQueueJob;
 import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.msg.JobState;
@@ -40,7 +41,6 @@ import org.beequeue.util.ToStringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public interface MessageQueries {
-
 	public static final String NN_MESSAGE = "NN_MESSAGE";
 	public static final String NN_JOB = "NN_JOB";
 	public static final String NN_STAGE = "NN_STAGE";
@@ -64,6 +64,7 @@ public interface MessageQueries {
 			return msg;
 		}
 	};
+	
 
 	Select<BeeQueueMessage, Long> LOAD_MESSAGE = new Select<BeeQueueMessage, Long>(
 	SELECT_MESSAGE +  "WHERE MSG_ID = ?",
@@ -75,11 +76,10 @@ public interface MessageQueries {
 	MESSAGE_FACTORY
 	, null);
 	
-	Select<BeeQueueJob, Long> LOAD_MESSAGE_JOBS = new Select<BeeQueueJob, Long>(
-		"SELECT J.JOB_ID,J.MSG_ID,J.JOB_STATE,J.RESPONSIBLE,J.JOB_NAME, M.MSG_NAME, M.DOMAIN_CD, M.MSG_STATE " +
-		"FROM NN_JOB J, NN_MESSAGE M " +
-		"WHERE J.MSG_ID = M.MSG_ID AND M.MSG_ID = ?",
-	new JdbcFactory<BeeQueueJob, Object>() {
+	String SELECT_MESSAGE_JOBS = "SELECT J.JOB_ID,J.MSG_ID,J.JOB_STATE,J.RESPONSIBLE,J.JOB_NAME, " +
+			"M.MSG_NAME, M.DOMAIN_CD, M.MSG_STATE " +
+			"FROM NN_JOB J, NN_MESSAGE M WHERE J.MSG_ID = M.MSG_ID";
+	JdbcFactory<BeeQueueJob, Object> JOB_FACTORY = new JdbcFactory<BeeQueueJob, Object>() {
 		@Override
 		public BeeQueueJob newInstance(ResultSet rs, Object input, Index idx)
 				throws SQLException {
@@ -95,20 +95,24 @@ public interface MessageQueries {
 			job.message.state = MessageState.valueOf(rs.getString(idx.next()));
 			return job;
 		}
-	}, DbConstants.LONG_SQL_PREPARE);
+	};
+	Select<BeeQueueJob, Long> LOAD_MESSAGE_JOBS = new Select<BeeQueueJob, Long>(
+			SELECT_MESSAGE_JOBS + " AND M.MSG_ID = ?",
+			JOB_FACTORY, DbConstants.LONG_SQL_PREPARE);
+	Select<BeeQueueJob, Void> LOAD_IN_PROCESS_MESSAGE_JOBS = new Select<BeeQueueJob, Void>(
+		SELECT_MESSAGE_JOBS + " AND M.MSG_STATE = '"+MessageState.IN_PROCESS+"'" ,
+		JOB_FACTORY, null);
 
-	public static final String SELECT_STAGE_SQL = "SELECT S.STAGE_ID, J.JOB_ID, J.MSG_ID, S.STAGE_STATE, S.RETRIES_LEFT, S.STAGE_NAME, " +
-			"J.JOB_STATE,J.JOB_NAME, M.MSG_NAME, M.DOMAIN_CD, M.MSG_STATE, M.MSG_PARAMETERS, M.CONTEXT_SETTINGS " +
-			"FROM NN_JOB J, NN_STAGE S , NN_MESSAGE M " +
-			"WHERE J.JOB_ID = S.JOB_ID AND J.MSG_ID = M.MSG_ID ";
-	public static final JdbcFactory<BeeQueueStage, Object> STAGE_FACTORY = new JdbcFactory<BeeQueueStage, Object>() {
+	String STAGE_FIELDS = "S.STAGE_ID, J.JOB_ID, J.MSG_ID, S.STAGE_STATE, S.RETRIES_LEFT, S.STAGE_NAME, J.JOB_STATE,J.JOB_NAME, M.MSG_NAME, M.DOMAIN_CD, M.MSG_STATE, M.MSG_PARAMETERS, M.CONTEXT_SETTINGS";
+	String STAGE_WHERE = "NN_JOB J, NN_STAGE S , NN_MESSAGE M WHERE J.JOB_ID = S.JOB_ID AND J.MSG_ID = M.MSG_ID";
+	String SELECT_STAGE_SQL = "SELECT " + STAGE_FIELDS + " FROM " + STAGE_WHERE+" ";
+	JdbcFactory<BeeQueueStage, Object> STAGE_FACTORY = new JdbcFactory<BeeQueueStage, Object>() {
 		@Override
 		public BeeQueueStage newInstance(ResultSet rs, Object input, Index idx)
 				throws SQLException {
 			BeeQueueStage stage = new BeeQueueStage();
 			stage.job = new BeeQueueJob();
 			stage.job.message = new BeeQueueMessage();
-			
 			stage.stageId = rs.getLong(idx.next());
 			stage.job.id = stage.jobId = rs.getLong(idx.next());
 			stage.job.message.id  = stage.job.msgId = rs.getLong(idx.next());
@@ -122,10 +126,11 @@ public interface MessageQueries {
 			stage.job.message.state = MessageState.valueOf(rs.getString(idx.next()));
 			stage.job.message.parameters = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
 			stage.job.message.contextSettings = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
-
 			return stage;
 		}
 	};
+	
+	
 
 
 	Select<BeeQueueStage, Long> LOAD_MESSAGE_STAGES = new Select<BeeQueueStage, Long>(
@@ -133,7 +138,15 @@ public interface MessageQueries {
 			STAGE_FACTORY, DbConstants.LONG_SQL_PREPARE);
 	
 	Select<BeeQueueStage, Long> LOAD_READY_STAGES = new Select<BeeQueueStage, Long>(
-				SELECT_STAGE_SQL + "AND S.STAGE_STATE='" + StageState.READY + "'",
+			SELECT_STAGE_SQL + "AND S.STAGE_STATE='" + StageState.READY + "'",
+			STAGE_FACTORY, null);
+	
+	Select<BeeQueueStage, Void> LOAD_RUNNING_STAGES = new Select<BeeQueueStage, Void>(
+			SELECT_STAGE_SQL + "AND S.STAGE_STATE='" + StageState.RUNNING + "'",
+			STAGE_FACTORY, null);
+
+	Select<BeeQueueStage, Void> LOAD_IN_PROCESS_JOBS_STAGES = new Select<BeeQueueStage, Void>(
+				SELECT_STAGE_SQL + "AND J.JOB_STATE='" + JobState.IN_PROCESS + "' ORDER BY J.JOB_ID",
 				STAGE_FACTORY, null);
 
 	Update<BeeQueueStage> UPDATE_STAGE_STATUS = new Update<BeeQueueStage>(
@@ -148,29 +161,59 @@ public interface MessageQueries {
 					pstmt.setString(idx.next(), input.state.name());
 				}
 			});
+	Update<BeeQueueJob> UPDATE_JOB_STATUS = new Update<BeeQueueJob>(
+			"UPDATE NN_JOB SET JOB_STATE=? WHERE JOB_ID=?",
+			new SqlPrepare<BeeQueueJob>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueJob input, Index idx)
+						throws SQLException {
+					pstmt.setString(idx.next(), input.state.name());
+					pstmt.setLong(idx.next(), input.id);
+				}
+			});
+	Update<BeeQueueMessage> UPDATE_MESSAGE_STATUS = new Update<BeeQueueMessage>(
+			"UPDATE NN_MESSAGE SET MSG_STATE=? WHERE MSG_ID=?",
+			new SqlPrepare<BeeQueueMessage>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
+						throws SQLException {
+					pstmt.setString(idx.next(), input.state.name());
+					pstmt.setLong(idx.next(), input.id);
+				}
+			});
 
-	Select<BeeQueueRun, Long> LOAD_MESSAGE_RUNS = new Select<BeeQueueRun, Long>(
-	"SELECT R.RUN_ID, S.STAGE_ID, J.JOB_ID, J.MSG_ID, R.WORKER_ID, R.PID, R.RUN_STATE, R.CMD, R.UP_TS, R.DOWN_TS " +
-	"FROM NN_JOB J, NN_STAGE S, NN_RUN R " +
-	"WHERE J.JOB_ID = S.JOB_ID AND S.STAGE_ID = R.STAGE_ID AND J.MSG_ID = ?",
-	new JdbcFactory<BeeQueueRun, Object>() {
+	JdbcFactory<BeeQueueRun, Object> RUN_FACTORY = new JdbcFactory<BeeQueueRun, Object>() {
 		@Override
 		public BeeQueueRun newInstance(ResultSet rs, Object input, Index idx)
 				throws SQLException {
 			BeeQueueRun run = new BeeQueueRun();
 			run.id = rs.getLong(idx.next());
-			run.stageId = rs.getLong(idx.next());
-			run.jobId = rs.getLong(idx.next());
-			run.msgId = rs.getLong(idx.next());
 			run.workerId = rs.getLong(idx.next());
+			run.processName = rs.getString(idx.next());
 			run.pid = rs.getString(idx.next());
 			run.state = RunState.valueOf(rs.getString(idx.next()));
+			run.dir = rs.getString(idx.next());
 			run.cmd = rs.getString(idx.next());
+			run.startTimeStamp = rs.getTimestamp(idx.next());
 			run.upTimeStamp = rs.getTimestamp(idx.next());
 			run.downTimeStamp = rs.getTimestamp(idx.next());
+			run.stage = STAGE_FACTORY.newInstance(rs, input, idx);
+			run.stageId = run.stage.stageId;
 			return run;
 		}
-	}, DbConstants.LONG_SQL_PREPARE);
+	};
+	String SELECT_MESSAGE_RUN = "SELECT R.RUN_ID, R.WORKER_ID, R.PID, R.PS_NAME, R.RUN_STATE, R.RUN_DIR, R.RUN_CMD, " +
+			"R.START_TS, R.UP_TS, R.DOWN_TS, " + STAGE_FIELDS + 
+	        " FROM NN_RUN R, ";
+	Select<BeeQueueRun, Long> LOAD_MESSAGE_RUNS = new Select<BeeQueueRun, Long>(
+			SELECT_MESSAGE_RUN + STAGE_WHERE +
+			" AND S.STAGE_ID = R.STAGE_ID AND M.MSG_ID = ?",
+			RUN_FACTORY, DbConstants.LONG_SQL_PREPARE);
+	
+	Select<BeeQueueRun, String> LOAD_CURRENT_MESSAGE_RUNS = new Select<BeeQueueRun, String>(
+			SELECT_MESSAGE_RUN +" NN_WORKER W, " + STAGE_WHERE +
+			" AND S.STAGE_ID = R.STAGE_ID AND R.WORKER_ID = W.WORKER_ID AND R.RUN_STATE='" + RunState.RUNNING +"' AND W.HOST_CD = ?",
+			RUN_FACTORY, DbConstants.STRING_SQL_PREPARE);
 
 	Update<BeeQueueMessage> INSERT_MESSAGE = new Update<BeeQueueMessage>(
 			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_PARAMETERS,CONTEXT_SETTINGS,USER_CD,DOMAIN_CD) VALUES (?,?,?,?,?,?,?)",
@@ -214,8 +257,67 @@ public interface MessageQueries {
 					pstmt.setString(idx.next(), input.stageName );
 				}
 			});
+
+	JdbcFactory<BeeQueueProcess, Object> PROCESS_FACTORY = new JdbcFactory<BeeQueueProcess, Object>() {
+		@Override
+		public BeeQueueProcess newInstance(ResultSet rs, Object input, Index idx)
+				throws SQLException {
+			BeeQueueProcess p = new BeeQueueProcess();
+			p.runId = rs.getLong(idx.next());
+			p.pid = rs.getString(idx.next());
+			p.ppid = rs.getString(idx.next());
+			p.processName = rs.getString(idx.next());
+			p.startTimeStamp = rs.getTimestamp(idx.next());
+			p.upTimeStamp = rs.getTimestamp(idx.next());
+			p.startTimeStamp = rs.getTimestamp(idx.next());
+			return p;
+		}
+	};
+	
+	Select<BeeQueueProcess, String> ALIVE_PROCESSES = new Select<BeeQueueProcess, String>(
+			"SELECT P.RUN_ID,P.PID,P.PPID,P.PS_NAME,P.START_TS,P.UP_TS,P.DOWN_TS " +
+			"FROM NN_PROCESS P, NN_RUN R, NN_WORKER W " +
+			"WHERE W.WORKER_ID=R.WORKER_ID AND R.RUN_ID=P.RUN_ID AND W.HOST_CD = ? AND P.DOWN_TS IS NULL",
+			PROCESS_FACTORY, DbConstants.STRING_SQL_PREPARE);
+	
+	Update<BeeQueueProcess> INSERT_PROCESS = new Update<BeeQueueProcess>(
+			"INSERT INTO NN_PROCESS (RUN_ID,PID,PPID,PS_NAME,START_TS,UP_TS,DOWN_TS) VALUES (?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,NULL)",
+			new SqlPrepare<BeeQueueProcess>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueProcess input, Index idx)
+						throws SQLException {
+					pstmt.setLong(idx.next(), input.runId);
+					pstmt.setString(idx.next(), input.pid);
+					pstmt.setString(idx.next(), input.ppid);
+					pstmt.setString(idx.next(), input.processName);
+				}
+			});
+	
+	Update<BeeQueueProcess> UPDATE_PROCESS = new Update<BeeQueueProcess>(
+			"UPDATE NN_PROCESS SET UP_TS = CURRENT_TIMESTAMP WHERE RUN_ID = ? AND PID = ?",
+			new SqlPrepare<BeeQueueProcess>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueProcess input, Index idx)
+						throws SQLException {
+					pstmt.setLong(idx.next(), input.runId);
+					pstmt.setString(idx.next(), input.pid);
+				}
+			});
+	
+	Update<BeeQueueProcess> MARK_PROCESS_TERMINATED = new Update<BeeQueueProcess>(
+			"UPDATE NN_PROCESS SET DOWN_TS = CURRENT_TIMESTAMP WHERE RUN_ID = ? AND PID = ?",
+			new SqlPrepare<BeeQueueProcess>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueProcess input, Index idx)
+						throws SQLException {
+					pstmt.setLong(idx.next(), input.runId);
+					pstmt.setString(idx.next(), input.pid);
+				}
+			});
+	
 	Update<BeeQueueRun> INSERT_RUN = new Update<BeeQueueRun>(
-			"INSERT INTO NN_RUN (RUN_ID,STAGE_ID,WORKER_ID,PID,RUN_STATE,CMD,UP_TS,DOWN_TS) VALUES (?,?,?,?,?,?,CURRENT_TIMESTAMP,NULL)",
+			"INSERT INTO NN_RUN (RUN_ID,STAGE_ID,WORKER_ID,RUN_STATE,PID,PS_NAME,RUN_DIR,RUN_CMD,START_TS,UP_TS,DOWN_TS) " +
+			"VALUES (?,?,?,?,NULL,NULL,NULL,NULL,CURRENT_TIMESTAMP,NULL,NULL)",
 			new SqlPrepare<BeeQueueRun>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, BeeQueueRun input, Index idx)
@@ -223,19 +325,41 @@ public interface MessageQueries {
 					pstmt.setLong(idx.next(), input.id);
 					pstmt.setLong(idx.next(), input.stageId);
 					pstmt.setLong(idx.next(), input.workerId);
-					pstmt.setString(idx.next(), input.pid);
 					pstmt.setString(idx.next(), input.state.name());
-					pstmt.setString(idx.next(), input.cmd );
 				}
 			});
+
 	Update<BeeQueueRun> UPDATE_RUN = new Update<BeeQueueRun>(
-			"UPDATE NN_RUN PID = ? ,RUN_STATE = ? ,DOWN_TS = CURRENT_TIMESTAMP " +
-			"WHERE RUN_ID = ?",
+			"UPDATE NN_RUN SET RUN_STATE=?, RUN_DIR=?, RUN_CMD=?, PID=?, PS_NAME=?, UP_TS = CURRENT_TIMESTAMP WHERE  RUN_ID = ?",
 			new SqlPrepare<BeeQueueRun>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, BeeQueueRun input, Index idx)
 						throws SQLException {
+					pstmt.setString(idx.next(), input.state.name());
+					pstmt.setString(idx.next(), input.dir);
+					pstmt.setString(idx.next(), input.cmd);
 					pstmt.setString(idx.next(), input.pid);
+					pstmt.setString(idx.next(), input.processName);
+					pstmt.setLong(idx.next(), input.id);
+				}
+			});
+	
+	Update<BeeQueueRun> REFRESH_UP_TS_RUN = new Update<BeeQueueRun>(
+			"UPDATE NN_RUN SET UP_TS = CURRENT_TIMESTAMP WHERE  RUN_ID = ?",
+			new SqlPrepare<BeeQueueRun>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueRun input, Index idx)
+						throws SQLException {
+					pstmt.setLong(idx.next(), input.id);
+				}
+			});
+	
+	Update<BeeQueueRun> REFRESH_DOWN_TS_RUN = new Update<BeeQueueRun>(
+			"UPDATE NN_RUN SET RUN_STATE = ? , DOWN_TS = CURRENT_TIMESTAMP WHERE  RUN_ID = ?",
+			new SqlPrepare<BeeQueueRun>() {
+				@Override
+				public void invoke(PreparedStatement pstmt, BeeQueueRun input, Index idx)
+						throws SQLException {
 					pstmt.setString(idx.next(), input.state.name());
 					pstmt.setLong(idx.next(), input.id);
 				}

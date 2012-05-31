@@ -17,17 +17,28 @@
 package org.beequeue.msg;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class BeeQueueRun {
 	public long id;
 	public long stageId;
-	public long jobId;
-	public long msgId;
 	public long workerId;
-	public String pid;
 	public RunState state;
+	public String pid;
+	public String processName;
+	public String dir;
 	public String cmd;
+	public Timestamp startTimeStamp;
 	public Timestamp upTimeStamp;
 	public Timestamp downTimeStamp;
+	public BeeQueueStage stage;
+	
+	public boolean justUpTimeStamp = false;
+	
+	public List<BeeQueueProcess> children=null;
+	
+	public boolean isInFinalState() {
+		return state == RunState.KILLED || state == RunState.FAILURE || state == RunState.SUCCESS;
+	}
 
 }

@@ -16,13 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.util;
 
-import java.io.IOException;
-
-import org.beequeue.msg.BeeQueueStage;
-
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -59,6 +53,7 @@ public class ToStringUtil {
 			throw new BeeException(e);
 		}
 	}
+	
 	public static <T> T toObject(String s, TypeReference<T> type){
 		try {
 			T readValue = MAPPER.readValue(s, type);
@@ -73,10 +68,19 @@ public class ToStringUtil {
 	}
 
 	public static void out(Object o) {
-		System.out.println(toString(o));
+		out("", o);
 	}
+	
+	public static void out(String msg, Object o) {
+		System.out.println(msg+toString(o));
+	}
+	
 	public static void err(Object o) {
-		System.err.println(toString(o));
+		err("",o);
+	}
+	
+	public static void err(String msg, Object o) {
+		System.err.println(msg+toString(o));
 	}
 
 }

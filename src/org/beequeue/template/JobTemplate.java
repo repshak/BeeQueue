@@ -19,6 +19,7 @@ package org.beequeue.template;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.util.Initializable;
 
 /**
@@ -30,6 +31,7 @@ import org.beequeue.util.Initializable;
 public class JobTemplate implements Initializable{
 	public String jobName;
 	public StageTemplate[] stages;
+	public boolean responsbile = false;
 	public MessageFilter filters[] = {new MessageFilter("true")};
 	private Map<String,StageTemplate> stageMap = new LinkedHashMap<String, StageTemplate>();
 	@Override
@@ -44,5 +46,14 @@ public class JobTemplate implements Initializable{
 	
 	public StageTemplate stageTemplate(String name){
 		return stageMap.get(name);
+	}
+
+	public boolean checkFilters(BeeQueueMessage msg) {
+		for (int i = 0; i < filters.length; i++) {
+			if(filters[i].evalFilter(msg)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

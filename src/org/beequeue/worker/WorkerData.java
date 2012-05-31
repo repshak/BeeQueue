@@ -43,6 +43,7 @@ public class WorkerData {
 	public HostStatistcs hostStat ;
 	public Worker worker ;
 	public ContentTree config = new ContentTree();
+	public ProcRawData[] statusOfProcesses;
 	
 	
 
@@ -74,7 +75,7 @@ public class WorkerData {
 	}
 
 	public void updateStatusOfProcesses(ProcRawData[] statusOfProcesses) {
-		// TODO Auto-generated method stub
+		this.statusOfProcesses = statusOfProcesses;
 		
 	}
 

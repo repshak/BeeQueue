@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -48,6 +47,7 @@ import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.msg.BeeQueueJob;
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.msg.DomainState;
@@ -62,6 +62,8 @@ import org.beequeue.template.StageTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
 import org.beequeue.util.ToStringUtil;
+import org.beequeue.util.Triple;
+import org.beequeue.util.Tuple;
 import org.beequeue.worker.HostState;
 import org.beequeue.worker.Singletons;
 import org.beequeue.worker.Worker;
@@ -407,13 +409,25 @@ public class DbCoordinator implements Coordiantor {
 		for (BeeQueueMessage msg : query) {
 			if(1 == MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
 				JobTemplate[] jobs = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name).jobs;
+				boolean alreadyHaveOneResposible = false;
 				for (int i = 0; i < jobs.length; i++) {
 					JobTemplate jt = jobs[i];
+					if( !jt.checkFilters(msg) ){
+						continue;
+					}
+					if(jt.responsbile){
+						if(alreadyHaveOneResposible){
+							continue;
+						}else{
+							alreadyHaveOneResposible = true;
+						}
+					}
 					BeeQueueJob job = new BeeQueueJob();
 					job.id = getNewId(MessageQueries.NN_JOB);
 					job.msgId = msg.id;
 					job.jobName = jt.jobName;
 					job.state = JobState.IN_PROCESS;
+					job.responsible = jt.responsbile ;
 					MessageQueries.INSERT_JOB.update(connection(), job);
 					StageTemplate[] stageTemplates = jt.stages;
 					for (int j = 0; j < stageTemplates.length; j++) {
@@ -437,37 +451,164 @@ public class DbCoordinator implements Coordiantor {
 		
 	}
 
-
-
 	@Override
 	public BeeQueueStage pickStageToRun() {
 		for (BeeQueueStage readyStage : MessageQueries.LOAD_READY_STAGES.query(connection(), null)) {
 			readyStage.retriesLeft--;
-			readyStage.newState = StageState.RUNNING;
-			if(1 == MessageQueries.UPDATE_STAGE_STATUS.update(connection(), readyStage)){
-				readyStage.state = readyStage.newState;
+			readyStage.newState = StageState.PREPARE_TO_RUN;
+			if(updateStage(readyStage)){
 				return readyStage;
 			}
 		}
 		return null;
 	}
 
-
-
 	@Override
 	public void storeRun(BeeQueueRun run) {
 		if(run.id > 0){
-			MessageQueries.UPDATE_RUN.update(connection(), run);
+			if(run.isInFinalState()){
+				MessageQueries.REFRESH_DOWN_TS_RUN.update(connection(), run);
+			}else if(run.justUpTimeStamp){
+				MessageQueries.REFRESH_UP_TS_RUN.update(connection(), run);
+			}else{
+				MessageQueries.UPDATE_RUN.update(connection(), run);
+			}
 		}else{
 			run.id = getNewId(MessageQueries.NN_RUN);
 			MessageQueries.INSERT_RUN.update(connection(), run);
 		}
+		
 	}
 
 
 
+	@Override
+	public List<BeeQueueRun> allCurrentRuns(WorkerData instance) {
+		return MessageQueries.LOAD_CURRENT_MESSAGE_RUNS.query(connection(), instance.host.hostName);
+	}
+
+
+
+	@Override
+	public List<BeeQueueProcess> allActiveProcessesOnHost(Host host) {
+		return MessageQueries.ALIVE_PROCESSES.query(connection(), host.hostName);
+	}
+
+
+	@Override
+	public void storeProcess(BeeQueueProcess process) {
+		SqlUtil.doUpdateInsertUpdate(connection(), MessageQueries.UPDATE_PROCESS, MessageQueries.INSERT_PROCESS, process);
+	}
+
+
+	@Override
+	public boolean updateStage(BeeQueueStage readyStage) {
+		if(1 == MessageQueries.UPDATE_STAGE_STATUS.update(connection(), readyStage)){
+			readyStage.state = readyStage.newState;
+			return true;
+		}
+		return false;
+	}
+
+
+
+	@Override
+	public void updateFinishedJobsAndMessages() {
+		updateInProcessJobs();
+		updateInProcessMessages();
+	}
+
+
+
+	public void updateInProcessJobs() {
+		List<BeeQueueStage> query = MessageQueries.LOAD_IN_PROCESS_JOBS_STAGES.query(connection(), null);
+		Map<Long,Tuple<BeeQueueJob,List<BeeQueueStage>>> jobs = new LinkedHashMap<Long, Tuple<BeeQueueJob,List<BeeQueueStage>>>();
+		for (int i = 0; i < query.size(); i++) {
+			BeeQueueJob job = query.get(i).job;
+			Tuple<BeeQueueJob, List<BeeQueueStage>> jobTuple;
+			if(!jobs.containsKey(job.id)){
+				jobTuple = new Tuple<BeeQueueJob, List<BeeQueueStage>>(job, new ArrayList<BeeQueueStage>());
+				jobs.put(job.id, jobTuple);
+			}else{
+				jobTuple = jobs.get(job.id);
+			}
+			jobTuple.o2.add(query.get(i));
+		}
+		for (Long id : jobs.keySet()) {
+			Tuple<BeeQueueJob, List<BeeQueueStage>> tuple = jobs.get(id);
+			boolean allSuccess = true ;
+			for (BeeQueueStage stage : tuple.o2) {
+				if( stage.state == StageState.FAILURE ){
+					tuple.o1.state = JobState.FAILURE;
+					allSuccess = false;
+					break;
+				}
+				if( stage.state != StageState.SUCCESS &&  stage.state != StageState.CANCELED ){
+					allSuccess = false;
+				}
+			}
+			if(allSuccess){
+				tuple.o1.state = JobState.SUCCESS;
+			}
+			if( tuple.o1.state != JobState.IN_PROCESS ){
+				MessageQueries.UPDATE_JOB_STATUS.update(connection(), tuple.o1);
+			}
+		}
+	}
+
+	public void updateInProcessMessages() {
+		List<BeeQueueJob> query = MessageQueries.LOAD_IN_PROCESS_MESSAGE_JOBS.query(connection(), null);
+		Map<Long,Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob>> messages = new LinkedHashMap<Long, Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob>>();
+		for (int i = 0; i < query.size(); i++) {
+			BeeQueueJob job = query.get(i);
+			BeeQueueMessage message = job.message;
+			Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob> t;
+			if(!messages.containsKey(message.id)){
+				t = new Triple<BeeQueueMessage, List<BeeQueueJob>, BeeQueueJob>(message, new ArrayList<BeeQueueJob>(),null);
+				messages.put(message.id, t);
+			}else{
+				t = messages.get(message.id);
+			}
+			t.o2.add(job);
+			if(job.responsible){
+				if(t.o3!=null){
+					throw new BeeException("only one responsible job should be assigned per message:")
+					.addPayload(t);
+				}
+				t.o3 = job;
+			}
+		}
+		
+		for (Long id : messages.keySet()) {
+			Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob> t = messages.get(id);
+			BeeQueueJob responsibleJob = t.o3;
+			BeeQueueMessage msg = t.o1;
+			if(responsibleJob != null){
+				if( responsibleJob.state == JobState.FAILURE ){
+					msg.state = MessageState.FAILURE;
+				}else if( responsibleJob.state == JobState.SUCCESS ){
+					msg.state = MessageState.SUCCESS;
+				}
+			}else{
+				boolean allSuccess = true ;
+				for (BeeQueueJob job : t.o2) {
+					if( job.state == JobState.FAILURE ){
+						msg.state = MessageState.FAILURE;
+						allSuccess = false;
+						break;
+					}
+					if( job.state != JobState.SUCCESS &&  job.state != JobState.CANCELED ){
+						allSuccess = false;
+					}
+				}
+				if(allSuccess){
+					msg.state = MessageState.SUCCESS;
+				}
+			}
+			if( msg.state != MessageState.IN_PROCESS ){
+				MessageQueries.UPDATE_MESSAGE_STATUS.update(connection(), msg);
+			}
+		}
+	}
 	
-
-
-
 }

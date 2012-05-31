@@ -20,9 +20,11 @@ import java.util.List;
 
 import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.hash.HashStore;
+import org.beequeue.host.Host;
 import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.worker.WorkerData;
@@ -61,5 +63,15 @@ public interface Coordiantor extends HashStore {
 	BeeQueueStage pickStageToRun();
 
 	void storeRun(BeeQueueRun run);
+
+	List<BeeQueueRun> allCurrentRuns(WorkerData instance);
+
+	List<BeeQueueProcess> allActiveProcessesOnHost(Host host);
+
+	void storeProcess(BeeQueueProcess process);
+
+	boolean updateStage(BeeQueueStage stage);
+
+	void updateFinishedJobsAndMessages();
 
 }

@@ -21,9 +21,11 @@ import java.util.List;
 
 import org.beequeue.hash.ContentTree;
 import org.beequeue.hash.HashKey;
+import org.beequeue.host.Host;
 import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.worker.WorkerData;
@@ -127,5 +129,36 @@ public class ZooKeeperCoordinator implements Coordiantor {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public List<BeeQueueRun> allCurrentRuns(WorkerData instance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<BeeQueueProcess> allActiveProcessesOnHost(Host host) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void storeProcess(BeeQueueProcess process) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean updateStage(BeeQueueStage stage) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void updateFinishedJobsAndMessages() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

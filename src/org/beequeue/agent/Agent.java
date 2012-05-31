@@ -89,20 +89,29 @@ public class Agent {
 
 
 	public void runStatistics() throws IOException, SigarException {
-		outputDirectory = BeeQueueHome.instance.getHost();
+		ensureDirectoryAndSetTimestamp();
+		CpuRawData cpuData = getCpuData();
+		MemRawData memoryData = getMemoryData();
+		WorkerData.instance.calcHostStatistics(cpuData,memoryData);
+		dump(CPU_CMD,cpuData);
+		dump(MEM_CMD,memoryData);
+	}
+	
+	public ProcRawData[] runProcessStatistics() throws IOException, SigarException {
+		ensureDirectoryAndSetTimestamp();
+		ProcRawData[] statusOfProcesses = getStatusOfProcesses();
+		WorkerData.instance.updateStatusOfProcesses(statusOfProcesses);
+		dump(PS_CMD,statusOfProcesses);
+		return statusOfProcesses;
+	}
+	
+
+	public void ensureDirectoryAndSetTimestamp() {
+		this.outputDirectory = BeeQueueHome.instance.getHost();
 		if(!outputDirectory.isDirectory() && !outputDirectory.mkdirs() ){
 			System.err.println("Cannot use or create "+ outputDirectory  );
 		}
 		this.timestamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-		
-		ProcRawData[] statusOfProcesses = getStatusOfProcesses();
-		CpuRawData cpuData = getCpuData();
-		MemRawData memoryData = getMemoryData();
-		WorkerData.instance.calcHostStatistics(cpuData,memoryData);
-		WorkerData.instance.updateStatusOfProcesses(statusOfProcesses);
-		dump(PS_CMD,statusOfProcesses);
-		dump(CPU_CMD,cpuData);
-		dump(MEM_CMD,memoryData);
 	}
 
 

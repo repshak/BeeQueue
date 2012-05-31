@@ -19,6 +19,7 @@ package org.beequeue.msg;
 public enum StageState {
 	READY,
 	BLOCKED,
+	PREPARE_TO_RUN,
 	RUNNING,
 	PAUSED,
 	SUCCESS,

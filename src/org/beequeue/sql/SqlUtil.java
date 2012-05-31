@@ -21,16 +21,22 @@ import java.sql.Connection;
 
 public class SqlUtil {
 	
-	public static <T> void doUpdateInsertUpdate(Connection connection, Update<T> update, Update<T> insert, T input ){
+	public static <T> int doUpdateInsertUpdate(Connection connection, Update<T> update, Update<T> insert, T input ){
+		int rc = doUpdateInsert(connection, update, insert, input);
+		if( rc == 0){
+			rc = update.update(connection, input);
+		}
+		return rc;
+	}
+
+	public static <T> int doUpdateInsert(Connection connection, Update<T> update, Update<T> insert, T input) {
 		int rc = update.update(connection, input);
 		if( rc == 0 ){
 			try{
 				rc = insert.update(connection, input);
 			}catch (Exception ignore) {}
 		}
-		if( rc == 0){
-			rc = update.update(connection, input);
-		}
+		return rc;
 	}
 
 	/**
