@@ -111,7 +111,7 @@ public class Agent {
 		if(!outputDirectory.isDirectory() && !outputDirectory.mkdirs() ){
 			System.err.println("Cannot use or create "+ outputDirectory  );
 		}
-		this.timestamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+		this.timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 	}
 
 
