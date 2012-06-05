@@ -36,6 +36,7 @@ import org.beequeue.coordinator.Coordiantor;
 import org.beequeue.hash.ContentTree;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.TransactionContext;
+import org.beequeue.util.JsonTable;
 import org.beequeue.util.Streams;
 import org.beequeue.util.ToStringUtil;
 
@@ -62,10 +63,10 @@ public class WorkerServlet  extends HttpServlet {
 			TransactionContext.push();
 			if( ctx.equals("/host") ){
 				File host = BeeQueueHome.instance.getHost();
-				dumpDataFromFileSystem(host, q, out);
+				dumpDataFromFileSystem(host, "host/" , q, out);
 			}else if( ctx.equals("/home") ){
 				File home = BeeQueueHome.instance.getHome();
-				dumpDataFromFileSystem(home, q, out);
+				dumpDataFromFileSystem(home, "home/" , q, out);
 			}else if( ctx.equals("/db") ){
 				Coordiantor c = Singletons.getCoordinator();
 				out.println(c.selectAnyTable(q));
@@ -85,14 +86,27 @@ public class WorkerServlet  extends HttpServlet {
 
 
 
-	public void dumpDataFromFileSystem(File base, String query, PrintWriter out)
+	public void dumpDataFromFileSystem(File base, String prefix, String query, PrintWriter out)
 			throws IOException, FileNotFoundException {
+		String parent = prefix;
+		String drill = prefix + "%0%";
 		if( query != null && !query.equals("") && !query.equals("/") ){
-			base = new File(base,query.substring(1));
+			String q = query.substring(1);
+			base = new File(base,q);
+			String link = prefix + q;
+			drill = (link + "/%0%").replaceAll("[\\\\/]+", "/");
+			int lastIndexOf = link.lastIndexOf('/',link.length()-1);
+			if(lastIndexOf > 0){
+				parent = link.substring(0,lastIndexOf);
+			}
 		}
 		if( base.exists() ){
 			if(base.isDirectory() ){
-				out.println(ToStringUtil.toString(base.list()));
+				JsonTable jsonTable = new JsonTable(base.toString());
+				jsonTable.add("FILE_NAME",base.list());
+				jsonTable.parent = parent;
+				jsonTable.drill = drill;
+				out.println(jsonTable.toJsonTable());
 			}else{
 				Streams.copyAndClose(new FileReader(base), out);
 			}

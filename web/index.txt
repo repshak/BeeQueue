@@ -1,0 +1,9 @@
+{
+  "tabularData" : true,
+  "drill" : "%0%",
+  "title" : "Home",
+  "aoColumns" : [ {
+    "sTitle" : "FILE_NAME"
+  } ],
+  "aaData" : [ [ "host" ], [ "db" ], [ "home" ], [ "query" ] ]
+}

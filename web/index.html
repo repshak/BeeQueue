@@ -3,11 +3,16 @@
 	<head>
 	<title></title>
 	<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="glibrary/yui_2.8.0r4/base.css" />
+	<link rel="stylesheet" type="text/css" href="json/default.css" />
+	<link rel="stylesheet" type="text/css"
+		href="glibrary/yui_2.8.0r4/reset-fonts.css" />
 	<!-- 
 	 -->
 	<style type="text/css" title="currentStyle">
 		@import "demo_page.css";
 		@import "demo_table.css";
+		@import "json/default.css";
 		tbody tr:hover, a:hover {
 		  background-color: #ECC;
 		  cursor: pointer;
@@ -16,6 +21,8 @@
 	<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="jquery-ui-1.8.19.custom.min.js"></script>
 	<script type="text/javascript" src="jquery.dataTables.min.js"></script>
+
+
 	<script type="text/javascript">
 		$(function() {
       		var rootUrl = location.href.replace(/#[^#]+$/,"").replace(/index\.html$/,"");
@@ -28,39 +35,47 @@
 					location.hash.substr(1), 
 					function (data){
 						 sData = data;
-						 document.title = data.query;
-						 $('#title').html(data.query);
-						 if(data.parent){
-							 $('#parent').css("display","inline")
-							    .html("Go back to parent")
-							 	.click(function(){goToHash(data.parent);});
-						 }else{
-							 $('#parent').unbind().css("display","none");
-						 }
-						 $('#div').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="table"></table>' );     
-						 $('#table').dataTable( {
-							 iDisplayLength: -1,
-							 aLengthMenu: [],
-						     aaData: data.aaData,
-						     aoColumns: data.aoColumns,
-						     fnDrawCallback: function() {
-					                if (Math.ceil((this.fnSettings().fnRecordsDisplay()) / this.fnSettings()._iDisplayLength) > 1)  {
-					                        $('.dataTables_paginate').css("display", "block"); 
-					                        $('.dataTables_length').css("display", "block");
-					                } else {
-					                        $('.dataTables_paginate').css("display", "none");
-					                        $('.dataTables_length').css("display", "none");
-					                }
-					            }
-						 } );  	
-						 $('#table tbody tr').live('click', function(){
-							 if( sData.drill){
-								var td0 = this.getElementsByTagName('td')[0];
-							    var id = td0.textContent || td0.text || td0.innerText;
-							    var newHash = sData.drill.replace("%1", id);
-							    goToHash(newHash); 
+						 if(data.tabularData){
+							 document.title = data.title;
+							 $('#title').html(data.title);
+							 if(data.parent){
+								 $('#parent').css("display","inline")
+								    .html("Go back to parent")
+								 	.click(function(){goToHash(data.parent);});
+							 }else{
+								 $('#parent').unbind().css("display","none");
 							 }
-						 });			 
+							 $('#div').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="table"></table>' );     
+							 $('#table').dataTable( {
+								 iDisplayLength: -1,
+								 aLengthMenu: [],
+							     aaData: data.aaData,
+							     aoColumns: data.aoColumns,
+							     fnDrawCallback: function() {
+						                if (Math.ceil((this.fnSettings().fnRecordsDisplay()) / this.fnSettings()._iDisplayLength) > 1)  {
+						                        $('.dataTables_paginate').css("display", "block"); 
+						                        $('.dataTables_length').css("display", "block");
+						                } else {
+						                        $('.dataTables_paginate').css("display", "none");
+						                        $('.dataTables_length').css("display", "none");
+						                }
+						            }
+							 } );  	
+							 $('#table tbody tr').live('click', function(){
+								 if( sData.drill){
+								   var tds = this.getElementsByTagName('td');
+								   var newHash = sData.drill;
+								   var i=0;
+								   for (;i<tds.length;i++) {
+								     var id = tds[i].textContent || tds[i].text || tds[i].innerText;
+								     newHash = newHash.replace("%"+i+"%", id);
+								   }
+								   goToHash(newHash); 
+								 }
+							 });			 
+						 }else{
+							 $('#div').html( HTML.display(data,"ath") );     
+						 }
 					});
    			});
     	    $(window).trigger('hashchange');
