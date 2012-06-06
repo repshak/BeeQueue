@@ -1,0 +1,9 @@
+= Setup Developer environment =
+
+== Tools ==
+
+* Any Java IDE with ant integration should work
+** I prefer to use [[http://eclipse.org|eclipse]] with plugins:
+*** Eclipse java and javascript developmnet
+*** Eclipse eGit
+*** Full list of my plugins as of now: [[MyEclipsePlugins.mediawiki]]

@@ -1,4 +1,5 @@
 = ToDo =
+* Write [[DeveloperSetup]] page
 * BeatLogic
 ** Evaluate blocked stages.
 * Visualization
