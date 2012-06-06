@@ -35,3 +35,175 @@ b0026b9c29285:bin sergeyk$ ./startNetworkServer &
 Wed Jun 06 13:10:17 PDT 2012 : Security manager installed using the Basic server security policy.
 Wed Jun 06 13:10:17 PDT 2012 : Apache Derby Network Server - 10.8.2.2 - (1181258) started and ready to accept connections on port 1527
 </pre>
+
+=== Recreate DB from scratch ===
+
+TO decribe later
+
+=== Build and Run Worker
+
+<pre>
+b0026b9c29285:BeeQueue sergeyk$ ant clean build
+Buildfile: /Users/sergeyk/git/BeeQueue/build.xml
+
+init:
+
+clean:
+   [delete] Deleting directory /Users/sergeyk/git/BeeQueue/.build
+
+init:
+
+build:
+    [mkdir] Created dir: /Users/sergeyk/git/BeeQueue/.build/warjar
+    [unjar] Expanding: /Users/sergeyk/git/BeeQueue/lib/web/winstone-0.9.10.jar into /Users/sergeyk/git/BeeQueue/.build/warjar
+    [javac] Compiling 9 source files to /Users/sergeyk/git/BeeQueue/.build/warjar
+[propertyfile] Creating new property file: /Users/sergeyk/git/BeeQueue/.build/warjar/bq.properties
+     [copy] Copying 451 files to /Users/sergeyk/git/BeeQueue/.build/warjar/web
+   [delete] Deleting: /Users/sergeyk/git/BeeQueue/.build/warjar/META-INF/MANIFEST.MF
+      [jar] Building jar: /Users/sergeyk/git/BeeQueue/.build/bq.jar
+
+BUILD SUCCESSFUL
+Total time: 4 seconds
+b0026b9c29285:BeeQueue sergeyk$ mkdir bq-home
+b0026b9c29285:BeeQueue sergeyk$ cp coordinator.json bq-home/
+b0026b9c29285:BeeQueue sergeyk$ java -jar .build/bq.jar 
+BQ_HOME:/Users/sergeyk/git/BeeQueue/bq-home
+[Winstone 2012/06/06 13:21:40] - HTTP Listener started: port=7532
+[Winstone 2012/06/06 13:21:40] - Winstone Servlet Engine v0.9.10 running: controlPort=disabled
+@Artifact: cpu: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/cpu/20120606132141.txt
+@Artifact: mem: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/mem/20120606132141.txt
+@Artifact: ps: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/ps/20120606132142.txt
+@Artifact: cpu: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/cpu/20120606132240.txt
+@Artifact: mem: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/mem/20120606132240.txt
+@Artifact: ps: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/ps/20120606132241.txt
+</pre>
+
+=== Submit and Check Message ===
+<pre>
+b0026b9c29285:BeeQueue sergeyk$ java -jar .build/bq.jar -command=SendMessage tc1 ReportRequest Zsw 20120521 20120525
+Submited :  {
+  "domain" : "tc1",
+  "name" : "ReportRequest",
+  "state" : "EMITTED",
+  "parameters" : {
+    "ReportName" : "Zsw",
+    "StartDate" : "20120521",
+    "EndDate" : "20120525"
+  },
+  "contextSettings" : null,
+  "id" : 1,
+  "lock" : null,
+  "current" : null
+}
+b0026b9c29285:BeeQueue sergeyk$ java -jar .build/bq.jar -command=CheckMessage 1
+Drilldown :  {
+  "msg" : {
+    "domain" : "tc1",
+    "name" : "ReportRequest",
+    "state" : "IN_PROCESS",
+    "parameters" : {
+      "ReportName" : "Zsw",
+      "StartDate" : "20120521",
+      "EndDate" : "20120525"
+    },
+    "contextSettings" : null,
+    "id" : 1,
+    "lock" : 1339014170543,
+    "current" : 1339014162776
+  },
+  "jobs" : [ {
+    "id" : 1,
+    "msgId" : 1,
+    "state" : "IN_PROCESS",
+    "responsible" : false,
+    "jobName" : "report",
+    "message" : {
+      "domain" : "tc1",
+      "name" : "ReportRequest",
+      "state" : "IN_PROCESS",
+      "parameters" : {
+      },
+      "contextSettings" : null,
+      "id" : 1,
+      "lock" : null,
+      "current" : null
+    }
+  } ],
+  "stages" : [ {
+    "stageId" : 1,
+    "jobId" : 1,
+    "state" : "RUNNING",
+    "retriesLeft" : 0,
+    "stageName" : "run",
+    "job" : {
+      "id" : 1,
+      "msgId" : 1,
+      "state" : "IN_PROCESS",
+      "responsible" : false,
+      "jobName" : "report",
+      "message" : {
+        "domain" : "tc1",
+        "name" : "ReportRequest",
+        "state" : "IN_PROCESS",
+        "parameters" : {
+          "ReportName" : "Zsw",
+          "StartDate" : "20120521",
+          "EndDate" : "20120525"
+        },
+        "contextSettings" : null,
+        "id" : 1,
+        "lock" : null,
+        "current" : null
+      }
+    },
+    "newState" : null
+  } ],
+  "runs" : [ {
+    "id" : 1,
+    "stageId" : 1,
+    "workerId" : 130,
+    "state" : "RUNNING",
+    "pid" : null,
+    "processName" : null,
+    "dir" : "/Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/runs/1",
+    "cmd" : "/Users/sergeyk/git/BeeQueue/bq-home/config/domains/tc1/test1.sh Zsw 20120521 20120525",
+    "startTimeStamp" : 1339014160665,
+    "upTimeStamp" : 1339014162370,
+    "downTimeStamp" : null,
+    "stage" : {
+      "stageId" : 1,
+      "jobId" : 1,
+      "state" : "RUNNING",
+      "retriesLeft" : 0,
+      "stageName" : "run",
+      "job" : {
+        "id" : 1,
+        "msgId" : 1,
+        "state" : "IN_PROCESS",
+        "responsible" : false,
+        "jobName" : "report",
+        "message" : {
+          "domain" : "tc1",
+          "name" : "ReportRequest",
+          "state" : "IN_PROCESS",
+          "parameters" : {
+            "ReportName" : "Zsw",
+            "StartDate" : "20120521",
+            "EndDate" : "20120525"
+          },
+          "contextSettings" : null,
+          "id" : 1,
+          "lock" : null,
+          "current" : null
+        }
+      },
+      "newState" : null
+    },
+    "justUpTimeStamp" : false,
+    "children" : null,
+    "inFinalState" : false
+  } ]
+}
+</pre>
+
+=== Inspect web interface ===
