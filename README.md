@@ -37,6 +37,8 @@ Development
 
 [ToDo](/repshak/BeeQueue/blob/master/design/ToThinkAndToDo.mediawiki)
 
+[DeveloperSetup](/repshak/BeeQueue/blob/master/design/DeveloperSetup.mediawiki)
+
 Downloads
 ---------
 
