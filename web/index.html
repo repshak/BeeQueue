@@ -2,13 +2,6 @@
 <html>
 	<head>
 	<title></title>
-	<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
-	<link rel="stylesheet" type="text/css" href="glibrary/yui_2.8.0r4/base.css" />
-	<link rel="stylesheet" type="text/css" href="json/default.css" />
-	<link rel="stylesheet" type="text/css"
-		href="glibrary/yui_2.8.0r4/reset-fonts.css" />
-	<!-- 
-	 -->
 	<style type="text/css" title="currentStyle">
 		@import "demo_page.css";
 		@import "demo_table.css";
@@ -34,6 +27,7 @@
 				getTableData(
 					location.hash.substr(1), 
 					function (data){
+						 data = $.parseJSON(data);
 						 sData = data;
 						 if(data.tabularData){
 							 document.title = data.title;
@@ -88,7 +82,10 @@
 
        		function getTableData(u, callback){
        	        var k = u ? u : "index.txt";
-       	        $.getJSON(rootUrl + k, callback);
+       	       	$.ajax({
+       	        url: rootUrl + k,
+       	        success: callback
+       	      	});
        	    }
        	    
 		});

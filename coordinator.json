@@ -1,0 +1,8 @@
+{
+  "type" : "db",
+  "driver" : "org.apache.derby.jdbc.ClientDriver",
+  "url" : "jdbc:derby://localhost:1527/bee",
+  "user" : "derbyuser",
+  "password" : "derbyuser",
+  "initSql" : null
+}
