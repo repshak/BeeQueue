@@ -7,5 +7,5 @@
 *** Eclipse java and javascript developmnet
 *** Eclipse eGit
 *** [http://groovy.codehaus.org/Install+Groovy-Eclipse+Plugin Groovy Eclipse Plugin] (not crtical because you can edit groovy code and template without it)
-*** (only necessary for database model changes) DBModel plugin [http://www.azzurri.jp/] free version work with derby
+***  DBModel plugin [http://www.azzurri.jp/] (only necessary for database model changes. Free version work with open souce databases including derby).
 *** Full list of [[MyEclipsePlugins|my plugins as of now]]
