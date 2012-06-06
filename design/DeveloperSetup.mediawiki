@@ -31,16 +31,20 @@ Archive:  beedb.zip
    creating: bee/tmp/
 b0026b9c29285:bin sergeyk$ ls -ld bee
 drwxr-xr-x  8 sergeyk  staff  272 May 31 14:54 bee
-b0026b9c29285:bin sergeyk$ ./startNetworkServer &
+b0026b9c29285:bin sergeyk$ ./startNetworkServer 
 Wed Jun 06 13:10:17 PDT 2012 : Security manager installed using the Basic server security policy.
 Wed Jun 06 13:10:17 PDT 2012 : Apache Derby Network Server - 10.8.2.2 - (1181258) started and ready to accept connections on port 1527
 </pre>
+
+I run it in separate terminal (db terminal).
 
 === Recreate DB from scratch ===
 
 TO decribe later
 
-=== Build and Run Worker
+=== Build and Run Worker ===
+
+In separate terminal (worker terminal)
 
 <pre>
 b0026b9c29285:BeeQueue sergeyk$ ant clean build
@@ -79,6 +83,9 @@ BQ_HOME:/Users/sergeyk/git/BeeQueue/bq-home
 </pre>
 
 === Submit and Check Message ===
+
+These in separate terminal too (command terminal).
+
 <pre>
 b0026b9c29285:BeeQueue sergeyk$ java -jar .build/bq.jar -command=SendMessage tc1 ReportRequest Zsw 20120521 20120525
 Submited :  {
