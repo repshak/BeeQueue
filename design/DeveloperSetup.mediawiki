@@ -7,4 +7,4 @@
 *** Eclipse java and javascript developmnet
 *** Eclipse eGit
 *** (only necessary for database model changes) DBModel plugin [http://www.azzurri.jp/] free version work with derby
-*** Full list of [[MyEclipsePlugins.mediawik]|[my plugins as of now]]
+*** Full list of [[MyEclipsePlugins.mediawik|my plugins as of now]]
