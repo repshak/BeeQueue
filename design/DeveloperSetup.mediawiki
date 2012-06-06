@@ -16,3 +16,22 @@
 
 == Build ==
 
+Assuming you aready clone BeeQueue.git 
+
+=== Set/Start DB ===
+
+<pre>
+b0026b9c29285:BeeQueue sergeyk$ cd install/db-node/bin/
+b0026b9c29285:bin sergeyk$ unzip beedb.zip 
+Archive:  beedb.zip
+   creating: bee/
+  inflating: bee/db.lck              
+... 
+  inflating: bee/service.properties  
+   creating: bee/tmp/
+b0026b9c29285:bin sergeyk$ ls -ld bee
+drwxr-xr-x  8 sergeyk  staff  272 May 31 14:54 bee
+b0026b9c29285:bin sergeyk$ ./startNetworkServer &
+Wed Jun 06 13:10:17 PDT 2012 : Security manager installed using the Basic server security policy.
+Wed Jun 06 13:10:17 PDT 2012 : Apache Derby Network Server - 10.8.2.2 - (1181258) started and ready to accept connections on port 1527
+<pre>
