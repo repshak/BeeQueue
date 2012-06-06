@@ -207,3 +207,6 @@ Drilldown :  {
 </pre>
 
 === Inspect web interface ===
+http://localhost:7532/index.html#
+
+go to 'db' and then 'NN_RUN'
