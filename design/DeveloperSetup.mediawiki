@@ -12,6 +12,7 @@
 * Some jdbc capable db client to modify derby db
 ** For example: [http://squirrel-sql.sourceforge.net/ squirrel-sql]
 * Diagram editor [https://live.gnome.org/Dia]
+* offline wiki editor [https://github.com/github/gollum gollum] (I use it right now)
 
 == Build ==
 
