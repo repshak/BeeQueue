@@ -6,4 +6,5 @@
 ** I prefer to use [http://eclipse.org eclipse] with plugins:
 *** Eclipse java and javascript developmnet
 *** Eclipse eGit
+*** (only necessary for database model changes) DBModel plugin [http://www.azzurri.jp/] free version work with derby
 *** Full list of my plugins as of now: [[MyEclipsePlugins.mediawiki]]
