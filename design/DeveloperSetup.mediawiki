@@ -6,6 +6,6 @@
 ** I prefer to use [http://eclipse.org eclipse] with plugins:
 *** Eclipse java and javascript developmnet
 *** Eclipse eGit
-*** http://groovy.codehaus.org/Install+Groovy-Eclipse+Plugin (not crtical because you can edit groovy code and template without it)
+*** [http://groovy.codehaus.org/Install+Groovy-Eclipse+Plugin Groovy Eclipse Plugin] (not crtical because you can edit groovy code and template without it)
 *** (only necessary for database model changes) DBModel plugin [http://www.azzurri.jp/] free version work with derby
 *** Full list of [[MyEclipsePlugins|my plugins as of now]]
