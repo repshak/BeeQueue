@@ -1,7 +1,7 @@
 = Setup Development Environment =
 
 == Tools ==
-
+* at very minimum you need [http://www.oracle.com/technetwork/java/javase/downloads/index.html java] 1.6 , [ http://ant.apache.org/ant ant] and [http://git-scm.com/ git]
 * Any Java IDE with ant integration should work
 ** I prefer to use [http://eclipse.org eclipse] with plugins:
 *** Eclipse java and javascript developmnet
@@ -12,3 +12,6 @@
 * Some jdbc capable db client to modify derby db
 ** For example: [http://squirrel-sql.sourceforge.net/ squirrel-sql]
 * Diagram editor [https://live.gnome.org/Dia]
+
+== Build ==
+
