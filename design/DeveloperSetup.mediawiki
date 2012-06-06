@@ -9,3 +9,6 @@
 *** [http://groovy.codehaus.org/Install+Groovy-Eclipse+Plugin Groovy Eclipse Plugin] (not crtical because you can edit groovy code and template without it)
 ***  DBModel plugin [http://www.azzurri.jp/] (only necessary for database model changes. Free version work with open souce databases including derby).
 *** Full list of [[MyEclipsePlugins|my plugins as of now]]
+* Some jdbc capable db client to modify derby db
+** For example: [http://squirrel-sql.sourceforge.net/ squirrel-sql]
+* Diagram editor [https://live.gnome.org/Dia]
