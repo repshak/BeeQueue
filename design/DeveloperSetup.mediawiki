@@ -82,6 +82,36 @@ BQ_HOME:/Users/sergeyk/git/BeeQueue/bq-home
 @Artifact: ps: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/ps/20120606132241.txt
 </pre>
 
+=== Altenative way to Build/Run Worker  ===
+
+There way to run worker, and load webcontent from development directory.
+this way you can avoid reassembling final jar all the time when you just made changes to webcontent ( like javascript modifications).
+
+<pre>
+b0026b9c29285:BeeQueue sergeyk$ ant run
+Buildfile: /Users/sergeyk/git/BeeQueue/build.xml
+
+init:
+
+build:
+    [unjar] Expanding: /Users/sergeyk/git/BeeQueue/lib/web/winstone-0.9.10.jar into /Users/sergeyk/git/BeeQueue/.build/warjar
+[propertyfile] Updating property file: /Users/sergeyk/git/BeeQueue/.build/warjar/bq.properties
+   [delete] Deleting: /Users/sergeyk/git/BeeQueue/.build/warjar/META-INF/MANIFEST.MF
+      [jar] Building jar: /Users/sergeyk/git/BeeQueue/.build/bq.jar
+
+run:
+     [java] BQ_HOME:/Users/sergeyk/git/BeeQueue/bq-home
+     [java] [Winstone 2012/06/06 19:02:44] - HTTP Listener started: port=7532
+     [java] [Winstone 2012/06/06 19:02:44] - Winstone Servlet Engine v0.9.10 running: controlPort=disabled
+     [java] @Artifact: cpu: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/cpu/20120606190245.txt
+     [java] @Artifact: mem: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/mem/20120606190245.txt
+     [java] @Artifact: ps: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/ps/20120606190246.txt
+     [java] @Artifact: cpu: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/cpu/20120606190359.txt
+     [java] @Artifact: mem: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/mem/20120606190359.txt
+     [java] @Artifact: ps: /Users/sergeyk/git/BeeQueue/bq-home/hosts/Sergeys-MacBook-Pro.local/ps/20120606190359.txt
+...
+</pre>
+
 === Submit and Check Message ===
 
 These in separate terminal too (command terminal).
