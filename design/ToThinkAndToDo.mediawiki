@@ -1,12 +1,7 @@
 = ToDo =
-* Write [[DeveloperSetup]] page
 * BeatLogic
 ** Evaluate blocked stages.
-* Visualization
-** query and drilldown and action config
-** json visualization 
-*** modify it to run visualization automatically on all json data pulled on the web
-** log visualization
+* log visualization
 
 == ToTest ==
 * Eat you own dog food: use BeeQueue as build/ci subsytem.
@@ -30,6 +25,11 @@
 
 == Done ==
 
+* Write [[DeveloperSetup]] page
+* Visualization
+** query and drilldown and action config
+** json visualization 
+*** modify it to run visualization automatically on all json data pulled on the web
 * Build better test case: 
 ** test scripts that produce std output/ std error , and spawn other processes
 * command to push configuration to cloud

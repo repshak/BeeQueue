@@ -5,7 +5,6 @@
 	<style type="text/css" title="currentStyle">
 		@import "demo_page.css";
 		@import "demo_table.css";
-		@import "json/default.css";
 		tbody tr:hover, a:hover {
 		  background-color: #ECC;
 		  cursor: pointer;
@@ -14,31 +13,29 @@
 	<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="jquery-ui-1.8.19.custom.min.js"></script>
 	<script type="text/javascript" src="jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="vj.js"></script>
 
 
 	<script type="text/javascript">
 		$(function() {
       		var rootUrl = location.href.replace(/#[^#]+$/,"").replace(/index\.html$/,"");
       		var sData = null;
+      		var sHash = null;
       		var lastHashProccessed = null;
        		$(window).bind( 'hashchange', function(){
            		if(location.hash == lastHashProccessed) return ;
        			lastHashProccessed = location.hash;
-				getTableData(
-					location.hash.substr(1), 
+				sHash = location.hash.substr(1) ;
+       			getTableData(
+					sHash, 
 					function (data){
-						 data = $.parseJSON(data);
 						 sData = data;
+						 try{
+							 data = $.parseJSON(data);
+							 sData = data;
+						 }catch(ignore){}
 						 if(data.tabularData){
-							 document.title = data.title;
-							 $('#title').html(data.title);
-							 if(data.parent){
-								 $('#parent').css("display","inline")
-								    .html("Go back to parent")
-								 	.click(function(){goToHash(data.parent);});
-							 }else{
-								 $('#parent').unbind().css("display","none");
-							 }
+							 setTitle(data.title || sHash,sHash, null);
 							 $('#div').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="table"></table>' );     
 							 $('#table').dataTable( {
 								 iDisplayLength: -1,
@@ -67,8 +64,13 @@
 								   goToHash(newHash); 
 								 }
 							 });			 
+						 }else if(typeof(data)!='string'){
+							 setTitle(sHash,sHash,null);
+							 $('#div').html( HTML.display(data,0) );     
 						 }else{
-							 $('#div').html( HTML.display(data,"ath") );     
+						 	setTitle(sHash,sHash,null);
+						 	$('#div').html( "<pre></pre>" );
+							$('#div pre').text( data );
 						 }
 					});
    			});
@@ -83,21 +85,40 @@
        		function getTableData(u, callback){
        	        var k = u ? u : "index.txt";
        	       	$.ajax({
-       	        url: rootUrl + k,
-       	        success: callback
+       	        	url: rootUrl + k,
+       	        	success: callback
        	      	});
        	    }
+       		
+       		function setTitle(t,h,p){
+				 document.title = t;
+				 $('#title').html(t);
+				 if(!p && h){
+					 if( h.indexOf('/')>0 ){
+					   p=h.substring(0,h.lastIndexOf('/'));
+					 }else{
+					   p='';
+					 }
+				 }
+				 $('#parent').unbind();
+				 if(h){
+					 $('#parent').css("display","inline")
+						    .html("Go back to parent")
+						 	.click(function(){goToHash(p);});
+				 }else{
+					 $('#parent').css("display","none");
+				 }
+
+       		}
        	    
 		});
+		
 	</script>
 	</head>
 	<body id="dt_example">
 		<h1 id="title"></h1>
 	    <a id="parent"></a>
 		<div id="div"></div>
-		<div id="links">
-		  <a href="json/index.html">JSON Visualization</a>
-		</div>
 	</body>
 </html>
 

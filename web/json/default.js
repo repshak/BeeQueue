@@ -2534,373 +2534,6 @@ HTML = {
 
 
 
-/** Provides a few necessary methods for detecting and rendering a generic
-  * data structure.
-  * @constructor
-  * @param {object | array} o
-  */
-STRUCTURE = function (o) {
-	this.footPrints = [];
-	this.length = 0;
-
-	// Determine the mode of all subobject property sets.  This also updates
-	// the length property.
-	this.footPrint = this.scanObject(o);
-};
-
-
-/** A single foot print.  Used to help determine which set of properties
-  * occurs the most often in a set of sets.
-  *
-  * @constructor
-  * @param {array} keys
-  */
-STRUCTURE.Footprint = function (keys) {
-	this.keys = keys.slice();
-	this.count = 1;
-};
-
-
-STRUCTURE.Footprint.prototype = {
-
-	/** Determine if this footprint is equal to another set of keys.
-	  * @param  {array} keys
-	  * @return {boolean}
-	  */
-	equals: function (keys) {
-		var x;
-		if (this.keys.length === keys.length) {
-			for (x = 0; x < keys.length; x++) {
-				if (this.keys[x] !== keys[x]) {
-					return false;
-				}
-			}
-		} else {
-			return false;
-		}
-		return true;
-	},
-
-	/** Render this footprint as a set of HTML table cells.
-	  * @return {string}
-	  */
-	render: function (row, path) {
-		var keys   = this.keys,
-			x      = 0,
-			k      = keys.length,
-			output = [];
-
-		if (row) {
-			for (; x < k; x++) {
-				VIS.paths.push(VIS.paths[path] + VIS.variable(keys[x]));
-
-				output[x] =
-					'<td id="px' + (VIS.paths.length - 1) + '">' +
-					HTML.display(row[keys[x]], VIS.paths.length - 1) +
-					'<\/td>';
-			}
-		} else {
-			for (; x < k; x++) {
-				output[x] = '<th>' + VIS.html(keys[x]) + '<\/th>';
-			}
-		}
-
-		return output.join('');
-	}
-};
-
-
-
-/** Determine whether a given object is valid for inclusion as a row in a
-  * datatable structure.
-  * @param  {object} o
-  * @return {boolean}
-  */
-STRUCTURE.isObject = function (o) {
-	return (
-		Lang.isObject(o)    === true  &&
-		Lang.isArray(o)     === false &&
-		Lang.isFunction(o)  === false &&
-		o instanceof Error  === false &&
-		o instanceof Date   === false &&
-		o instanceof RegExp === false
-	);
-};
-
-
-/** Sort an array numerically */
-STRUCTURE.numericSort = function (a, b) {
-	return a - b;
-};
-
-
-/** Extract a sorted list of keys from the given object.
-  * @param  {object} o
-  * @return a
-  */
-STRUCTURE.getKeys = function (o) {
-	var a = [], y;
-
-	for (y in o) {
-		if (o.hasOwnProperty(y)) {
-			a[a.length] = y;
-		}
-	}
-
-	if (Lang.isArray(o)) {
-		a.sort(STRUCTURE.numericSort);
-	} else {
-		a.sort();
-	}
-
-	return a;
-};
-
-
-STRUCTURE.prototype = {
-
-	/** Scan an object for inclusion in this data structure.
-	  *
-	  * Updates the length property of this structure.
-	  *
-	  * @param  {object} o
-	  * @return {array}
-	  *
-	  */
-	scanObject: function (o) {
-		var x, keys, length = 0;
-		for (x in o) {
-			if (o.hasOwnProperty(x)) {
-				length++;
-				if (STRUCTURE.isObject(o[x])) {
-					keys = STRUCTURE.getKeys(o[x]);
-					if (keys.length > 0) {
-						this.addFootPrint(keys);
-					}
-				}
-			}
-		}
-
-		this.length += length;
-		return this.getMode();
-	},
-
-
-	/** Add a single footprint to our collection of footprints.
-	  * @param {array} keys
-	  */
-	addFootPrint: function (keys) {
-		var x, footPrints = this.footPrints;
-
-		for (x = 0; x < footPrints.length; x++) {
-			if (footPrints[x].equals(keys)) {
-				footPrints[x].count++;
-				return true;
-			}
-		}
-
-		footPrints[footPrints.length] = new STRUCTURE.Footprint(keys);
-		return true;
-	},
-
-	/** Return the mode of the footprints (i.e., the one that occurred the
-	  * most often).
-	  *
-	  * @return {STRUCTURE.FootPrint}
-	  */
-	getMode: function () {
-		var x,
-			count      = 0,
-			max        = null,
-			footPrints = this.footPrints;
-
-		for (x = 0; x < footPrints.length; x++) {
-			if (footPrints[x].count > count) {
-				max = footPrints[x];
-				count = max.count;
-			}
-		}
-		return max;
-	},
-
-	/** This is only valid as a structure if at least two items have been
-	  * scanned, and if the the mode of all subobject property sets occurred
-	  * at least X% of the time.
-	  *
-	  * @param  {number}  threshold
-	  * @return {boolean}
-	  */
-	isValid: function (threshold) {
-		return (
-			this.length > 1 &&
-			this.footPrint !== null &&
-			this.footPrint.count >= (this.length * threshold)
-		);
-	},
-
-
-	/** Render the given object using this data structure as a framework.
-	  * @param {object | array} obj
-	  * @param {number}         path
-	  * @return {string}
-	  */
-	render: function (obj, path) {
-		var x, keys, row, subPath,
-			html       = VIS.html,
-			properties = STRUCTURE.getKeys(obj),
-			span       = this.footPrint.keys.length,
-			o          = [],
-			p          = 0,
-			isArray    = Lang.isArray(obj);
-
-		o[p++] =
-			'<table id="p' + path + '" class="ARRAY">' +
-			'<caption>[-] ' +
-			(isArray ? 'Array' : 'Object') +
-			' data structure, ' + VIS.formatSize(properties.length) +
-			(isArray ? ' items' : ' properties') +
-			'</caption><thead><tr><th>[key]</th>';
-
-		o[p++] = this.footPrint.render();
-		o[p++] = '</tr></thead><tbody>';
-
-		path = VIS.paths[path];
-
-		for (x = 0; x < properties.length; x++) {
-			row = obj[properties[x]];
-			keys = STRUCTURE.getKeys(row);
-
-			subPath = 
-				(isArray && isNaN(parseInt(properties[x], 10)) === false) ?
-				'[<span class="NUMBER">' + properties[x] + '</span>]' :
-				VIS.variable(properties[x]);
-
-			VIS.paths.push(path + subPath);
-
-			if (this.footPrint.equals(keys)) {
-				o[p++] =
-					'<tr id="p' + (VIS.paths.length - 1) + '"><th' +
-					(isArray ? ' class="NUMBER">' : '>') +
-					html(properties[x]) + '</th>';
-
-				o[p++] = this.footPrint.render(row, VIS.paths.length - 1);
-				o[p++] = '</tr>';
-
-			} else {
-				o[p++] =
-					'<tr id="p' + (VIS.paths.length - 1) + '"><th><em' +
-					(isArray ? ' class="NUMBER">' : '>') +
-					html(properties[x]) + '</em></th><td colspan="' +
-					span + '">';
-
-				o[p++] = HTML.display(row, VIS.paths.length - 1);
-				o[p++] = '</td></tr>';
-			}
-		}
-
-		o[p++] = '</tbody></table>';
-		return o.join('');
-	}
-};
-
-
-QUERYSTRING = (function () {
-
-	function parseSource(source) {
-		source = String(source);
-
-		if (source.substring(0, 1) === '?') {
-			source = source.substring(1);
-		}
-
-		source = source.split('&');
-
-		var x = source.length;
-		while (x--) {
-			source[x] = source[x].split('=');
-
-			if (source[x].length === 2) {
-				source[x][0] = decodeURIComponent(source[x][0]);
-				source[x][1] = decodeURIComponent(source[x][1]);
-			} else {
-				source.splice(x, 1);
-			}
-		}
-
-		return source;
-	}
-
-	function QueryString(source) {
-
-		source = (source === null || source === undefined) ?
-			document.location.search : String(source);
-
-		source = parseSource(source);
-
-		this.get = function (key) {
-			key = key.toUpperCase();
-			var x, output = [];
-			for (x = 0; x < source.length; x += 1) {
-				if (source[x][0].toUpperCase() === key) {
-					output.push(source[x][1]);
-				}
-			}
-
-			return output;
-		};
-
-		this.set = function (key, values) {
-
-			key = String(key);
-
-			if ($.isArray(values) === false) {
-				values = [values];
-			}
-
-			var x, ucKey = key.toUpperCase();
-
-			x = values.length;
-			while (x--) {
-				if (values[x] === null || values[x] === undefined) {
-					values.splice(x, 1);
-				} else {
-					values[x] = String(values[x]);
-				}
-			}
-
-			x = source.length;
-			while (x--) {
-				if (source[x][0].toUpperCase() === ucKey) {
-					source.splice(x, 1);
-				}
-			}
-
-			for (x = 0; x < values.length; x += 1) {
-				source.push([ key, values[x] ]);
-			}
-
-			return this;
-		};
-
-		this.toString = function () {
-			if (source.length === 0) {
-				return '';
-			}
-
-			var x, output = [];
-			for (x = 0; x < source.length; x += 1) {
-				output.push(
-					encodeURIComponent(source[x][0]) + '=' +
-						encodeURIComponent(source[x][1])
-				);
-			}
-
-			return '?' + output.join('&');
-		};
-	}
-
-	return QueryString;
-}());
 
 
 COOKIE = {
@@ -2945,3 +2578,101 @@ COOKIE = {
 };
 
 Event.onDOMReady(VIS.init, VIS, true);
+
+QUERYSTRING = (function () {
+
+  function parseSource(source) {
+    source = String(source);
+
+    if (source.substring(0, 1) === '?') {
+      source = source.substring(1);
+    }
+
+    source = source.split('&');
+
+    var x = source.length;
+    while (x--) {
+      source[x] = source[x].split('=');
+
+      if (source[x].length === 2) {
+        source[x][0] = decodeURIComponent(source[x][0]);
+        source[x][1] = decodeURIComponent(source[x][1]);
+      } else {
+        source.splice(x, 1);
+      }
+    }
+
+    return source;
+  }
+
+  function QueryString(source) {
+
+    source = (source === null || source === undefined) ?
+      document.location.search : String(source);
+
+    source = parseSource(source);
+
+    this.get = function (key) {
+      key = key.toUpperCase();
+      var x, output = [];
+      for (x = 0; x < source.length; x += 1) {
+        if (source[x][0].toUpperCase() === key) {
+          output.push(source[x][1]);
+        }
+      }
+
+      return output;
+    };
+
+    this.set = function (key, values) {
+
+      key = String(key);
+
+      if ($.isArray(values) === false) {
+        values = [values];
+      }
+
+      var x, ucKey = key.toUpperCase();
+
+      x = values.length;
+      while (x--) {
+        if (values[x] === null || values[x] === undefined) {
+          values.splice(x, 1);
+        } else {
+          values[x] = String(values[x]);
+        }
+      }
+
+      x = source.length;
+      while (x--) {
+        if (source[x][0].toUpperCase() === ucKey) {
+          source.splice(x, 1);
+        }
+      }
+
+      for (x = 0; x < values.length; x += 1) {
+        source.push([ key, values[x] ]);
+      }
+
+      return this;
+    };
+
+    this.toString = function () {
+      if (source.length === 0) {
+        return '';
+      }
+
+      var x, output = [];
+      for (x = 0; x < source.length; x += 1) {
+        output.push(
+          encodeURIComponent(source[x][0]) + '=' +
+            encodeURIComponent(source[x][1])
+        );
+      }
+
+      return '?' + output.join('&');
+    };
+  }
+
+  return QueryString;
+}());
