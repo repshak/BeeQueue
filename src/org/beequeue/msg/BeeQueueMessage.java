@@ -29,6 +29,7 @@ public class BeeQueueMessage {
 	public String domain;
 	public String name;
 	public MessageState state;
+	public MessageLocator locator;
 	public Map<String, String> parameters = new LinkedHashMap<String, String>();
 	public Map<String, String> contextSettings = null;
 	public long id;

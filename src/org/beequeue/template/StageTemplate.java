@@ -19,20 +19,34 @@ package org.beequeue.template;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.util.Initializable;
 
-public class StageTemplate implements Initializable{
+public class StageTemplate {
 	public String stageName;
 	public String[] dependOnStage;
+	public String[] filters ;
 	public Map<String,CommandTemplate> commands = new LinkedHashMap<String, CommandTemplate>();
 	public RetryStrategy retryStrategy = new RetryStrategy();
+	private JobTemplate jobTemplate;
 	
 	public StageTemplate command(String key, CommandTemplate cmd){
 		commands.put(key, cmd);
 		return this;
 	}
 
-	@Override
-	public void init() {
+	public void init(JobTemplate jobTemplate) {
+		this.jobTemplate = jobTemplate;
+		this.jobTemplate.checkPresenseOfFilters(filters);
 	}
+
+	public JobTemplate jobTemplate() {
+		return jobTemplate;
+	}
+	
+	public boolean checkFilters(BeeQueueMessage msg) {
+		return jobTemplate.matchAnyOfTheseFilters(msg, filters);
+	}
+
+	
 }

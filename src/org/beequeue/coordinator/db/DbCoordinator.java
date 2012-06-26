@@ -56,6 +56,7 @@ import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.SqlUtil;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.template.JobTemplate;
+import org.beequeue.template.MessageTemplate;
 import org.beequeue.template.StageTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
@@ -379,7 +380,8 @@ public class DbCoordinator implements Coordiantor {
 		List<BeeQueueMessage> query = MessageQueries.PICK_EMMITED_MESSAGES.query(connection(), null);
 		for (BeeQueueMessage msg : query) {
 			if(1 == MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
-				JobTemplate[] jobs = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name).jobs;
+				MessageTemplate mt = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name);
+				JobTemplate[] jobs = mt.jobs;
 				boolean alreadyHaveOneResposible = false;
 				for (int i = 0; i < jobs.length; i++) {
 					JobTemplate jt = jobs[i];

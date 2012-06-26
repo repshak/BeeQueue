@@ -1,7 +1,19 @@
 {
   "messages" : [ {
     "messageName" : "ReportRequest",
-    "columns" : [ "ReportName", "StartDate", "EndDate" ],
+    "columns" : [ {
+      "name" : "ReportName",
+      "attrType" : "PARALLEL",
+      "dataType" : "STRING"
+    }, {
+      "name" : "StartDate",
+      "attrType" : "SEQUENTIAL",
+      "dataType" : "DATE"
+    }, {
+      "name" : "EndDdate",
+      "attrType" : "SEQUENTIAL",
+      "dataType" : "DATE"
+    } ],
     "jobs" : [ {
       "jobName" : "report",
       "stages" : [ {

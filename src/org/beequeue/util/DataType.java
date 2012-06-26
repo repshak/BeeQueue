@@ -18,6 +18,8 @@ package org.beequeue.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.beequeue.piles.flock.AnyFlock;
 import org.beequeue.piles.flock.BooleanFlockImpl;
@@ -30,6 +32,8 @@ import org.beequeue.piles.flock.LongFlockImpl;
 import org.beequeue.piles.flock.ShortFlockImpl;
 import org.beequeue.piles.flock.StringFlockImpl;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 
 public abstract class DataType<T> {
 	public final String name;
@@ -40,9 +44,15 @@ public abstract class DataType<T> {
 		this.type = type;
 	}
 	
+	@Override @JsonValue
+	public String toString() {
+		return name;
+	}
+
 	abstract public Flock<T> newFlock();
 	abstract public String o2s(T o) throws Exception ;
 	abstract public T s2o(String s) throws Exception ;
+	
 	
 	public static DataType<Boolean> BOOLEAN = new DataType<Boolean>("BOOLEAN", Boolean.class) {
 		@Override public Flock<Boolean> newFlock() { return new BooleanFlockImpl(); }
@@ -98,17 +108,49 @@ public abstract class DataType<T> {
 		@Override public Date s2o(String s) throws Exception { return yyyymmdd().parse(s) ; }
 	};
 
-	public static SimpleDateFormat yyyymmddhhmmss() { return new SimpleDateFormat("yyyyMMddhhmmss"); }
+	public static SimpleDateFormat yyyymmddhhmmss() { return new SimpleDateFormat("yyyyMMddHHmmss"); }
 	public static DataType<Date> TIMESTAMP = new DataType<Date>("TIMESTAMP", Date.class) {
 		@Override public Flock<Date> newFlock() { return new AnyFlock<Date>(); }
 		@Override public String o2s(Date o) throws Exception { return yyyymmddhhmmss().format(o) ; }
 		@Override public Date s2o(String s) throws Exception { return yyyymmddhhmmss().parse(s) ; }
 	};
-	public static SimpleDateFormat yyyymmddhhmmssz() { return new SimpleDateFormat("yyyyMMddhhmmssZ"); }
+	public static SimpleDateFormat yyyymmddhhmmssz() { return new SimpleDateFormat("yyyyMMddHHmmssZ"); }
 	public static DataType<Date> ZTIMESTAMP = new DataType<Date>("ZTIMESTAMP", Date.class) {
 		@Override public Flock<Date> newFlock() { return new AnyFlock<Date>(); }
 		@Override public String o2s(Date o) throws Exception { return yyyymmddhhmmssz().format(o) ; }
 		@Override public Date s2o(String s) throws Exception { return yyyymmddhhmmssz().parse(s) ; }
 	};
+	
+	@SuppressWarnings("rawtypes")
+	private static DataType[] TYPES = new DataType[]{
+		BOOLEAN,
+		SHORT,
+		INTEGER,
+		DOUBLE,
+		FLOAT,
+		BYTE,
+		LONG,
+		STRING,
+		DATE,
+		TIMESTAMP,
+		ZTIMESTAMP,
+	};
+	
+	@SuppressWarnings("rawtypes")
+	private static Map<String,DataType> TYPES_MAP = new HashMap<String,DataType>();
+	static {
+		for (@SuppressWarnings("rawtypes") DataType t : TYPES) {
+			TYPES_MAP.put(t.name,t);
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static DataType valueOf(String key) {
+		return TYPES_MAP.get(key);
+	}
+	
+	
+	
+	
 
 }

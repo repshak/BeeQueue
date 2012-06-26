@@ -23,8 +23,9 @@ import org.beequeue.util.Initializable;
 
 public class MessageTemplate implements Initializable {
 	public String messageName;
-	public String [] columns;
+	public MessageAttribute [] columns;
 	public JobTemplate[] jobs;
+	public Map<String,MessageFilter> filters = new LinkedHashMap<String, MessageFilter>();
 	private Map<String,JobTemplate> jobMap = new LinkedHashMap<String, JobTemplate>();
 	
 	@Override
@@ -32,7 +33,7 @@ public class MessageTemplate implements Initializable {
 		for (int i = 0; i < jobs.length; i++) {
 			JobTemplate jt = jobs[i];
 			jobMap.put(jt.jobName, jt);
-			jt.init();
+			jt.init(this);
 		}
 	}	
 	

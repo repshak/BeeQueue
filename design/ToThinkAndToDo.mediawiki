@@ -1,5 +1,8 @@
 = ToDo =
+* Latch dbmodel change
 * BeatLogic
+** Message filters
+** 
 ** Evaluate blocked stages.
 * log visualization
 

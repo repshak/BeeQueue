@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Initializable;
 
 /**
@@ -28,32 +29,54 @@ import org.beequeue.util.Initializable;
  * @author sergeyk
  *
  */
-public class JobTemplate implements Initializable{
+public class JobTemplate {
 	public String jobName;
 	public StageTemplate[] stages;
 	public boolean responsbile = false;
-	public MessageFilter filters[] = {new MessageFilter("true")};
+	public String filters[] ;
 	private Map<String,StageTemplate> stageMap = new LinkedHashMap<String, StageTemplate>();
-	@Override
-	public void init() {
-		for (int i = 0; i < stages.length; i++) {
-			StageTemplate st = stages[i];
-			stageMap.put(st.stageName, st);
-			st.init();
+	private MessageTemplate messageTemplate ;
+	
+	public void init(MessageTemplate messageTemplate) {
+		this.messageTemplate = messageTemplate;
+		checkPresenseOfFilters(filters);
+		if(stages!=null){
+			for (int i = 0; i < stages.length; i++) {
+				StageTemplate st = stages[i];
+				stageMap.put(st.stageName, st);
+				st.init(this);
+			}
 		}
-		
 	}
 	
+	public MessageTemplate messageTemplate() {
+		return messageTemplate;
+	}
+
 	public StageTemplate stageTemplate(String name){
 		return stageMap.get(name);
 	}
 
 	public boolean checkFilters(BeeQueueMessage msg) {
-		for (int i = 0; i < filters.length; i++) {
-			if(filters[i].evalFilter(msg)){
+		return matchAnyOfTheseFilters(msg, filters);
+	}
+
+	public boolean matchAnyOfTheseFilters(BeeQueueMessage msg, String[] theseFilters) {
+		for (int i = 0; i < theseFilters.length; i++) {
+			if(this.messageTemplate.filters.get(theseFilters[i]).evalFilter(msg)){
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public void checkPresenseOfFilters(String[] theseFilters) {
+		if(theseFilters == null) return;
+		for (int i = 0; i < theseFilters.length; i++) {
+			String key = theseFilters[i];
+			if(! this.messageTemplate.filters.containsKey(key)){
+				throw new BeeException("No filter defined:"+key).addPayload(this.messageTemplate);
+			}
+		}
 	}
 }

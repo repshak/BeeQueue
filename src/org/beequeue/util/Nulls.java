@@ -53,15 +53,38 @@ public class Nulls {
   }
   
   public static <T extends Comparable<T>> int compare(Collection<T> v1, Collection<T> v2, boolean shortListFirst , boolean nullFirst) {
+	  Integer checkNull = checkNull(v1,v2,nullFirst);
+	  if(checkNull!=null){
+		  return checkNull;
+	  }
+	  Iterator<T> i1 = v1.iterator(); 
+	  Iterator<T> i2 = v2.iterator();
+	  for(;;){
+		  boolean hasNext1 = i1.hasNext();   
+		  boolean hasNext2 = i2.hasNext();
+		  if( !hasNext1 && !hasNext2 ){
+			  return 0;
+		  }if( hasNext1 && !hasNext2 ){
+			  return shortListFirst ? 1 : -1;
+		  }else if( !hasNext1 && hasNext2 ){
+			  return shortListFirst ? -1 : 1;
+		  }else{
+			  int compare = compare(i1.next(), i2.next(), nullFirst);
+			  if(compare!=0){
+				  return compare;
+			  }
+		  }
+	  }
+  }
+  
+  public static <T extends Comparable<T>> int compare(T[] v1, T[] v2, boolean shortListFirst , boolean nullFirst) {
     Integer checkNull = checkNull(v1,v2,nullFirst);
     if(checkNull!=null){
       return checkNull;
     }
-    Iterator<T> i1 = v1.iterator(); 
-    Iterator<T> i2 = v2.iterator();
-    for(;;){
-      boolean hasNext1 = i1.hasNext();   
-      boolean hasNext2 = i2.hasNext();
+    for(int i = 0;;i++){
+      boolean hasNext1 = i < v1.length;   
+      boolean hasNext2 = i < v2.length;
       if( !hasNext1 && !hasNext2 ){
         return 0;
       }if( hasNext1 && !hasNext2 ){
@@ -69,7 +92,7 @@ public class Nulls {
       }else if( !hasNext1 && hasNext2 ){
         return shortListFirst ? -1 : 1;
       }else{
-        int compare = compare(i1.next(), i2.next(), nullFirst);
+        int compare = compare(v1[i], v2[i], nullFirst);
         if(compare!=0){
           return compare;
         }

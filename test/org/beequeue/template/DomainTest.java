@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
+import org.beequeue.util.DataType;
 import org.beequeue.util.ToStringUtil;
 import org.junit.Test;
 
@@ -64,7 +65,10 @@ public class DomainTest {
 		};
 		MessageTemplate msg = d.messages[0];
 		msg.messageName="ReportRequest";
-		msg.columns= new String[] {"ReportName", "StartDate", "EndDdate" };
+		msg.columns= new MessageAttribute[] {
+				new MessageAttribute("ReportName",AttributeType.PARALLEL,DataType.STRING), 
+				new MessageAttribute("StartDate",AttributeType.SEQUENTIAL,DataType.DATE), 
+				new MessageAttribute("EndDdate",AttributeType.SEQUENTIAL,DataType.DATE) };
 		msg.jobs = new JobTemplate[]{
 				new JobTemplate()
 		};

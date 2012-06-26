@@ -7,6 +7,7 @@ import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.msg.MessageState;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.template.DomainTemplate;
+import org.beequeue.template.MessageAttribute;
 import org.beequeue.template.MessageTemplate;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.Singletons;
@@ -34,9 +35,9 @@ public class SendMessage {
 				}
 				msg.state = MessageState.EMITTED;
 				for (int i = 0; i < mt.columns.length; i++) {
-					String col = mt.columns[i];
+					MessageAttribute col = mt.columns[i];
 					if(2+i < args.length ){
-						msg.parameters.put(col, args[2+i]);
+						msg.parameters.put(col.name, args[2+i]);
 					}else{
 						die(""+i+" parameter missing: ", mt.columns);
 					}
