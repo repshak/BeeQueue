@@ -37,7 +37,7 @@ public class JobTemplate {
 	private Map<String,StageTemplate> stageMap = new LinkedHashMap<String, StageTemplate>();
 	private MessageTemplate messageTemplate ;
 	
-	public void init(MessageTemplate messageTemplate) {
+	void init(MessageTemplate messageTemplate) {
 		this.messageTemplate = messageTemplate;
 		checkPresenseOfFilters(filters);
 		if(stages!=null){

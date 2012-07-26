@@ -27,6 +27,7 @@ import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.msg.JobState;
+import org.beequeue.msg.MessageLocator;
 import org.beequeue.msg.MessageState;
 import org.beequeue.msg.RunState;
 import org.beequeue.msg.StageState;
@@ -46,7 +47,7 @@ public interface MessageQueries {
 	public static final String NN_STAGE = "NN_STAGE";
 	public static final String NN_RUN = "NN_RUN";
 
-	public static final String SELECT_MESSAGE = "SELECT MSG_ID,MSG_NAME,MSG_STATE,MSG_PARAMETERS,CONTEXT_SETTINGS,USER_CD,DOMAIN_CD,LOCK_TS,CURRENT_TIMESTAMP FROM NN_MESSAGE ";
+	public static final String SELECT_MESSAGE = "SELECT MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,LOCK_TS,CREATED_TS FROM NN_MESSAGE ";
 	public static final JdbcFactory<BeeQueueMessage, Object> MESSAGE_FACTORY = new JdbcFactory<BeeQueueMessage, Object>() {
 		@Override
 		public BeeQueueMessage newInstance(ResultSet rs, Object input, Index idx)
@@ -55,12 +56,13 @@ public interface MessageQueries {
 			msg.id = rs.getLong(idx.next());
 			msg.name = rs.getString(idx.next());
 			msg.state = MessageState.valueOf(rs.getString(idx.next()));
+			msg.kind = MessageLocator.valueOf(rs.getString(idx.next()));
+			msg.locator = MessageLocator.valueOf(rs.getString(idx.next()));
 			msg.parameters = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
-			msg.contextSettings = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
 			idx.next();
 			msg.domain = rs.getString(idx.next());
 			msg.lock = rs.getTimestamp(idx.next());
-			msg.current = rs.getTimestamp(idx.next());
+			msg.created = rs.getTimestamp(idx.next());
 			return msg;
 		}
 	};
@@ -103,7 +105,7 @@ public interface MessageQueries {
 		SELECT_MESSAGE_JOBS + " AND M.MSG_STATE = '"+MessageState.IN_PROCESS+"'" ,
 		JOB_FACTORY, null);
 
-	String STAGE_FIELDS = "S.STAGE_ID, J.JOB_ID, J.MSG_ID, S.STAGE_STATE, S.RETRIES_LEFT, S.STAGE_NAME, J.JOB_STATE,J.JOB_NAME, M.MSG_NAME, M.DOMAIN_CD, M.MSG_STATE, M.MSG_PARAMETERS, M.CONTEXT_SETTINGS";
+	String STAGE_FIELDS = "S.STAGE_ID, J.JOB_ID, J.MSG_ID, S.STAGE_STATE, S.RETRIES_LEFT, S.STAGE_NAME, J.JOB_STATE,J.JOB_NAME, M.MSG_NAME, M.DOMAIN_CD, M.MSG_STATE, M.MSG_KIND, M.MSG_LOCATOR, M.MSG_INFO";
 	String STAGE_WHERE = "NN_JOB J, NN_STAGE S , NN_MESSAGE M WHERE J.JOB_ID = S.JOB_ID AND J.MSG_ID = M.MSG_ID";
 	String SELECT_STAGE_SQL = "SELECT " + STAGE_FIELDS + " FROM " + STAGE_WHERE+" ";
 	JdbcFactory<BeeQueueStage, Object> STAGE_FACTORY = new JdbcFactory<BeeQueueStage, Object>() {
@@ -124,8 +126,9 @@ public interface MessageQueries {
 			stage.job.message.name = rs.getString(idx.next());
 			stage.job.message.domain = rs.getString(idx.next());
 			stage.job.message.state = MessageState.valueOf(rs.getString(idx.next()));
+			stage.job.message.kind = new MessageLocator(rs.getString(idx.next()));
+			stage.job.message.locator = new MessageLocator(rs.getString(idx.next()));
 			stage.job.message.parameters = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
-			stage.job.message.contextSettings = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
 			return stage;
 		}
 	};
@@ -216,16 +219,20 @@ public interface MessageQueries {
 			RUN_FACTORY, DbConstants.STRING_SQL_PREPARE);
 
 	Update<BeeQueueMessage> INSERT_MESSAGE = new Update<BeeQueueMessage>(
-			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_PARAMETERS,CONTEXT_SETTINGS,USER_CD,DOMAIN_CD) VALUES (?,?,?,?,?,?,?)",
+			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,CREATED_TS) VALUES (?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)",
 			new SqlPrepare<BeeQueueMessage>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
 						throws SQLException {
+					if(input.kind == null || input.locator == null){
+						input.updateLocators();
+					}
 					pstmt.setLong(idx.next(), input.id);
 					pstmt.setString(idx.next(), input.name);
 					pstmt.setString(idx.next(), input.state.name());
+					pstmt.setString(idx.next(), input.kind.toString() );
+					pstmt.setString(idx.next(), input.locator.toString() );
 					pstmt.setString(idx.next(), ToStringUtil.toString(input.parameters) );
-					pstmt.setString(idx.next(), ToStringUtil.toString(input.contextSettings) );
 					pstmt.setString(idx.next(), null );
 					pstmt.setString(idx.next(), input.domain );
 				}

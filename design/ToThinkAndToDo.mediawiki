@@ -1,5 +1,5 @@
 = ToDo =
-* Latch dbmodel change
+* dbmodel change
 * BeatLogic
 ** Message filters
 ** 

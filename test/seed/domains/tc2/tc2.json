@@ -33,9 +33,6 @@
           "maxTries" : 1,
           "delayBetweenTries" : 15
         }
-      } ],
-      "filters" : [ {
-        "expression" : "true"
       } ]
     } ]
   } ],

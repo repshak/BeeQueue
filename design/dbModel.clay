@@ -22,8 +22,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="43a11a8e:13648c9dafd:-7b5d" mandatory="true" name="MSG_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="3376ec8b:137e7506e80:-7f0e" mandatory="false" name="PREV_MSG_ID">
-<data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e36" mandatory="true" name="DOMAIN_CD">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e49" mandatory="true" name="MSG_NAME">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
@@ -43,10 +43,10 @@
 <column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7f5c" mandatory="false" name="USER_CD">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="2d42fd58:1365a31ffa5:-7e36" mandatory="true" name="DOMAIN_CD">
-<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
-</column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="CURRENT_TIMESTAMP" id="41a224b8:1376b6c811d:-7fb0" mandatory="false" name="LOCK_TS">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6cea7211:1387c135bd3:-7f27" mandatory="true" name="CREATED_TS">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 </column-list>
@@ -59,9 +59,6 @@
 </foreign-key>
 <foreign-key id="2d42fd58:1365a31ffa5:-7e38" name="FK_NN_MESSAGE_5" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_DOMAIN" referenced-table="NN_DOMAIN" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
 <foreign-key-column column-name="DOMAIN_CD" referenced-key-column-name="DOMAIN_CD"/>
-</foreign-key>
-<foreign-key id="3376ec8b:137e7506e80:-7f1b" name="FK_NN_MESSAGE_6" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_MESSAGE" referenced-table="NN_MESSAGE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
-<foreign-key-column column-name="PREV_MSG_ID" referenced-key-column-name="MSG_ID"/>
 </foreign-key>
 </foreign-key-list>
 </table>
@@ -391,6 +388,9 @@
 </table>
 <table id="3376ec8b:137e7506e80:-7e77" name="NN_SPAWN">
 <column-list>
+<column auto-increment="false" column-size="32" decimal-digits="0" default-value="" id="6cea7211:1387c135bd3:-7fbb" mandatory="true" name="DOMAIN_CD">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
 <column auto-increment="false" column-size="1024" decimal-digits="0" default-value="" id="3376ec8b:137e7506e80:-7e73" mandatory="true" name="MSG_KIND">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
@@ -400,15 +400,19 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="3376ec8b:137e7506e80:-7e71" mandatory="true" name="LOCK_TS">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="3376ec8b:137e7506e80:-7e3e" mandatory="true" name="LAST_MSG_ID">
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6cea7211:1387c135bd3:-7f6b" mandatory="true" name="LAST_MSG_ID">
 <data-type name="BIGINT" selected-variant-pattern="BIGINT"/>
 </column>
 </column-list>
 <primary-key id="3376ec8b:137e7506e80:-7e76" name="PK_NN_SPAWN">
 <primary-key-column name="MSG_KIND"/>
+<primary-key-column name="DOMAIN_CD"/>
 </primary-key>
 <foreign-key-list>
-<foreign-key id="3376ec8b:137e7506e80:-7e40" name="FK_NN_SPAWN_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_MESSAGE" referenced-table="NN_MESSAGE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key id="6cea7211:1387c135bd3:-7fbd" name="FK_NN_SPAWN_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_DOMAIN" referenced-table="NN_DOMAIN" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="DOMAIN_CD" referenced-key-column-name="DOMAIN_CD"/>
+</foreign-key>
+<foreign-key id="6cea7211:1387c135bd3:-7f6d" name="FK_NN_SPAWN_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_NN_MESSAGE" referenced-table="NN_MESSAGE" referenced-table-schema="DEFAULT_SCHEMA" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
 <foreign-key-column column-name="LAST_MSG_ID" referenced-key-column-name="MSG_ID"/>
 </foreign-key>
 </foreign-key-list>
@@ -419,27 +423,20 @@
 </database-model>
 <diagram>
 <table-figure refid="43a11a8e:13648c9dafd:-7f56" x="783" y="77"/>
-<table-figure refid="43a11a8e:13648c9dafd:-7b61" x="789" y="401"/>
-<fk-figure refid="3376ec8b:137e7506e80:-7f1b">
-<bendpoints>
-<bendpoint height1="110" height2="110" weight="0.5" width1="16" width2="16"/>
-<bendpoint height1="109" height2="109" weight="0.5" width1="80" width2="80"/>
-<bendpoint height1="26" height2="26" weight="0.5" width1="80" width2="80"/>
-</bendpoints>
-</fk-figure>
-<table-figure refid="43a11a8e:13648c9dafd:-78f1" x="30" y="192"/>
+<table-figure refid="43a11a8e:13648c9dafd:-7b61" x="737" y="369"/>
+<table-figure refid="43a11a8e:13648c9dafd:-78f1" x="42" y="189"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78ed" x="37" y="419"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78e5" x="270" y="548"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78e1" x="508" y="574"/>
 <table-figure refid="43a11a8e:13648c9dafd:-78dd" x="268" y="423"/>
-<table-figure refid="43a11a8e:13648c9dafd:-78d9" x="524" y="422"/>
-<table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="779" y="594"/>
+<table-figure refid="43a11a8e:13648c9dafd:-78d9" x="510" y="420"/>
+<table-figure refid="2d42fd58:1365a31ffa5:-7fc9" x="727" y="581"/>
 <table-figure refid="2d42fd58:1365a31ffa5:-7e1c" x="591" y="72"/>
 <table-figure refid="5ef5485:136ed867bc8:-7f15" x="65" y="81"/>
 <table-figure refid="5ef5485:136ed867bc8:-7ee7" x="255" y="313"/>
 <table-figure refid="33e728da:1370b42bc57:-7d54" x="250" y="74"/>
 <table-figure refid="33e728da:1370b42bc57:-7cc5" x="430" y="257"/>
 <table-figure refid="41a224b8:1376b6c811d:-7f45" x="30" y="560"/>
-<table-figure refid="3376ec8b:137e7506e80:-7e77" x="601" y="277"/>
+<table-figure refid="3376ec8b:137e7506e80:-7e77" x="607" y="212"/>
 </diagram>
 </clay-model>

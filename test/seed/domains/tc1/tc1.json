@@ -34,8 +34,7 @@
           "delayBetweenTries" : 15
         }
       } ],
-      "filters" : [ {
-        "expression" : "true"
+      "filters" : null
       } ]
     } ]
   } ],

@@ -35,7 +35,7 @@ public class StageTemplate {
 		return this;
 	}
 
-	public void init(JobTemplate jobTemplate) {
+	void init(JobTemplate jobTemplate) {
 		this.jobTemplate = jobTemplate;
 		this.jobTemplate.checkPresenseOfFilters(filters);
 	}

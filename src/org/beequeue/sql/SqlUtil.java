@@ -17,6 +17,8 @@
 package org.beequeue.sql;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class SqlUtil {
@@ -58,6 +60,11 @@ public class SqlUtil {
 	}
 	public static String fromBoolean(boolean b) {
 		return b ? "Y" : "N";
+	}
+
+	public static Long getNullableLong(ResultSet rs, int idx) throws SQLException {
+		long v = rs.getLong(idx);
+		return v==0 && rs.wasNull() ? null :  v ;
 	}
   
 

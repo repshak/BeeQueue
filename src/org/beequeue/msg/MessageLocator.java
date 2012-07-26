@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.beequeue.template.AttributeType;
-import org.beequeue.template.MessageAttribute;
 import org.beequeue.template.MessageTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Nulls;
@@ -60,7 +59,7 @@ public class MessageLocator implements Comparable<MessageLocator> {
 	}
 
 	public MessageLocator extractMessageKind(MessageTemplate template){
-		if( this.attributes.length != template.columns.length || !this.name.equals(template.messageName) ){
+		if( this.attributes.length != template.keyColumns().length || !this.name.equals(template.messageName) ){
 			throw new BeeException("template does not comply with message locator:").addPayload(template, this);
 		}
 		String kindAttributes[] = new String[template.columns.length];

@@ -49,6 +49,22 @@ public abstract class DataType<T> {
 		return name;
 	}
 
+	@SuppressWarnings("unchecked")
+	public String toString(Object o){
+		try {
+			return o2s((T)o);
+		} catch (Exception e) {
+			throw new BeeException(e).addPayload(o);
+		}
+	}
+	public T toObject(String s){
+		try {
+			return s2o(s);
+		} catch (Exception e) {
+			throw new BeeException(e).addPayload(s);
+		}
+	}
+	
 	abstract public Flock<T> newFlock();
 	abstract public String o2s(T o) throws Exception ;
 	abstract public T s2o(String s) throws Exception ;
@@ -57,7 +73,7 @@ public abstract class DataType<T> {
 	public static DataType<Boolean> BOOLEAN = new DataType<Boolean>("BOOLEAN", Boolean.class) {
 		@Override public Flock<Boolean> newFlock() { return new BooleanFlockImpl(); }
 		@Override public String o2s(Boolean o) throws Exception { return o.toString() ; }
-		@Override public Boolean s2o(String s) throws Exception { return  s.length() > 0 && " YyTt".indexOf(s.charAt(0)) > 0; }
+		@Override public Boolean s2o(String s) throws Exception { return  s.length() > 0 && "YyTt".indexOf(s.charAt(0)) >= 0; }
 	};
 	
 	public static DataType<Short> SHORT = new DataType<Short>("SHORT", Short.class) {

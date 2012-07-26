@@ -16,29 +16,68 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.template;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.beequeue.util.Initializable;
 
 public class MessageTemplate implements Initializable {
+	
 	public String messageName;
 	public MessageAttribute [] columns;
 	public JobTemplate[] jobs;
 	public Map<String,MessageFilter> filters = new LinkedHashMap<String, MessageFilter>();
-	private Map<String,JobTemplate> jobMap = new LinkedHashMap<String, JobTemplate>();
+	public SpawnTemplate spawn;
 	
+	private MessageAttribute [] keyColumns;
+	private Map<String,JobTemplate> jobMap = new LinkedHashMap<String, JobTemplate>();
+	private Map<String,MessageAttribute> columnsMap = new LinkedHashMap<String, MessageAttribute>();
+	private boolean sequential = false;
 	@Override
 	public void init() {
-		for (int i = 0; i < jobs.length; i++) {
-			JobTemplate jt = jobs[i];
-			jobMap.put(jt.jobName, jt);
-			jt.init(this);
+		if(jobs != null){
+			for (int i = 0; i < jobs.length; i++) {
+				JobTemplate jt = jobs[i];
+				jobMap.put(jt.jobName, jt);
+				jt.init(this);
+			}
 		}
-	}	
+		if(spawn != null){
+			spawn.init(this);
+		}
+		if(columns != null){
+			List<MessageAttribute> keyColumnsList = new ArrayList<MessageAttribute>();
+			for (int i = 0; i < columns.length; i++) {
+				MessageAttribute ma = columns[i];
+				columnsMap.put(ma.name, ma);
+				if(ma.attrType.key){
+					keyColumnsList.add(ma);
+				}
+				if(ma.attrType == AttributeType.SEQUENTIAL ){
+					sequential = true;
+				}
+			}
+			this.keyColumns = keyColumnsList.toArray(new MessageAttribute[keyColumnsList.size()]);
+		}
+	}
+	
+	public boolean isSequential(){
+		return false;
+		
+	}
 	
 	public JobTemplate jobTemplate(String name){
 		return jobMap.get(name);
+	}
+
+	public MessageAttribute column(String name) {
+		return columnsMap.get(name);
+	}
+
+	public MessageAttribute[] keyColumns() {
+		return keyColumns;
 	}
 	
 
