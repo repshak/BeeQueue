@@ -18,12 +18,16 @@ package org.beequeue.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
+import org.beequeue.msg.BeeQueueJob;
+import org.beequeue.msg.BeeQueueStage;
 
 public class LoggingUtil {
 	public static  ConsoleHandler setLevelForConsoleHandler(Level level) {
@@ -54,6 +58,11 @@ public class LoggingUtil {
 					r.getMessage()+"\n"; 
 			}
 		});
+	}
+
+	public static void warn(String msg, Object ... suplimental) {
+		// TODO think about how to display warning like this.
+		
 	}
 
 }

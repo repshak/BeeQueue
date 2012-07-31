@@ -93,13 +93,18 @@ public class BeatLogic implements Runnable{
 				int returnCode = Integer.parseInt(Files.readAll(rc).trim());
 				run.state = returnCode == 0 ? RunState.SUCCESS : RunState.FAILURE ;
 				coordinator.storeRun(run);
-				run.stage.newState = run.state == RunState.SUCCESS ?   StageState.SUCCESS :   run.stage.retriesLeft > 0 ? StageState.READY : StageState.FAILURE;
+				if (run.state == RunState.SUCCESS) {
+					run.stage.newState = StageState.SUCCESS;
+				} else {
+					run.stage.newState = run.stage.retriesLeft > 0 ? StageState.READY : StageState.FAILURE;
+				}
 				coordinator.updateStage(run.stage);
 			}else{
 				notFinishedRuns.put(run.id, run);
 			}
 			
 		}
+		
 		ProcRawData[] ps = agent.runProcessStatistics();
 		List<BeeQueueProcess> allActiveProcesses = coordinator.allActiveProcessesOnHost(WorkerData.instance.host);
 		for (int i = 0; i < ps.length; i++) {

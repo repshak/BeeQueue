@@ -140,7 +140,7 @@ public interface MessageQueries {
 			SELECT_STAGE_SQL + "AND M.MSG_ID = ?",
 			STAGE_FACTORY, DbConstants.LONG_SQL_PREPARE);
 	
-	Select<BeeQueueStage, Long> LOAD_READY_STAGES = new Select<BeeQueueStage, Long>(
+	Select<BeeQueueStage, Void> LOAD_READY_STAGES = new Select<BeeQueueStage, Void>(
 			SELECT_STAGE_SQL + "AND S.STAGE_STATE='" + StageState.READY + "'",
 			STAGE_FACTORY, null);
 	
@@ -219,7 +219,8 @@ public interface MessageQueries {
 			RUN_FACTORY, DbConstants.STRING_SQL_PREPARE);
 
 	Update<BeeQueueMessage> INSERT_MESSAGE = new Update<BeeQueueMessage>(
-			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,CREATED_TS) VALUES (?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)",
+			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,CREATED_TS) " +
+			"VALUES (?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)",
 			new SqlPrepare<BeeQueueMessage>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)

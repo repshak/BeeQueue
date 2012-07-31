@@ -26,6 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,7 @@ import org.beequeue.template.StageTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
 import org.beequeue.util.JsonTable;
+import org.beequeue.util.LoggingUtil;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.util.Triple;
 import org.beequeue.util.Tuple;
@@ -495,28 +497,47 @@ public class DbCoordinator implements Coordiantor {
 
 	public void updateInProcessJobs() {
 		List<BeeQueueStage> query = MessageQueries.LOAD_IN_PROCESS_JOBS_STAGES.query(connection(), null);
-		Map<Long,Tuple<BeeQueueJob,List<BeeQueueStage>>> jobs = new LinkedHashMap<Long, Tuple<BeeQueueJob,List<BeeQueueStage>>>();
+		Map<Long,Tuple<BeeQueueJob,Map<String, BeeQueueStage>>> jobs = new LinkedHashMap<Long, Tuple<BeeQueueJob,Map<String, BeeQueueStage>>>();
 		for (int i = 0; i < query.size(); i++) {
-			BeeQueueJob job = query.get(i).job;
-			Tuple<BeeQueueJob, List<BeeQueueStage>> jobTuple;
+			BeeQueueStage stage = query.get(i);
+			BeeQueueJob job = stage.job;
+			Tuple<BeeQueueJob, Map<String, BeeQueueStage>> jobTuple;
 			if(!jobs.containsKey(job.id)){
-				jobTuple = new Tuple<BeeQueueJob, List<BeeQueueStage>>(job, new ArrayList<BeeQueueStage>());
+				jobTuple = new Tuple<BeeQueueJob, Map<String, BeeQueueStage>>(job, new HashMap<String,BeeQueueStage>());
 				jobs.put(job.id, jobTuple);
 			}else{
 				jobTuple = jobs.get(job.id);
 			}
-			jobTuple.o2.add(query.get(i));
+			jobTuple.o2.put(stage.stageName, stage);
 		}
 		for (Long id : jobs.keySet()) {
-			Tuple<BeeQueueJob, List<BeeQueueStage>> tuple = jobs.get(id);
+			Tuple<BeeQueueJob, Map<String,BeeQueueStage>> tuple = jobs.get(id);
 			boolean allSuccess = true ;
-			for (BeeQueueStage stage : tuple.o2) {
-				if( stage.state == StageState.FAILURE ){
+			for (String stageName: tuple.o2.keySet()) {
+				BeeQueueStage stage = tuple.o2.get(stageName);
+				if( stage.state == StageState.BLOCKED ){
+					String[] dependOnStages = stage.stageTemplate().dependOnStage;
+					boolean allDependOnStagesAreInSuccessState = true ;
+					for (int i = 0; i < dependOnStages.length; i++) {
+						BeeQueueStage dependOnStage = tuple.o2.get(dependOnStages[i]);
+						if(dependOnStage == null){
+							LoggingUtil.warn("Stage:" +dependOnStages[i] + " is not defined. Assuming success end state.", tuple);
+						}else{
+							if(!dependOnStage.state.successEndState()){
+								allDependOnStagesAreInSuccessState = false ;
+							}
+						}
+					}
+					if(allDependOnStagesAreInSuccessState) {
+						stage.newState = StageState.READY ;
+						updateStage(stage);
+					}
+				}else if( stage.state == StageState.FAILURE ){
 					tuple.o1.state = JobState.FAILURE;
 					allSuccess = false;
 					break;
 				}
-				if( stage.state != StageState.SUCCESS &&  stage.state != StageState.CANCELED ){
+				if( !stage.state.successEndState() ){
 					allSuccess = false;
 				}
 			}

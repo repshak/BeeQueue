@@ -24,7 +24,15 @@ public enum StageState {
 	PAUSED,
 	SUCCESS,
 	FAILURE,
-	CANCELED
+	CANCELED;
+	
+	public boolean successEndState(){
+		return this == SUCCESS || this == CANCELED ; 
+	}
+	
+	public boolean failureEndState() {
+		return this == FAILURE ;
+	}
 	
 
 }
