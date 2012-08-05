@@ -132,9 +132,6 @@ public interface MessageQueries {
 			return stage;
 		}
 	};
-	
-	
-
 
 	Select<BeeQueueStage, Long> LOAD_MESSAGE_STAGES = new Select<BeeQueueStage, Long>(
 			SELECT_STAGE_SQL + "AND M.MSG_ID = ?",

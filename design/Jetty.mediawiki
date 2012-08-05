@@ -1,0 +1,12 @@
+[[File:http://jetty.codehaus.org/jetty/images/jetty_logo.png]]
+
+Small dynamic embeded http server. We use eclipse distribution.  
+
+[http://jetty.codehaus.org/jetty/ original jetty page]
+
+[http://docs.codehaus.org/display/JETTY/Downloading+Jetty downloads]
+
+
+[http://wiki.eclipse.org/Jetty/ documentation]
+
+Minimal Jetty configuration: [http://wiki.eclipse.org/Jetty/Reference/Dependencies Jetty Dependencies]

@@ -1,9 +1,8 @@
 = ToDo =
-* dbmodel change
-* BeatLogic
-** Message filters
-** 
-** Evaluate blocked stages.
+* Relpace wingstone with [[Jetty]] container
+* Spawn design
+* Message filters
+* record log file size
 * log visualization
 
 == ToTest ==
@@ -28,6 +27,8 @@
 
 == Done ==
 
+* Evaluate blocked stages.
+* dbmodel change
 * Write [[DeveloperSetup]] page
 * Visualization
 ** query and drilldown and action config
