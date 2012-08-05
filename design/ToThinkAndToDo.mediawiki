@@ -1,5 +1,5 @@
 = ToDo =
-* Relpace wingstone with [[Jetty]] container
+* Relpace wingstone with [[Jetty.wikimedia]] container
 * Spawn design
 * Message filters
 * record log file size
