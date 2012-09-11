@@ -1,0 +1,29 @@
+{ 
+	"": { "resourceControllers" : [ 
+	  { "type" : "FileSystem" ,
+	    "root" : "${BQ_WEB}" ,
+	    "rootIndexPage" : "index.html" 
+	  }
+	]},
+	"home": { "resourceControllers" : [ 
+	  { "type" : "FileSystem" ,
+	    "root" : "${BQ_HOME}" 
+	  }
+	]},
+	"host": { "resourceControllers" : [ 
+	  { "type" : "FileSystem" ,
+	    "root" : "${BQ_HOST}" 
+	  }
+	]},
+	"db":  { "resourceControllers" : [ 
+	{ "type" : "AnyTable" 
+	}
+	]},
+	"query": { "resourceControllers" : [ 
+		{ "type" : "Query" ,
+		  "queries" : { 
+		    "test" : "select 1" 
+		   }
+		}
+	 ]}
+}
