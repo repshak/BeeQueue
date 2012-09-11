@@ -16,6 +16,8 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.util;
 
+import java.io.File;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -41,6 +43,28 @@ public class ToStringUtil {
 		}
 	}
 
+	public static <I,T> T toObject(I input, Morph<I,String> read, Class<T> type)  {
+		try {
+			String s =  read.doIt(input);
+			return toObject(s, type);
+		} catch (BeeException e) {
+			throw e.addPayload(input);
+		} catch (Exception e) {
+			throw new BeeException(e).addPayload(input);
+		}
+	}
+
+	public static <I,T> T toObject(I input, Morph<I,String> read, TypeReference<T> type)  {
+		try {
+			String s =  read.doIt(input);
+			return toObject(s, type);
+		} catch (BeeException e) {
+			throw e.addPayload(input);
+		} catch (Exception e) {
+			throw new BeeException(e).addPayload(input);
+		}
+	}
+	
 	public static <T> T toObject(String s, Class<T> type)  {
 		try {
 			T readValue = MAPPER.readValue(s, type);

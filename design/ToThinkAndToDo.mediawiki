@@ -1,5 +1,6 @@
 = ToDo =
-* Relpace wingstone with [[Jetty.wikimedia]] container
+* Relpace wingstone with [[Jetty.mediawiki]] container
+* Launcher has to specify what cloud it is in on start
 * Spawn design
 * Message filters
 * record log file size

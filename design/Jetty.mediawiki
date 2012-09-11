@@ -6,6 +6,7 @@ Small dynamic embeded http server. We use eclipse distribution.
 
 [http://docs.codehaus.org/display/JETTY/Downloading+Jetty downloads]
 
+[http://repo1.maven.org/maven2/org/eclipse/jetty/aggregate/jetty-all/ sources]
 
 [http://wiki.eclipse.org/Jetty/ documentation]
 

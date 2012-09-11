@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="launcher"/>
-	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="lib" path="lib/bin/groovy-all-1.8.6.jar"/>
 	<classpathentry kind="lib" path="lib/bin/jackson-core-2.0.0.jar"/>
@@ -13,7 +11,12 @@
 	<classpathentry kind="lib" path="lib/bin/jackson-annotations-2.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/bin/derbyclient.jar"/>
 	<classpathentry kind="lib" path="lib/sigar-bin/lib/sigar.jar"/>
-	<classpathentry kind="lib" path="lib/web/winstone-0.9.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path=".bin"/>
+	<classpathentry kind="lib" path="lib/web/jetty-continuation-8.1.5.v20120716.jar"/>
+	<classpathentry kind="lib" path="lib/web/jetty-http-8.1.5.v20120716.jar"/>
+	<classpathentry kind="lib" path="lib/web/jetty-io-8.1.5.v20120716.jar"/>
+	<classpathentry kind="lib" path="lib/web/jetty-server-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
+	<classpathentry kind="lib" path="lib/web/jetty-util-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
+	<classpathentry kind="lib" path="lib/web/servlet-api-3.0.jar"/>
+	<classpathentry kind="output" path=".binn"/>
 </classpath>

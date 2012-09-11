@@ -49,13 +49,13 @@
     	<tstamp>
     	      <format property="version" pattern="yyyyMMddhhmmss" />
     	</tstamp>
+    	
     	<mkdir dir="${weblib}"/>
     	<mkdir dir="${classes}"/>
 
     	<propertyfile file="${warjar}/bq.properties" comment="BeeQueue properties">
     	  <entry  key="version" value="${version}"/>
     	</propertyfile>
-    	
     	
     	<javac 
     		destdir="${classes}"

@@ -21,35 +21,23 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.beequeue.GlobalConfig;
-import org.beequeue.agent.Agent;
 import org.beequeue.coordinator.Coordiantor;
-import org.beequeue.hash.ContentTree;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.JsonTable;
 import org.beequeue.util.Streams;
-import org.beequeue.util.ToStringUtil;
 
 public class WorkerServlet  extends HttpServlet {
 
-	private static BeatLogic beatLogic = new BeatLogic(); 
 	private static final long serialVersionUID = 1L;
 
 	
-	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	static {
-		scheduler.scheduleAtFixedRate(beatLogic , 0, 15, TimeUnit.SECONDS);
-	}
 	
 
 	@Override
@@ -88,29 +76,6 @@ public class WorkerServlet  extends HttpServlet {
 
 	public void dumpDataFromFileSystem(File base, String prefix, String query, PrintWriter out)
 			throws IOException, FileNotFoundException {
-		String parent = prefix;
-		String drill = prefix + "%0%";
-		if( query != null && !query.equals("") && !query.equals("/") ){
-			String q = query.substring(1);
-			base = new File(base,q);
-			String link = prefix + q;
-			drill = (link + "/%0%").replaceAll("[\\\\/]+", "/");
-			int lastIndexOf = link.lastIndexOf('/',link.length()-1);
-			if(lastIndexOf > 0){
-				parent = link.substring(0,lastIndexOf);
-			}
-		}
-		if( base.exists() ){
-			if(base.isDirectory() ){
-				JsonTable jsonTable = new JsonTable(base.toString());
-				jsonTable.add("FILE_NAME",base.list());
-				jsonTable.parent = parent;
-				jsonTable.drill = drill;
-				out.println(jsonTable.toJsonTable());
-			}else{
-				Streams.copyAndClose(new FileReader(base), out);
-			}
-		}
 	}
 
 

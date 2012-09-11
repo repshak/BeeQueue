@@ -20,13 +20,17 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 
+import org.beequeue.buzz.BuzzServer;
 import org.beequeue.launcher.JarUnpacker.EntryFilter;
+import org.beequeue.worker.BeatLogic;
 
 
 public class BeeQueueHome implements VariablesProvider{
@@ -34,17 +38,18 @@ public class BeeQueueHome implements VariablesProvider{
 	public static final String BQ_CONFIG = "BQ_CONFIG";
 	public static final String BQ_WEB = "BQ_WEB";
 	public static final String BQ_HOST = "BQ_HOST";
+	public static final String BQ_CLOUD = "BQ_CLOUD";
 	public static final String BQ_WORKER_PID = "BQ_WORKER_PID";
 	
 	public static final BeeQueueHome instance = new BeeQueueHome();
 	
 	private File home;
 	private File config;
-	private File web;
 	private File host;
 	private long pid;
+	private String cloud;
 	private String hostName;
-	private int port = 7532;
+	private BuzzServer buzz;
 	
 	private BeeQueueHome() {
 		try{
@@ -64,10 +69,10 @@ public class BeeQueueHome implements VariablesProvider{
 			this.hostName = java.net.InetAddress.getLocalHost().getHostName();
 			this.host = new File( home, "hosts/"+hostName );
 			this.host.mkdirs();
-			
+			this.buzz = new BuzzServer(7532);
 			String webEnv = System.getenv(BQ_WEB);
 			if( webEnv == null || webEnv.trim().length()==0 ){
-				this.web = new File(home, "web");
+				this.buzz.setRoot(new File(home, "web"));
 				JarUnpacker.unpack(BeeQueueHome.class, new EntryFilter() {
 					@Override
 					public boolean include(ZipEntry ze) {
@@ -75,7 +80,7 @@ public class BeeQueueHome implements VariablesProvider{
 					}
 				}, home);
 			}else{
-				this.web = new File(webEnv).getAbsoluteFile();
+				this.buzz.setRoot(new File(webEnv).getAbsoluteFile());
 			}
 		}catch (Exception e) {
 			die(e, "Cannot establish home directory: " + home+" error:");
@@ -103,7 +108,7 @@ public class BeeQueueHome implements VariablesProvider{
 	public Map<String, String> getHomeVariables( ) {
 		Map<String,String> envMap = new LinkedHashMap<String, String>();
 		envMap.put(BQ_HOME,home.toString());
-		envMap.put(BQ_WEB,web.toString());
+		envMap.put(BQ_WEB,getWeb().toString());
 		envMap.put(BQ_HOST,host.toString());
 		envMap.put(BQ_CONFIG,config.toString());
 		envMap.put(BQ_WORKER_PID,String.valueOf(pid));
@@ -116,7 +121,7 @@ public class BeeQueueHome implements VariablesProvider{
 	}
 
 	public File getWeb() {
-		return web;
+		return getBuzz().getRoot();
 	}
 
 	public File getHost() {
@@ -134,11 +139,9 @@ public class BeeQueueHome implements VariablesProvider{
 	public long getPid() {
 		return pid;
 	}
-	public int getPort() {
-		return port;
-	}
-	void setPort(int port) {
-		this.port = port;
+
+	public BuzzServer getBuzz(){
+		return buzz;
 	}
 
 	List<File> getClassPathElements(){
@@ -156,6 +159,28 @@ public class BeeQueueHome implements VariablesProvider{
 	@Override
 	public Map<String, ?> getVariables() {
 		return getHomeVariables();
+	}
+
+	public void setCloudName(String cloud) {
+		this.cloud = cloud;
+		
+	}
+	
+	private BeatLogic beatLogic = null ;
+	private ScheduledExecutorService scheduler = null;
+
+	public void runServer() {
+		beatLogic = new BeatLogic(); 
+		scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleAtFixedRate(beatLogic , 0, 15, TimeUnit.SECONDS);
+
+
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getPort() {
+		return buzz.getPort();
 	}
 
 }
