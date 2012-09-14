@@ -53,6 +53,7 @@ public class BeeQueueCommandLineInterface {
 					break;
 				}
 			}
+			argList.add(0,command);
 			if(printHelp) printHelp();
 		}
 		return argList ;

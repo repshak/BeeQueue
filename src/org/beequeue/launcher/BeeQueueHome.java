@@ -19,6 +19,7 @@ package org.beequeue.launcher;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -144,16 +145,17 @@ public class BeeQueueHome implements VariablesProvider{
 		return buzz;
 	}
 
-	List<File> getClassPathElements(){
-		List<File> list = new ArrayList<File>();
-		list.add(new File(getWeb(),"WEB-INF/classes"));
-		File libDir = new File(getWeb(),"WEB-INF/lib");
-		String[] libs = libDir.list();
-		for (int i = 0; i < libs.length; i++) {
-			String lib = libs[i];
-			if(lib.endsWith(".jar")) list.add(new File(libDir,lib));
+	void setJavaLibraryPath(){
+
+		System.setProperty( "java.library.path", new File(getWeb(),"WEB-INF/lib").getPath() );
+		Field fieldSysPath;
+		try {
+			fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+			fieldSysPath.setAccessible( true );
+			fieldSysPath.set( null, null );
+		} catch (Exception e) {
+			System.err.println("cannot reset sys_paths");
 		}
-		return list;
 	}
 	
 	@Override
@@ -173,10 +175,7 @@ public class BeeQueueHome implements VariablesProvider{
 		beatLogic = new BeatLogic(); 
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(beatLogic , 0, 15, TimeUnit.SECONDS);
-
-
-		// TODO Auto-generated method stub
-		
+		buzz.start();
 	}
 
 	public int getPort() {

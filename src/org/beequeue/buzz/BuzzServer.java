@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 
 public class BuzzServer {
 	private int port ;

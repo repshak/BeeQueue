@@ -56,6 +56,7 @@ public class WorkerServlet  extends HttpServlet {
 				File home = BeeQueueHome.instance.getHome();
 				dumpDataFromFileSystem(home, "home/" , q, out);
 			}else if( ctx.equals("/db") ){
+				
 				Coordiantor c = Singletons.getCoordinator();
 				out.println(c.selectAnyTable(q));
 			}else if( ctx.equals("/query") ){

@@ -16,9 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.launcher;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -40,10 +38,6 @@ public class BeeQueueLauncher {
 			){
 				@Override void extract(Matcher m, List<String> rest, BeeQueueCommandLineInterface cli) {
 					BeeQueueHome.instance.getBuzz().setPort(Integer.parseInt(m.group(1)));
-					if(rest.size()!=1){
-						System.err.println("ERROR: runServer take one additional argument <cloud name>");
-						cli.printHelp = true;
-					}
 				}
 			},
 			new Entry(
@@ -70,68 +64,11 @@ public class BeeQueueLauncher {
 		List<String> extraArgs = cli.process(args);
 		//run default action
 		if(runScheduler){
-			if(extraArgs.size()!=1){
-				//cloud
-				System.err.println("ERROR: you nee to provide only cloud name instead:"+extraArgs);
-				System.err.println();
-				cli.printHelp();
-			}else{
-				bqh.setCloudName(extraArgs.get(0));
-				System.out.println("BQ_HOME:"+bqh.getHome());
-				runScheduler();
-			}
+			BeeQueueCommand.runMain("RunServer", extraArgs);
 		}
 	}
 
 	
-	public static void runScheduler() throws InterruptedException,
-			IOException {
-		makeSureThatPortAvailable();
-		BeeQueueHome.instance.runServer();
-	}
 
-	public static void makeSureThatPortAvailable() throws InterruptedException {
-		File jvmCsv = BeeQueueHome.instance.jvmCsv(BeeQueueHome.instance.getPort());
-		BeeQueueJvmHelpeer jvmStatus = new BeeQueueJvmHelpeer(BeeQueueHome.instance.getPort());
-		if( jvmStatus.starting != null ){
-			BeeQueueHome.die(null, "It's odd. Some worker already starting. Kill all workers running and delete file:"+ jvmCsv);
-		}
-		boolean portAvailable = false;
-		for (int i = 0; i < 6; i++) {
-			jvmStatus.ensureMeInList(BeeQueueHome.instance.getPort(), BeeQueueJvmStatus.STARTING);
-			jvmStatus.write(BeeQueueHome.instance.getPort());
-			if(portAvailable(BeeQueueHome.instance.getPort())){
-				portAvailable = true;
-				break;
-			}
-			Thread.sleep(15000L);
-		}
-		if(!portAvailable){
-			portAvailable = killAllWorkersExceptItself();
-		}
-		if(!portAvailable){
-			BeeQueueHome.die(null, "Gave up to get port. Kill process mannualy, also you may inspect file:"+ jvmCsv);
-		}
-	}
-
-	public static boolean portAvailable(int port) {
-		ServerSocket ss = null;
-	    try {
-			ss = new ServerSocket(port);
-	        ss.setReuseAddress(true);
-	        return true;
-	    } catch (IOException ignore) {
-	    } finally {
-            try { ss.close(); } catch (Exception ignore) {}
-	    }
-	    return false;
-	}
-
-	private static boolean killAllWorkersExceptItself() {
-		// TODO add smart killing logic
-		//return portAvailable();
-		return false;
-		
-	}
 
 }

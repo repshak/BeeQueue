@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Files;
-import org.beequeue.util.ToStringUtil;
 
 public class GroovyTemplate extends ContentReference {
 
@@ -61,10 +60,9 @@ public class GroovyTemplate extends ContentReference {
 		}
 	}
 
-
 	public static String resolveTemplate(Map<String, ?> context, String templateText) {
 		try {
-			SimpleTemplateEngine engine = new SimpleTemplateEngine(false);
+			SimpleTemplateEngine engine = new SimpleTemplateEngine();
 			return engine.createTemplate(templateText).make(new LinkedHashMap<String, Object>(context)).toString();
 		} catch (Exception e) {
 			throw BeeException.cast(e).addPayload(context,templateText);
