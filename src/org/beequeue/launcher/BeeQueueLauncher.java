@@ -28,7 +28,7 @@ public class BeeQueueLauncher {
 	private static boolean runScheduler = true ;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		BeeQueueHome bqh = BeeQueueHome.instance;
+		final BeeQueueHome bqh = BeeQueueHome.instance;
 		
 		BeeQueueCommandLineInterface cli = new BeeQueueCommandLineInterface(
 			new Entry(
@@ -37,7 +37,7 @@ public class BeeQueueLauncher {
 						"In both default case and when -runServer specified. One more argument <cloud name> required."
 			){
 				@Override void extract(Matcher m, List<String> rest, BeeQueueCommandLineInterface cli) {
-					BeeQueueHome.instance.getBuzz().setPort(Integer.parseInt(m.group(1)));
+					bqh.getBuzz().setPort(Integer.parseInt(m.group(1)));
 				}
 			},
 			new Entry(

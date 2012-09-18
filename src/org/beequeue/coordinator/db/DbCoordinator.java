@@ -119,7 +119,7 @@ public class DbCoordinator implements Coordiantor {
 			String drill = null;
 			String parent = null;
 			if( table != null && !table.equals("") && !table.equals("/") ){
-				t = table.substring(1);
+				t = table;
 				parent = "db/";
 			}else{
 				t = "sys.systables where TABLETYPE = 'T'";
@@ -138,8 +138,14 @@ public class DbCoordinator implements Coordiantor {
 
 	@Override
 	public String query(String q) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection connection = null;
+		try {
+			connection = connection();
+			ResultSet rs = connection.createStatement().executeQuery(q);
+			return JsonTable.queryToJson(rs, q, null, null);
+		} catch (SQLException e) {
+			throw new BeeException(e);
+		}
 	}
 
 	

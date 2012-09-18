@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value=FileSystemBuzzResourceController.class, name="FileSystem"),
-    @JsonSubTypes.Type(value=AnyTableResourceController.class, name="AnyTable"),
     @JsonSubTypes.Type(value=QueryResourceController.class, name="Query")
 })
 

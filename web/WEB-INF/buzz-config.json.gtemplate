@@ -16,7 +16,7 @@
 	  }
 	]},
 	"db":  { "resourceControllers" : [ 
-	{ "type" : "AnyTable" 
+	{ "type" : "Query" 
 	}
 	]},
 	"query": { "resourceControllers" : [ 
