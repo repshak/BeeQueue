@@ -1,9 +1,11 @@
 = ToDo =
+* BuzzSchema
 * GUI design
 ** Rework screens 
 ** Log visualization
 * Message filters
 * record log file size
+* Spawn design
 
 == ToTest ==
 * Eat you own dog food: use BeeQueue as build/ci subsytem.
@@ -18,7 +20,6 @@
 
 == ToThink ==
 
-* Try to remember. I am not sure what I meant by that by: ToDo: Spawn design
 * Record somewhere that how many runs are failing/succeeding on stage, job and message levels
 * Host - Architecture - Datastores rules to match host to particular stage
 * How job that mark message/job complete, and 

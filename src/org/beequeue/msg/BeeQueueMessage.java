@@ -25,6 +25,7 @@ import java.util.Set;
 import org.beequeue.template.DomainTemplate;
 import org.beequeue.template.MessageAttribute;
 import org.beequeue.template.MessageTemplate;
+import org.beequeue.time.LockTimestamp;
 import org.beequeue.util.Creator;
 import org.beequeue.util.Nulls;
 import org.beequeue.worker.Singletons;
@@ -113,13 +114,9 @@ public class BeeQueueMessage {
 
 	};
 	public long id;
-	public Timestamp lock;
-	public Timestamp current;
+	public LockTimestamp lock;
 	public Timestamp created;
 	
-	public Timestamp newLock() {
-		return new Timestamp(current.getTime()+10000L);
-	}
 
 	public DomainTemplate domainTemplate(){
 		return Creator.IgnoreExceptions.create(new Creator<DomainTemplate>() { 

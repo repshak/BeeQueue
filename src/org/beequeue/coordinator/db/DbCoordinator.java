@@ -423,7 +423,7 @@ public class DbCoordinator implements Coordiantor {
 					}
 				}
 				msg.state = MessageState.IN_PROCESS;
-				msg.lock = msg.newLock();
+				msg.lock.value = msg.lock.newLock();
 				if( 1 != MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg) ){
 					throw new BeeException("cannot update status").addPayload(msg);
 				}

@@ -37,6 +37,7 @@ import org.beequeue.sql.Select;
 import org.beequeue.sql.SqlPrepare;
 import org.beequeue.sql.SqlUtil;
 import org.beequeue.sql.Update;
+import org.beequeue.time.LockTimestamp;
 import org.beequeue.util.ToStringUtil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -47,7 +48,18 @@ public interface MessageQueries {
 	public static final String NN_STAGE = "NN_STAGE";
 	public static final String NN_RUN = "NN_RUN";
 
-	public static final String SELECT_MESSAGE = "SELECT MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,LOCK_TS,CREATED_TS FROM NN_MESSAGE ";
+	public static final String SELECT_MESSAGE = "SELECT MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,CREATED_TS,LOCK_TS,CURRENT_TIMESTAMP FROM NN_MESSAGE ";
+	public static final JdbcFactory<LockTimestamp, Object> LOCK_TS_FACTORY = new JdbcFactory<LockTimestamp, Object>() {
+		@Override
+		public LockTimestamp newInstance(ResultSet rs, Object input, Index idx)
+				throws SQLException {
+			LockTimestamp ths = new LockTimestamp();
+			ths.value = rs.getTimestamp(idx.next());
+			ths.timeNow = rs.getTimestamp(idx.next());
+			return ths;
+		}
+		
+	};
 	public static final JdbcFactory<BeeQueueMessage, Object> MESSAGE_FACTORY = new JdbcFactory<BeeQueueMessage, Object>() {
 		@Override
 		public BeeQueueMessage newInstance(ResultSet rs, Object input, Index idx)
@@ -61,10 +73,11 @@ public interface MessageQueries {
 			msg.parameters = ToStringUtil.toObject(rs.getString(idx.next()), new TypeReference<LinkedHashMap<String,String>>() {});
 			idx.next();
 			msg.domain = rs.getString(idx.next());
-			msg.lock = rs.getTimestamp(idx.next());
 			msg.created = rs.getTimestamp(idx.next());
+			msg.lock = LOCK_TS_FACTORY.newInstance(rs, null, idx);
 			return msg;
 		}
+
 	};
 	
 
@@ -217,7 +230,7 @@ public interface MessageQueries {
 
 	Update<BeeQueueMessage> INSERT_MESSAGE = new Update<BeeQueueMessage>(
 			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,CREATED_TS) " +
-			"VALUES (?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)",
+			"VALUES (?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)",
 			new SqlPrepare<BeeQueueMessage>() {
 				@Override
 				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
@@ -377,9 +390,9 @@ public interface MessageQueries {
 				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
 						throws SQLException {
 					pstmt.setString(idx.next(), input.state.name());
-					pstmt.setTimestamp(idx.next(), input.newLock());
+					pstmt.setTimestamp(idx.next(), input.lock.newLock());
 					pstmt.setLong(idx.next(), input.id);
-					pstmt.setTimestamp(idx.next(), input.lock);
+					pstmt.setTimestamp(idx.next(), input.lock.value);
 				}
 			});
 

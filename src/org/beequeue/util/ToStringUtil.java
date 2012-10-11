@@ -16,8 +16,6 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.util;
 
-import java.io.File;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -29,13 +27,17 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  */
 public class ToStringUtil {
 	public static ObjectMapper MAPPER = new ObjectMapper();
-
+	
 	public String toString() {
 		return toString(this);
 	}
 
 	public static String toString(Object o) {
-		ObjectWriter writer = MAPPER.writerWithDefaultPrettyPrinter();
+		return toString(MAPPER, o);
+	}
+
+	public static String toString(ObjectMapper mapper, Object o) {
+		ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
 		try {
 			return writer.writeValueAsString(o);
 		} catch (Exception e) {

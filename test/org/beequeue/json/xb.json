@@ -1,0 +1,98 @@
+{
+  "head" : {
+    "type" : "OBJECT",
+    "className" : "org.beequeue.json.BuzzSchemaTest$X<org.beequeue.json.BuzzSchemaTest$B>"
+  },
+  "types" : [ {
+    "className" : "org.beequeue.json.BuzzSchemaTest$X<org.beequeue.json.BuzzSchemaTest$B>",
+    "objectAttributes" : [ {
+      "name" : "t",
+      "type" : "OBJECT",
+      "className" : "org.beequeue.json.BuzzSchemaTest$B"
+    }, {
+      "name" : "xq",
+      "type" : "OBJECT",
+      "className" : "org.beequeue.json.BuzzSchemaTest$X<org.beequeue.json.BuzzSchemaTest$Q>"
+    }, {
+      "name" : "s",
+      "type" : "STRING"
+    } ]
+  }, {
+    "className" : "org.beequeue.json.BuzzSchemaTest$B",
+    "objectAttributes" : [ {
+      "name" : "aga",
+      "type" : "OBJECT",
+      "className" : "org.beequeue.json.BuzzSchemaTest$A"
+    }, {
+      "name" : "qqq",
+      "type" : "ENUM",
+      "className" : "org.beequeue.json.BuzzSchemaTest$C"
+    }, {
+      "name" : "ddd",
+      "type" : "STRING"
+    } ]
+  }, {
+    "className" : "org.beequeue.json.BuzzSchemaTest$A",
+    "objectAttributes" : [ {
+      "name" : "s",
+      "type" : "STRING"
+    }, {
+      "name" : "i",
+      "type" : "INTEGER"
+    }, {
+      "name" : "b",
+      "type" : "BOOLEAN"
+    } ]
+  }, {
+    "className" : "org.beequeue.json.BuzzSchemaTest$C",
+    "enumValues" : [ "X", "Y", "Z" ]
+  }, {
+    "className" : "org.beequeue.json.BuzzSchemaTest$X<org.beequeue.json.BuzzSchemaTest$Q>",
+    "objectAttributes" : [ {
+      "name" : "t",
+      "type" : "OBJECT",
+      "className" : "org.beequeue.json.BuzzSchemaTest$Q"
+    }, {
+      "name" : "xq",
+      "type" : "OBJECT",
+      "className" : "org.beequeue.json.BuzzSchemaTest$X<org.beequeue.json.BuzzSchemaTest$Q>"
+    }, {
+      "name" : "s",
+      "type" : "STRING"
+    } ]
+  }, {
+    "className" : "org.beequeue.json.BuzzSchemaTest$Q",
+    "objectAttributes" : [ {
+      "name" : "as",
+      "type" : "ARRAY",
+      "contentType" : "OBJECT",
+      "className" : "org.beequeue.json.BuzzSchemaTest$A"
+    }, {
+      "name" : "cs",
+      "type" : "ARRAY",
+      "contentType" : "ENUM",
+      "className" : "org.beequeue.json.BuzzSchemaTest$C"
+    }, {
+      "name" : "ss",
+      "type" : "ARRAY",
+      "contentType" : "STRING"
+    }, {
+      "name" : "fs",
+      "type" : "ARRAY",
+      "contentType" : "FLOAT"
+    }, {
+      "name" : "m0",
+      "type" : "MAP",
+      "contentType" : "INTEGER"
+    }, {
+      "name" : "m1",
+      "type" : "MAP",
+      "contentType" : "STRING"
+    }, {
+      "name" : "m2",
+      "type" : "MAP",
+      "contentType" : "OBJECT",
+      "className" : "org.beequeue.json.BuzzSchemaTest$A"
+    } ]
+  } ]
+}
