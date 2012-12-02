@@ -18,13 +18,12 @@ public class BuzzSchemaBuilder {
 	
 	public BuzzSchema schema = new BuzzSchema();
 	
-
-	public <T> void setType(Class<T> cls) {
-		this.schema.head = this.recurseSchema(ToStringUtil.MAPPER.getTypeFactory().constructType(cls));
+	public BuzzAttribute add(Class<?> cls) {
+		return this.recurseSchema(ToStringUtil.MAPPER.getTypeFactory().constructType(cls));
 	}
-	
-	public <T> void setType(TypeReference<T> tr) {
-		this.schema.head = this.recurseSchema(ToStringUtil.MAPPER.getTypeFactory().constructType(tr));
+
+	public <T> BuzzAttribute add(TypeReference<?> tr) {
+		return this.recurseSchema(ToStringUtil.MAPPER.getTypeFactory().constructType(tr));
 	}
 
 	private BuzzAttribute recurseSchema(JavaType jt) {

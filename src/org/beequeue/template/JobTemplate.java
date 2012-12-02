@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.beequeue.msg.BeeQueueMessage;
 import org.beequeue.util.BeeException;
-import org.beequeue.util.Initializable;
 
 /**
  * JobTemplate has many stages, they may depend on each other, but no circular dependencies allowed. 
@@ -62,6 +61,9 @@ public class JobTemplate {
 	}
 
 	public boolean matchAnyOfTheseFilters(BeeQueueMessage msg, String[] theseFilters) {
+		if(theseFilters == null){
+			return true;
+		}
 		for (int i = 0; i < theseFilters.length; i++) {
 			if(this.messageTemplate.filters.get(theseFilters[i]).evalFilter(msg)){
 				return true;

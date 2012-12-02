@@ -19,6 +19,7 @@ package org.beequeue.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * ToStringUtil - class used for debugging purposes. That class uses reflection
@@ -26,7 +27,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  * Is is pretty CPU expensive so use with caution.
  */
 public class ToStringUtil {
-	public static ObjectMapper MAPPER = new ObjectMapper();
+	public static ObjectMapper MAPPER = new ObjectMapper()
+	.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	
 	public String toString() {
 		return toString(this);
@@ -38,6 +40,19 @@ public class ToStringUtil {
 
 	public static String toString(ObjectMapper mapper, Object o) {
 		ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+		try {
+			return writer.writeValueAsString(o);
+		} catch (Exception e) {
+			return e.toString();
+		}
+	}
+	
+	public static String toNotPrettyString(Object o) {
+		return toNotPrettyString(MAPPER, o);
+	}
+	
+	public static String toNotPrettyString(ObjectMapper mapper, Object o) {
+		ObjectWriter writer = mapper.writer();
 		try {
 			return writer.writeValueAsString(o);
 		} catch (Exception e) {

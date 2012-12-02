@@ -20,6 +20,7 @@ import java.io.File;
 
 public interface HashStore {
 	
+	
 	/**
 	 * push new content into named content tree in 
 	 * datastore

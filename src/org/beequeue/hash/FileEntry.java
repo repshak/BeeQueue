@@ -40,8 +40,9 @@ public class FileEntry implements Comparable<FileEntry>{
 	}
 	
 	public static FileEntry valueOf(String s){
-		return new FileEntry( HashKey.valueOf( s.substring(0, 41)) , 
-				s.substring(42,43).equals("x") , s.substring(44)  );
+		String[] split = s.split(",", 3);
+		return new FileEntry( HashKey.valueOf( split[0]) , 
+				split[1].equals("x") , split[2]  );
 	}
 
 	public HashInput input(File base) throws FileNotFoundException{

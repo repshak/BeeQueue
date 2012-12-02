@@ -39,5 +39,16 @@ public class FileEntryTest {
 		System.out.println(f);
 		System.out.println(f2.toString());
 	}
+	@Test
+	public void test512() {
+		MessageDigest md = MessageDigestUtils.md512();
+		md.update((byte)10);
+		FileEntry fe = new FileEntry( new HashKey(HashKeyResource.F, md.digest()), true, "right/there.txt");
+		String f = fe.toString();
+		FileEntry f2 = FileEntry.valueOf(f);
+		assertEquals(f, f2.toString());
+		System.out.println(f);
+		System.out.println(f2.toString());
+	}
 
 }

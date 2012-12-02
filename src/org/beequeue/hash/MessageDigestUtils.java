@@ -31,6 +31,13 @@ public class MessageDigestUtils {
 			throw new BeeException(e);
 		}
 	}
+	public static MessageDigest md512(){
+		try {
+			return MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			throw new BeeException(e);
+		}
+	}
 	
 	final static public String toHexString(byte[] b){
 		char[] array = new char[b.length*2];

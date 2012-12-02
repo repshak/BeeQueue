@@ -63,6 +63,7 @@ import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
 import org.beequeue.util.JsonTable;
 import org.beequeue.util.LoggingUtil;
+import org.beequeue.util.Throwables;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.util.Triple;
 import org.beequeue.util.Tuple;
@@ -389,43 +390,47 @@ public class DbCoordinator implements Coordiantor {
 		for (BeeQueueMessage msg : query) {
 			if(1 == MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
 				MessageTemplate mt = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name);
-				JobTemplate[] jobs = mt.jobs;
-				boolean alreadyHaveOneResposible = false;
-				for (int i = 0; i < jobs.length; i++) {
-					JobTemplate jt = jobs[i];
-					if( !jt.checkFilters(msg) ){
-						continue;
-					}
-					if(jt.responsbile){
-						if(alreadyHaveOneResposible){
+				try{
+					JobTemplate[] jobs = mt.jobs;
+					boolean alreadyHaveOneResposible = false;
+					for (int i = 0; i < jobs.length; i++) {
+						JobTemplate jt = jobs[i];
+						if( !jt.checkFilters(msg) ){
 							continue;
-						}else{
-							alreadyHaveOneResposible = true;
+						}
+						if(jt.responsbile){
+							if(alreadyHaveOneResposible){
+								continue;
+							}else{
+								alreadyHaveOneResposible = true;
+							}
+						}
+						BeeQueueJob job = new BeeQueueJob();
+						job.id = getNewId(MessageQueries.NN_JOB);
+						job.msgId = msg.id;
+						job.jobName = jt.jobName;
+						job.state = JobState.IN_PROCESS;
+						job.responsible = jt.responsbile ;
+						MessageQueries.INSERT_JOB.update(connection(), job);
+						StageTemplate[] stageTemplates = jt.stages;
+						for (int j = 0; j < stageTemplates.length; j++) {
+							BeeQueueStage stage = new BeeQueueStage();
+							stage.stageId = getNewId(MessageQueries.NN_STAGE);
+							stage.jobId = job.id;
+							StageTemplate st = stageTemplates[j];
+							stage.retriesLeft = st.retryStrategy.maxTries;
+							stage.state = st.dependOnStage == null  || st.dependOnStage.length == 0 ? StageState.READY : StageState.BLOCKED ;
+							stage.stageName = st.stageName;
+							MessageQueries.INSERT_STAGE.update(connection(), stage);
 						}
 					}
-					BeeQueueJob job = new BeeQueueJob();
-					job.id = getNewId(MessageQueries.NN_JOB);
-					job.msgId = msg.id;
-					job.jobName = jt.jobName;
-					job.state = JobState.IN_PROCESS;
-					job.responsible = jt.responsbile ;
-					MessageQueries.INSERT_JOB.update(connection(), job);
-					StageTemplate[] stageTemplates = jt.stages;
-					for (int j = 0; j < stageTemplates.length; j++) {
-						BeeQueueStage stage = new BeeQueueStage();
-						stage.stageId = getNewId(MessageQueries.NN_STAGE);
-						stage.jobId = job.id;
-						StageTemplate st = stageTemplates[j];
-						stage.retriesLeft = st.retryStrategy.maxTries;
-						stage.state = st.dependOnStage == null  || st.dependOnStage.length == 0 ? StageState.READY : StageState.BLOCKED ;
-						stage.stageName = st.stageName;
-						MessageQueries.INSERT_STAGE.update(connection(), stage);
+					msg.state = MessageState.IN_PROCESS;
+					msg.lock.value = msg.lock.newLock();
+					if( 1 != MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg) ){
+						throw new BeeException("cannot update status");
 					}
-				}
-				msg.state = MessageState.IN_PROCESS;
-				msg.lock.value = msg.lock.newLock();
-				if( 1 != MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg) ){
-					throw new BeeException("cannot update status").addPayload(msg);
+				}catch (Exception e) {
+					throw Throwables.cast(BeeException.class, e).addPayload(msg,mt);
 				}
 			}
 		}

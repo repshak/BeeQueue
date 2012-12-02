@@ -1,5 +1,5 @@
 {
-  "head" : {
+  "object" : {
     "type" : "OBJECT",
     "className" : "org.beequeue.json.BuzzSchemaTest$X<org.beequeue.json.BuzzSchemaTest$B>"
   },
@@ -39,6 +39,9 @@
     }, {
       "name" : "i",
       "type" : "INTEGER"
+    }, {
+      "name" : "date",
+      "type" : "DATE"
     }, {
       "name" : "b",
       "type" : "BOOLEAN"

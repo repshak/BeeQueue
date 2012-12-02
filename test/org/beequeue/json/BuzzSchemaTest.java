@@ -1,7 +1,9 @@
 package org.beequeue.json;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ public class BuzzSchemaTest {
 	public static class A {
 		public String s;
 		public int i;
+		public Date date;
 		public Boolean getB(){
 			return true;
 		}
@@ -62,7 +65,7 @@ public class BuzzSchemaTest {
 	@Test
 	public void test() throws IOException {
 		BuzzSchemaBuilder bsb = new BuzzSchemaBuilder();
-		bsb.setType(new TypeReference<X<B>>(){});
+		bsb.schema.object = bsb.add(new TypeReference<X<B>>(){});
 		ToStringUtil.out(bsb.schema);
 		Class<? extends BuzzSchemaTest> c = getClass();
 		String dir = c.getPackage().getName().replaceAll("\\.", "/");
@@ -70,6 +73,15 @@ public class BuzzSchemaTest {
 //		Files.writeAll(new File("test/"+xbPath), ToStringUtil.toString(bsb.schema));
 		String readAll = Files.readAll(new InputStreamReader(c.getResourceAsStream("/"+xbPath)));
 		Assert.assertEquals(readAll, ToStringUtil.toString(bsb.schema));
+		A a = new A();
+		a.date = new Date();
+		A o = ToStringUtil.toObject(ToStringUtil.toString(a),A.class);
+		ToStringUtil.out(o);
+		ToStringUtil.out(a);
+		Assert.assertEquals(
+				ToStringUtil.toString(a),
+				ToStringUtil.toString(o));
+		
 	}
 
 
