@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="lib/web/jetty-server-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
 	<classpathentry kind="lib" path="lib/web/jetty-util-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
 	<classpathentry kind="lib" path="lib/web/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/bin/guava-13.0.1.jar"/>
 	<classpathentry kind="output" path=".binn"/>
 </classpath>
