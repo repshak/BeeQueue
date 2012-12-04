@@ -26,8 +26,7 @@ public class Utf8TextContent {
 			String row = null;
 			while(null != (row = in.readLine())){
 				int at = buffer.size();
-				String s = row.trim();
-				add(at, s);
+				add(at, row.trim());
 			}
 		} catch (Exception e) {
 			throw BeeException.cast(e);
@@ -39,11 +38,13 @@ public class Utf8TextContent {
 	public boolean canAdd(){
 		return size < maxSize;
 	}
+	
 	public void set(int at, String s) {
 		String z = buffer.get(at);
 		buffer.set(at, s);
 		size += s.length()-z.length();
 	}
+	
 	public void add(int at, String s) {
 		buffer.add(at, s);
 		size += s.length()+1;
@@ -58,5 +59,4 @@ public class Utf8TextContent {
 		size -= s.length()+1;
 		return s;
 	}
-	
 }
