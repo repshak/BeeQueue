@@ -1,4 +1,4 @@
-package org.beequeue.piles.lifecycle;
+package org.beequeue.cache;
 
 public interface Sweepable {
 	void sweep(long currentTimeStamp);

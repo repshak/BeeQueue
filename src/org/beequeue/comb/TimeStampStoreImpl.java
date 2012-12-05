@@ -49,14 +49,12 @@ public class TimeStampStoreImpl implements TimeStampStore {
 
 	@Override
 	public <T> TimeStampStreamReader<T> reader(Class<T> type, File file) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Reader<T>(type, file);
 	}
 
 	@Override
 	public <T> TimeStampStreamReader<T> reader(final TypeReference<T> type, final File file) {
-		return new Reader<T>(file);
-		
+		return new Reader<T>(type, file);
 	}
 
 	@Override
