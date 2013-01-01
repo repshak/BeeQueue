@@ -43,5 +43,10 @@ public class LifeCycleEntry<K, V> {
 		this.k = k;
 		this.weight = new ExponentialDecayWeight(System.currentTimeMillis(), averageWeight);
 	}
+	public LifeCycleEntry(K k,long averageWeight,V v) {
+		this.k = k;
+		this.weight = new ExponentialDecayWeight(System.currentTimeMillis(), averageWeight);
+		this.v = v;
+	}
 
 }

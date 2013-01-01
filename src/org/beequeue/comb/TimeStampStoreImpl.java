@@ -1,11 +1,8 @@
 package org.beequeue.comb;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.RandomAccessFile;
 import java.util.Date;
 
-import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,16 +32,23 @@ public class TimeStampStoreImpl implements TimeStampStore {
 				return ToStringUtil.toObject(s, ref);
 			}
 		}
-		
+
 		@Override
-		public TimeStampStream<T> openStream(Date startFrom, IterationDirection direction) {
-			try {
-				RandomAccessFile raf = new RandomAccessFile(file, "r");
-				return null;
-			} catch (Exception e) {
-				throw new BeeException(e);
-			}
+		public org.beequeue.comb.TimeStampStreamReader.Iterator<T> iterate(
+				Date startFrom, IterationDirection direction) {
+			// TODO Auto-generated method stub
+			return null;
 		}
+		
+//		@Override
+//		public TimeStampStream<T> openStream(Date startFrom, IterationDirection direction) {
+//			try {
+//				RandomAccessFile raf = new RandomAccessFile(file, "r");
+//				return null;
+//			} catch (Exception e) {
+//				throw new BeeException(e);
+//			}
+//		}
 	}
 
 	@Override
