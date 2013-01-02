@@ -21,17 +21,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 
 
 public class NestedList<I,O> implements Iterable<O>, Serializable  {
   private static final long serialVersionUID = 1L;
   private List<O> data = new ArrayList<O>();
-  private Morph<I,O> morph ;
+  private BeeOperation<I,O> morph ;
   private NestedList<O,?> parent = null;
   
   
-  public NestedList(Morph<I, O> morph) {
+  public NestedList(BeeOperation<I, O> morph) {
     this.morph = morph;
   }
 

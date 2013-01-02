@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.beequeue.piles.MapList;
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -28,13 +28,13 @@ public class BuzzSchema {
 	public BuzzAttribute object;
 	
 
-	public MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(new Morph<BuzzClass,String>(){
+	public MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(new BeeOperation<BuzzClass,String>(){
 		@Override public String doIt(BuzzClass input) {
 			return input.className;
 		}});
 
 	@JsonInclude (Include.NON_EMPTY)
-	public MapList<String,BuzzColumn> tableColumns = new MapList<String,BuzzColumn>(new Morph<BuzzColumn,String>(){
+	public MapList<String,BuzzColumn> tableColumns = new MapList<String,BuzzColumn>(new BeeOperation<BuzzColumn,String>(){
 		@Override public String doIt(BuzzColumn input) {
 			return input.name;
 		}});

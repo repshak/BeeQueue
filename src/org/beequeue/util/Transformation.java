@@ -23,5 +23,5 @@ package org.beequeue.util;
  * @param <T>
  */
 
-public interface Transformation<T> extends Morph<T,T> {
+public interface Transformation<T> extends BeeOperation<T,T> {
 }

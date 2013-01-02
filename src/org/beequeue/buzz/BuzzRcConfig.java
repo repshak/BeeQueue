@@ -10,13 +10,13 @@ import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.template.GroovyTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Files;
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.ToStringUtil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public class BuzzRcConfig {
-	private static final Morph<File, String> READ_AND_RESOLVE = new Morph<File, String>() {
+	private static final BeeOperation<File, String> READ_AND_RESOLVE = new BeeOperation<File, String>() {
 		@Override
 		public String doIt(File input) {
 			try {

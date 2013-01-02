@@ -18,6 +18,6 @@ package org.beequeue.util;
 
 
 public interface SimpleTypeInterface 
-extends Morph<String,Object> {
+extends BeeOperation<String,Object> {
   Object toObject(String s);
 }

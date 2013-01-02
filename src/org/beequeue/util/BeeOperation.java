@@ -22,7 +22,7 @@ package org.beequeue.util;
  * @param <I> input type
  * @param <O> target type
  */
-public interface Morph<I,O> {
+public interface BeeOperation<I,O> {
   /**
    * make transition of input 
    * @param input

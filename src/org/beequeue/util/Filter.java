@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public interface Filter<T> extends Morph<T,Boolean> {
+public interface Filter<T> extends BeeOperation<T,Boolean> {
   class Util {
     
     public static <T> List<T> keepMatches(Collection<T> collection, Filter <? super T> filter){

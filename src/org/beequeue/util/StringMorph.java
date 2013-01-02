@@ -21,12 +21,12 @@ package org.beequeue.util;
 
 public interface StringMorph {
 	
-  public class ToString<T> implements Morph<T, String> {
+  public class ToString<T> implements BeeOperation<T, String> {
     public String doIt(T input) {
       return String.valueOf(input);
     }
   }
-  Morph<Object,String> TO_STRING = new ToString<Object>();
+  BeeOperation<Object,String> TO_STRING = new ToString<Object>();
   
   Transformation<String> PASS_THRU = new PassThruTransformation<String>();
 	

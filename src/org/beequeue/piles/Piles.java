@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 
 
 public class Piles {
@@ -75,26 +75,26 @@ public class Piles {
   }
   
   public static <K,K2,V2> SortedMap<K2,V2> ensureSortedMap(Map<K,SortedMap<K2,V2>> parent, K key){
-    return ensureAny(parent, key, new Morph<Void, SortedMap<K2,V2>>(){
+    return ensureAny(parent, key, new BeeOperation<Void, SortedMap<K2,V2>>(){
       public SortedMap<K2,V2> doIt(Void input) {
         return new TreeMap<K2, V2>();
       }}) ;
   }
   public static <K,K2,V2> Map<K2,V2> ensureMap(Map<K,Map<K2,V2>> parent, K key){
-    return ensureAny(parent, key, new Morph<Void, Map<K2,V2>>(){
+    return ensureAny(parent, key, new BeeOperation<Void, Map<K2,V2>>(){
       public Map<K2,V2> doIt(Void input) {
         return new HashMap<K2, V2>();
       }}) ;
   }
   
   public static <K,V> List<V> ensureList(Map<K,List<V>> parent, K key){
-    return ensureAny(parent, key, new Morph<Void, List<V>>(){
+    return ensureAny(parent, key, new BeeOperation<Void, List<V>>(){
       public List<V> doIt(Void input) {
         return new ArrayList<V>();
       }}) ;
   }
 
-  public static <K,V> V ensureAny(Map<K,V> parent, K key, Morph<Void,V> coustruct){
+  public static <K,V> V ensureAny(Map<K,V> parent, K key, BeeOperation<Void,V> coustruct){
     V val = parent.get(key);
     if(val==null){
       val = coustruct.doIt(null);
@@ -116,7 +116,7 @@ public class Piles {
     return collection;
   }
   
-  public static <T> String buildListString(Collection<T> list, String separator, Morph<? super T,String> morph ){
+  public static <T> String buildListString(Collection<T> list, String separator, BeeOperation<? super T,String> morph ){
     StringBuilder sb = new StringBuilder();
     for (T t : list) {
       if( sb.length() > 0 ){

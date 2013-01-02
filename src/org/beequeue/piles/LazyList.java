@@ -23,7 +23,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.StringMorph;
 
 
@@ -54,41 +54,41 @@ public class LazyList<T> extends ArrayList<T> {
     }
   }
 
-  public static <O,T> LazyList<T> morph(Morph<? super O,? extends T > morph, Collection<? extends O> others) {
+  public static <O,T> LazyList<T> morph(BeeOperation<? super O,? extends T > morph, Collection<? extends O> others) {
     return new LazyList<T>().morphInto(morph, others);
   }
   
-  public static <O,T> LazyList<T> morph(Morph<? super O,? extends T> morph, O... others) {
+  public static <O,T> LazyList<T> morph(BeeOperation<? super O,? extends T> morph, O... others) {
     return new LazyList<T>().morphInto(morph, others);
   }
   
-  public static <O,T> LazyList<T> morph(Morph<? super O,? extends T> morph, Iterator<? extends O> others) {
+  public static <O,T> LazyList<T> morph(BeeOperation<? super O,? extends T> morph, Iterator<? extends O> others) {
     return new LazyList<T>().morphInto(morph, others);
   }
   
-  public static <O,T> LazyList<T> morph(Morph<? super O,? extends T> morph, Enumeration<? extends O> others) {
+  public static <O,T> LazyList<T> morph(BeeOperation<? super O,? extends T> morph, Enumeration<? extends O> others) {
     return new LazyList<T>().morphInto(morph, others);
   }
 
-  public <O> LazyList<T> morphInto(Morph<? super O,? extends  T> morph, O... others) {
+  public <O> LazyList<T> morphInto(BeeOperation<? super O,? extends  T> morph, O... others) {
     return morphInto(morph, Arrays.asList(others));
   }
 
-  public <O> LazyList<T> morphInto(Morph<? super O,? extends T> morph, Collection<? extends O> others) {
+  public <O> LazyList<T> morphInto(BeeOperation<? super O,? extends T> morph, Collection<? extends O> others) {
     for (O o : others) {
       add(morph.doIt(o));
     }
     return this;
   }
   
-  public <O> LazyList<T> morphInto(Morph<? super O,? extends T> morph, Iterator<? extends O> others) {
+  public <O> LazyList<T> morphInto(BeeOperation<? super O,? extends T> morph, Iterator<? extends O> others) {
     while (others.hasNext()) {
       add(morph.doIt(others.next()));
     }
     return this;
   }
   
-  public <O> LazyList<T> morphInto(Morph<? super O,? extends T> morph, Enumeration<? extends O> others) {
+  public <O> LazyList<T> morphInto(BeeOperation<? super O,? extends T> morph, Enumeration<? extends O> others) {
     while (others.hasMoreElements()) {
       add(morph.doIt(others.nextElement()));
     }
@@ -107,7 +107,7 @@ public class LazyList<T> extends ArrayList<T> {
 
 
 
-  public String toString(String separator, Morph<Object,String> morph ){
+  public String toString(String separator, BeeOperation<Object,String> morph ){
     return Piles.buildListString(this, separator, morph);
   }
 

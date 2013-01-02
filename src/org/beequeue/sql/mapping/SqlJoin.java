@@ -28,7 +28,7 @@ import org.beequeue.piles.Piles;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.Select;
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.Quadruple;
 import org.beequeue.util.StringMorph;
 import org.beequeue.util.Triple;
@@ -91,7 +91,7 @@ public class SqlJoin  {
   private <I> void resetWhere(WhereCondition<I> whereCondition, FieldMap... conditionMaps) {
     LazyList<String> whereExps = LazyList.morph(WhereCondition.TO_EQ, conditionMaps);
     final int index = this.joinedTables.size()-1;
-    Morph<String, String> morph = new Morph<String, String>(){
+    BeeOperation<String, String> morph = new BeeOperation<String, String>(){
       public String doIt(String input) {
         return tableAlias(index)+"."+input;
       }};

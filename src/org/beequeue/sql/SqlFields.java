@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.beequeue.piles.LazyList;
 import org.beequeue.piles.Piles;
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.StringMorph;
 
 /**
@@ -34,19 +34,19 @@ import org.beequeue.util.StringMorph;
 public class SqlFields<T> implements  SqlMorph<T>{
   private static final String COMMA = ", ";
   
-  private static Morph<Object,String> VALUE_PART_OF_INSERT = new Morph<Object,String>(){
+  private static BeeOperation<Object,String> VALUE_PART_OF_INSERT = new BeeOperation<Object,String>(){
     public String doIt(Object input) {
       return "?";
     }
   };
 
-  private static Morph<Object,String> SET_PART_OF_UPDATE = new Morph<Object,String>(){
+  private static BeeOperation<Object,String> SET_PART_OF_UPDATE = new BeeOperation<Object,String>(){
     public String doIt(Object input) {
       return String.valueOf(input)+ " = ?";
     }
   };
   
-  public static class Alias implements Morph<Object,String>
+  public static class Alias implements BeeOperation<Object,String>
   {
     private String alias;
     
@@ -60,14 +60,14 @@ public class SqlFields<T> implements  SqlMorph<T>{
   }  
 
   private List<? extends Object> fields ;
-  private Morph<Object,String> morph;
+  private BeeOperation<Object,String> morph;
   
   public SqlFields(List<?> fields) {
     this.fields = fields;
     this.morph = StringMorph.TO_STRING;
   }
   
-  public SqlFields(List<?> fields, Morph<Object,String> morph) {
+  public SqlFields(List<?> fields, BeeOperation<Object,String> morph) {
     this.fields = fields;
     this.morph = morph;
   }

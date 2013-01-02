@@ -27,7 +27,7 @@ import org.beequeue.piles.LazyList;
 import org.beequeue.piles.Piles;
 import org.beequeue.sql.Index;
 import org.beequeue.sql.SqlPrepare;
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.Quadruple;
 import org.beequeue.util.StringMorph;
 import org.beequeue.util.Triple;
@@ -36,44 +36,44 @@ import org.beequeue.util.Tuple;
 public class WhereCondition<T> {
   public static final String AND = " and ";
   
-  public static final Morph<FieldMap, String> TO_EQ = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_EQ = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " = ?";
     }
   };
-  public static final Morph<FieldMap, String> TO_GT = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_GT = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " > ?";
     }
   };
-  public static final Morph<FieldMap, String> TO_LT = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_LT = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " < ?";
     }
   };
-  public static final Morph<FieldMap, String> TO_GT_EQ = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_GT_EQ = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " >= ?";
     }
   };
-  public static final Morph<FieldMap, String> TO_LT_EQ = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_LT_EQ = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " <= ?";
     }
   };
-  public static final Morph<FieldMap, String> TO_NE = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_NE = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " <> ?";
     }
   };
 
-  public static final Morph<FieldMap, String> TO_IS_NULL = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_IS_NULL = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " is null";
     }
   };
 
-  public static final Morph<FieldMap, String> TO_IS_NOT_NULL = new Morph<FieldMap, String>(){
+  public static final BeeOperation<FieldMap, String> TO_IS_NOT_NULL = new BeeOperation<FieldMap, String>(){
     public String doIt(FieldMap input) {
       return input.name + " is not null";
     }
@@ -101,7 +101,7 @@ public class WhereCondition<T> {
   }
 
   @SuppressWarnings("unchecked")
-  public static WhereCondition<Record> dynamic(final Map<FieldMap,Morph<FieldMap,String>> conditionMap){
+  public static WhereCondition<Record> dynamic(final Map<FieldMap,BeeOperation<FieldMap,String>> conditionMap){
     final LazyList<FieldMap> fieldMaps = new LazyList<FieldMap>(conditionMap.keySet());
     WhereCondition<Record> whereCondition = new WhereCondition<Record>("",new SqlPrepare<Record>(){
       public void invoke(PreparedStatement pstmt, Record input, Index idx) throws SQLException {
@@ -111,7 +111,7 @@ public class WhereCondition<T> {
       }}, fieldMaps);
     List<String> conditions = new ArrayList<String>();
     for (FieldMap fieldMap : fieldMaps) {
-      Morph<FieldMap, String> morph = conditionMap.get(fieldMap);
+      BeeOperation<FieldMap, String> morph = conditionMap.get(fieldMap);
       if(morph == null){
         morph = TO_EQ ;
       }
@@ -139,11 +139,11 @@ public class WhereCondition<T> {
     return whereCondition;
   }
 
-  public static <T> String combine(Morph<? super T, String> morph, T... condMaps) {
+  public static <T> String combine(BeeOperation<? super T, String> morph, T... condMaps) {
     return combine(morph, Arrays.asList(condMaps));
   }
 
-  public static <T> String combine(Morph<? super T, String> morph, List<T> asList ) {
+  public static <T> String combine(BeeOperation<? super T, String> morph, List<T> asList ) {
     return Piles.buildListString(asList, AND , morph);
   }
 

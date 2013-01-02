@@ -16,13 +16,13 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.msg;
 
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 
 public class BeeQueueDomain {
 	public String name;
 	public DomainState state;
 	
-	public static Morph<String, BeeQueueDomain> TO_DOMAIN = new Morph<String, BeeQueueDomain>() {
+	public static BeeOperation<String, BeeQueueDomain> TO_DOMAIN = new BeeOperation<String, BeeQueueDomain>() {
 		
 		@Override
 		public BeeQueueDomain doIt(String input) {

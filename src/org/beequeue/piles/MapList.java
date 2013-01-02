@@ -4,15 +4,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.beequeue.util.Morph;
+import org.beequeue.util.BeeOperation;
 
 public class MapList<K,V> extends BoundList<V> {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Morph<? super V,? extends K> extractKey ;
+	private BeeOperation<? super V,? extends K> extractKey ;
 	
-	public MapList(Morph<? super V,? extends K> extractKey){
+	public MapList(BeeOperation<? super V,? extends K> extractKey){
 		super();
 		this.extractKey = extractKey ;
 		setUpdateListener(new Listener() {

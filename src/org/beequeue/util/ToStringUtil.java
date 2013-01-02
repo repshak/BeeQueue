@@ -60,7 +60,7 @@ public class ToStringUtil {
 		}
 	}
 
-	public static <I,T> T toObject(I input, Morph<I,String> read, Class<T> type)  {
+	public static <I,T> T toObject(I input, BeeOperation<I,String> read, Class<T> type)  {
 		try {
 			String s =  read.doIt(input);
 			return toObject(s, type);
@@ -71,7 +71,7 @@ public class ToStringUtil {
 		}
 	}
 
-	public static <I,T> T toObject(I input, Morph<I,String> read, TypeReference<T> type)  {
+	public static <I,T> T toObject(I input, BeeOperation<I,String> read, TypeReference<T> type)  {
 		try {
 			String s =  read.doIt(input);
 			return toObject(s, type);
