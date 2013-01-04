@@ -46,6 +46,12 @@
 			<classpath location="${warjar}" />
 			<classpath refid="lib.cp" />
 		</javac>
+		<copy todir="${testbin}">
+			<fileset dir="${test}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
 		<junit>
 		    <classpath>
 				<pathelement location="${warjar}" />
