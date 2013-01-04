@@ -4,12 +4,16 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="init">
 		<property name="src" location="src" />
+		<property name="test" location="test" />
 		<property name="scripts" location="scripts" />
 		<property name="lib" value="lib" />
 		<property name="web" location="web" />
 		<property name="build" location=".build" />
 		<property name="warjar" location="${build}/warjar" />
+		<property name="testreports" location="${build}/testreports" />
+		<property name="testbin" location="${build}/testbin" />
 		<property name="lib-sigar" value="${lib}/sigar-bin/lib" />
+		<property name="lib-test" value="${lib}/bin" />
 		<property name="weblib" location="${web}/WEB-INF/lib" />
 
 		<path id="sigar.cp">
@@ -36,7 +40,25 @@
 
 
 	<target name="test-all" depends="build" description="Test">
-
+		<mkdir dir="${testbin}" />
+		<mkdir dir="${testreports}" />
+		<javac destdir="${testbin}" source="1.6" target="1.6" srcdir="${test}" debug="true" includeantruntime="false">
+			<classpath location="${warjar}" />
+			<classpath refid="lib.cp" />
+		</javac>
+		<junit>
+		    <classpath>
+				<pathelement location="${warjar}" />
+				<pathelement location="${testbin}" />
+				<path refid="lib.cp" />
+		    </classpath>    
+		    <batchtest todir="${testreports}">
+		       <fileset dir="${test}">
+		            <include name="**/*Test*" />
+		       </fileset>
+		    </batchtest>
+			<formatter type="xml"/>
+		</junit>
 	</target>
 	
 	<target name="build" depends="clean" description="Builds war-jar">
