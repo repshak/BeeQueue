@@ -35,6 +35,10 @@
 	</target>
 
 
+	<target name="test-all" depends="build" description="Test">
+
+	</target>
+	
 	<target name="build" depends="clean" description="Builds war-jar">
 		<mkdir dir="${warjar}" />
 		
