@@ -31,7 +31,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class StageTest {
+public class StageFunctional {
 	private static final String SEED_TREE = "test/seed";
 	
 	@Test
