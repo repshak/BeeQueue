@@ -45,7 +45,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class DbCoordinatorTest {
+public class DbCoordinatorFunctional {
 
 	private static final String COORDINATOR_JSON = "/Users/sergeyk/git/BeeQueue/bq-home/coordinator.json";
 

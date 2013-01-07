@@ -37,7 +37,7 @@ public class StageTest {
 	@Test
 	public void test() 
 			throws JsonParseException, JsonMappingException, IOException {
-		DbCoordinator c = DbCoordinatorTest.getCoordinator();
+		DbCoordinator c = DbCoordinatorFunctional.getCoordinator();
 		TransactionContext.push();
 		c.processEmittedMessages();
 		BeeQueueStage pickStageToRun = c.pickStageToRun();

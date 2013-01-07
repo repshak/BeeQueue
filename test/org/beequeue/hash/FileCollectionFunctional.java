@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.beequeue.GlobalConfig;
-import org.beequeue.coordinator.DbCoordinatorTest;
+import org.beequeue.coordinator.DbCoordinatorFunctional;
 import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.sql.TransactionContext;
@@ -34,13 +34,13 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class FileCollectionTest {
+public class FileCollectionFunctional {
 	private static final String SEED_TREE = "test/seed";
 	
 	@Test
 	public void test() 
 			throws JsonParseException, JsonMappingException, IOException {
-		DbCoordinator c = DbCoordinatorTest.getCoordinator();
+		DbCoordinator c = DbCoordinatorFunctional.getCoordinator();
 		TransactionContext.push();
 		
 		HashKey push = c.push(new File(SEED_TREE));
@@ -57,7 +57,7 @@ public class FileCollectionTest {
 		String all = Files.readAll(new File("test/seed/global.json"));
 		TransactionContext.push();
 		Dirs.deleteDirectory(BeeQueueHome.instance.getConfig());
-		DbCoordinator c = DbCoordinatorTest.getCoordinator();
+		DbCoordinator c = DbCoordinatorFunctional.getCoordinator();
 		System.out.println(c.sync(WorkerData.instance.config,BeeQueueHome.instance.getConfig()));
 		ToStringUtil.toObject(all, GlobalConfig.class);
 		Singletons.getGlobalConfig();
@@ -67,7 +67,7 @@ public class FileCollectionTest {
 	public void tesToo() 
 			throws JsonParseException, JsonMappingException, IOException {
 		
-		DbCoordinator c = DbCoordinatorTest.getCoordinator();
+		DbCoordinator c = DbCoordinatorFunctional.getCoordinator();
 		TransactionContext.push();
 		ContentTree push = c.push(new File(SEED_TREE),WorkerData.BEE_QUEUE_CONFIG);
 		System.out.println(push);
