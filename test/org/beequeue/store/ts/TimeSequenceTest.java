@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store.ts;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
