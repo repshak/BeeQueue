@@ -14,8 +14,22 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store;
 
-public class KeyRangeNode {
+import org.beequeue.json.BuzzSchema;
+import org.beequeue.store.node.KeyRangeTree;
 
+public class BeeMessageFrame extends BeeMessageFrameKey {
+	public BuzzSchema schema;
+	
+	public int keyLimit;
+	public int valueInlineLimit;
+	public int fragmentNodeMaxSize;
+	
+	public static class RetainPolicy{
+		
+	};
+	public RetainPolicy retainingPolicy;
+	KeyRangeTree root;
+	
 }

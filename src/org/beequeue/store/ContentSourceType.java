@@ -14,12 +14,8 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store;
 
-import org.beequeue.hash.HashKey;
-
-public interface BeeCombStore {
-	BeeFrame get(String collectionName);
-	ContentSource read(HashKey key);
-	HashKey save(ContentSource content);
+public enum ContentSourceType {
+	plain, gzip, bzip2;
 }

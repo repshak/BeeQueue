@@ -14,8 +14,16 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store.node;
 
-public enum ContentSourceType {
-	plain, gzip, bzip2;
+import org.beequeue.hash.HashKey;
+import org.beequeue.store.BeeMessageFrameKey;
+import org.beequeue.store.BeeMessageKey;
+
+public class RealKeyRange {
+	public BeeMessageKey start;
+	public BeeMessageKey end;
+	public BeeMessageFrameKey frame;
+	public HashKey rangeKey(){return null;}
+
 }

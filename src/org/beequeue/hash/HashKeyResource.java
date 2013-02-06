@@ -17,8 +17,16 @@
 package org.beequeue.hash;
 
 public enum HashKeyResource {
+	/** standalone file content */
 	F("File"), 
-	D("Directory");
+	/** flat list of directory tree sorted by path using {@link FileEntry} */
+	D("Directory"),
+	/**   */
+	C("ContentVersion"),
+	/**   */
+	T("KeyRangeTree"),
+	/** */
+	R("KeyRangeData");
 	
 	public final String description;
 	

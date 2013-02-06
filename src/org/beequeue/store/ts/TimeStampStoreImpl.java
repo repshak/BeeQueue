@@ -14,11 +14,12 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store.ts;
 
 import java.io.File;
 import java.util.Date;
 
+import org.beequeue.store.IterationDirection;
 import org.beequeue.util.ToStringUtil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,7 +51,7 @@ public class TimeStampStoreImpl implements TimeStampStore {
 		}
 
 		@Override
-		public org.beequeue.comb.TimeStampStreamReader.Iterator<T> iterate(
+		public org.beequeue.store.ts.TimeStampStreamReader.Iterator<T> iterate(
 				Date startFrom, IterationDirection direction) {
 			// TODO Auto-generated method stub
 			return null;

@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store.ts;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -66,18 +66,10 @@ public class TimeSequence implements Comparable<TimeSequence> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TimeSequence other = (TimeSequence) obj;
-		if (counter != other.counter)
-			return false;
-		if (time != other.time)
-			return false;
-		return true;
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass() ) return false;
+		TimeSequence that = (TimeSequence) obj;
+		return counter == that.counter && time == that.time;
 	}
 
 	@Override
@@ -85,7 +77,7 @@ public class TimeSequence implements Comparable<TimeSequence> {
 		return this == that ? 0 : that == null ? -1 : compareNotNull(that) ;
 	}
 
-	private int compareNotNull(TimeSequence that) {
+	final private int compareNotNull(TimeSequence that) {
 		long dTime = that.time - this.time;
 		return dTime == 0 ? that.counter - this.counter : dTime < 0 ? -1 : 1 ;
 	}

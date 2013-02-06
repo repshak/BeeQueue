@@ -14,9 +14,11 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store.ts;
 
 import java.util.Date;
+
+import org.beequeue.store.IterationDirection;
 
 public interface TimeStampStreamReader<T> {
 	class Entry<T> {

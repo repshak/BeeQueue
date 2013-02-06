@@ -14,17 +14,14 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store.node;
 
 import org.beequeue.hash.HashKey;
+import org.beequeue.store.ContentVersion;
 
-public class KeyRangeTree extends KeyRangeNode{
-	public static class Entry {
-		public String key;
-		public TimeSequence ts;
-		public String inline;
-		public HashKey offline;
-	}
-	public Entry[] entries;
-	
+
+public class KeyRangeNode {
+	public HashKey parent;
+	public RealKeyRange range;
+	public ContentVersion version;
 }

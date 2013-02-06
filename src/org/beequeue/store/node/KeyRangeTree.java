@@ -14,9 +14,14 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store.node;
 
-public class RealKey {
-	String key;
-	String hive;
+
+public class KeyRangeTree extends KeyRangeNode{
+	
+	public static class TreeEntry {
+		public RealKeyRange range;
+	}
+	public TreeEntry[] entries;
+	
 }

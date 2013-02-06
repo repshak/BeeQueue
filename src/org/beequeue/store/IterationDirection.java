@@ -14,22 +14,9 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store;
 
-import org.beequeue.json.BuzzSchema;
-
-public class BeeFrame {
-	public String name;
-	public BuzzSchema schema;
-	
-	public int keyLimit;
-	public int valueInlineLimit;
-	public int fragmentNodeMaxSize;
-	
-	public static class VersioningPolicy{
-		
-	};
-	public VersioningPolicy versioningPolicy;
-	KeyRangeTree root;
-	
+public enum IterationDirection {
+	BACKWARD,
+	FORWARD
 }

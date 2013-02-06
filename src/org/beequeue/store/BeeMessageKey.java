@@ -14,15 +14,8 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.comb;
+package org.beequeue.store;
 
-import java.io.File;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
-public interface TimeStampStore {
-	<T> TimeStampStreamReader<T> reader(Class<T> type, File file);
-	<T> TimeStampStreamReader<T> reader(TypeReference<T> type, File file);
-	<T> void append(File file, T toAdd);
-	//<T> void merge(File destination, File ... sources );
+public class BeeMessageKey {	
+	String key;
 }
