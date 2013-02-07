@@ -92,7 +92,7 @@ public class SqlJoin  {
     LazyList<String> whereExps = LazyList.morph(WhereCondition.TO_EQ, conditionMaps);
     final int index = this.joinedTables.size()-1;
     BeeOperation<String, String> morph = new BeeOperation<String, String>(){
-      public String doIt(String input) {
+      public String execute(String input) {
         return tableAlias(index)+"."+input;
       }};
     whereCondition.setWhere(WhereCondition.combine(morph, whereExps));

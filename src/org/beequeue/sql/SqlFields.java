@@ -35,13 +35,13 @@ public class SqlFields<T> implements  SqlMorph<T>{
   private static final String COMMA = ", ";
   
   private static BeeOperation<Object,String> VALUE_PART_OF_INSERT = new BeeOperation<Object,String>(){
-    public String doIt(Object input) {
+    public String execute(Object input) {
       return "?";
     }
   };
 
   private static BeeOperation<Object,String> SET_PART_OF_UPDATE = new BeeOperation<Object,String>(){
-    public String doIt(Object input) {
+    public String execute(Object input) {
       return String.valueOf(input)+ " = ?";
     }
   };
@@ -54,7 +54,7 @@ public class SqlFields<T> implements  SqlMorph<T>{
       this.alias = alias;
     }
 
-    public String doIt(Object input) {
+    public String execute(Object input) {
       return alias + "." + String.valueOf(input);
     }
   }  

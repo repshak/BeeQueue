@@ -77,7 +77,7 @@ public class JobTemplate {
 		for (int i = 0; i < theseFilters.length; i++) {
 			String key = theseFilters[i];
 			if(! this.messageTemplate.filters.containsKey(key)){
-				throw new BeeException("No filter defined:"+key).addPayload(this.messageTemplate);
+				throw new BeeException("No filter defined:"+key).memo("messageTemplate",this.messageTemplate);
 			}
 		}
 	}

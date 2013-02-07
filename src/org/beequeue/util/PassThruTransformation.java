@@ -21,7 +21,7 @@ package org.beequeue.util;
  * @param <T> input and output object type
  */
 public class PassThruTransformation<T> implements Transformation<T>{
-  public T doIt(T input) {
+  public T execute(T input) {
     return input;
   }
 }

@@ -45,7 +45,7 @@ public class MapList<K,V> extends BoundList<V> {
 		if( localCopy == null ){
 			localCopy = new HashMap<K, V>();
 			for (V v : this) {
-				localCopy.put(extractKey.doIt(v), v);
+				localCopy.put(extractKey.execute(v), v);
 			}
 			localCopy = Collections.unmodifiableMap(localCopy);
 			this.map = localCopy ;

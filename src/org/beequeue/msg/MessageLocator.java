@@ -76,7 +76,9 @@ public class MessageLocator implements Comparable<MessageLocator> {
 
 	public MessageLocator extractMessageKind(MessageTemplate template){
 		if( this.attributes.length != template.keyColumns().length || !this.name.equals(template.messageName) ){
-			throw new BeeException("template does not comply with message locator:").addPayload(template, this);
+			throw new BeeException("template does not comply with message locator:")
+			.memo("temlate",template)
+			.memo("locator",this);
 		}
 		String kindAttributes[] = new String[template.columns.length];
 		for (int i = 0; i < template.columns.length; i++) {

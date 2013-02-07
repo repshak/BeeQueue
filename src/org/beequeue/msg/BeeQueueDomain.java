@@ -25,7 +25,7 @@ public class BeeQueueDomain {
 	public static BeeOperation<String, BeeQueueDomain> TO_DOMAIN = new BeeOperation<String, BeeQueueDomain>() {
 		
 		@Override
-		public BeeQueueDomain doIt(String input) {
+		public BeeQueueDomain execute(String input) {
 			BeeQueueDomain domain = new BeeQueueDomain();
 			domain.name = input;
 			return domain;

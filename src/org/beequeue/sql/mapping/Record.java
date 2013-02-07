@@ -37,7 +37,7 @@ public class Record {
   @SuppressWarnings("unchecked")
   public Map<String,Object> toBeanMap(){
     return LazyMap.morphKeys(new BeeOperation<FieldMap, String>(){
-      public String doIt(FieldMap input) {
+      public String execute(FieldMap input) {
         return input.beanPath;
       }} , data) ;
   }

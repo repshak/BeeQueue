@@ -28,9 +28,9 @@ public class TransformationChain<T> implements Transformation<T> {
     transitionChain = chain;
   }
 
-  public T doIt(T data) {
+  public T execute(T data) {
     for (int i = 0; i < transitionChain.length; i++) {
-      data = transitionChain[i].doIt(data);
+      data = transitionChain[i].execute(data);
     }
     return data;
   }

@@ -57,7 +57,7 @@ public class ThreeStageCache<K,V> implements Sweepable {
 		}, strongConfig);
 		this.soft = new NotStrongReference<LifeCycleCache<K, V>>(false, new BeeOperation<Void, LifeCycleCache<K, V>>() {
 			@Override
-			public LifeCycleCache<K, V> doIt(Void input) {
+			public LifeCycleCache<K, V> execute(Void input) {
 				return new LifeCycleCache<K, V>(new LoadDeleteStrategy<K, V>() {
 					@Override
 					public V load(K k) {
@@ -77,7 +77,7 @@ public class ThreeStageCache<K,V> implements Sweepable {
 		});
 		this.weak = new NotStrongReference<LifeCycleCache<K, V>>(true, new BeeOperation<Void, LifeCycleCache<K, V>>() {
 			@Override
-			public LifeCycleCache<K, V> doIt(Void input) {
+			public LifeCycleCache<K, V> execute(Void input) {
 				return new LifeCycleCache<K, V>(new LoadDeleteStrategy<K, V>() {
 					@Override
 					public V load(K k) {

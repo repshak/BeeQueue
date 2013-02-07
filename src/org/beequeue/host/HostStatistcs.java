@@ -24,7 +24,7 @@ public class HostStatistcs {
 	
 	public static final Filter<HostStatistcs> HEALTHY_HOST_CHECK =new Filter<HostStatistcs>(){
 		@Override
-		public Boolean doIt(HostStatistcs stat) {
+		public Boolean execute(HostStatistcs stat) {
 			return stat.cpu.ratio() < 0.9 && stat.memory.ratio() < .95;
 		}
 		

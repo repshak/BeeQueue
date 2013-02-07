@@ -80,7 +80,7 @@ public class WorkerData {
 	}
 
 	public void calculateNextStatus() {
-		this.worker.state = HostStatistcs.HEALTHY_HOST_CHECK.doIt(this.hostStat) ?
+		this.worker.state = HostStatistcs.HEALTHY_HOST_CHECK.execute(this.hostStat) ?
 			host.toWorkerState() : WorkerState.PAUSED ;	
 		
 	}

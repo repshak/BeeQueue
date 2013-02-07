@@ -61,7 +61,7 @@ public class LazyMap<K, V> extends LinkedHashMap<K, V> {
   public static <K,V> LazyMap<K,V> extractKeys(BeeOperation<V,K> extractKey, Collection<V> collection){
     LazyMap<K, V> lazyMap = new LazyMap<K,V>();
     for (V v : collection) {
-      lazyMap.put(extractKey.doIt(v), v);
+      lazyMap.put(extractKey.execute(v), v);
     }
     return lazyMap;
   }
@@ -90,7 +90,7 @@ public class LazyMap<K, V> extends LinkedHashMap<K, V> {
 
   public <K2,V2> LazyMap<K,V> morphInto(BeeOperation<K2,K> morphKey, BeeOperation<V2,V> morphValue, Map<K2,V2> toMorph){
     for (K2 k2 : toMorph.keySet()) {
-      put(morphKey.doIt(k2),morphValue.doIt(toMorph.get(k2)));
+      put(morphKey.execute(k2),morphValue.execute(toMorph.get(k2)));
     }
     return this;
   }

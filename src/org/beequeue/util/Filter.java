@@ -34,7 +34,7 @@ public interface Filter<T> extends BeeOperation<T,Boolean> {
     public static <T> List<T> filter(Collection<T> collection, Filter <? super T> filter, boolean reverse){
       ArrayList<T> result = new ArrayList<T>();
       for (T t : collection) {
-        if( filter.doIt(t) ^ reverse ){
+        if( filter.execute(t) ^ reverse ){
           result.add(t);
         }
       }
@@ -43,12 +43,12 @@ public interface Filter<T> extends BeeOperation<T,Boolean> {
   }
 
   Filter<Object> TRUE = new Filter<Object>(){
-    public Boolean doIt(Object input) {
+    public Boolean execute(Object input) {
       return true;
     }};
 
   Filter<Object> FALSE = new Filter<Object>(){
-    public Boolean doIt(Object input) {
+    public Boolean execute(Object input) {
       return false;
     }};
 }

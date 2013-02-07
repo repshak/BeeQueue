@@ -155,7 +155,7 @@ public class BeanUtil {
   
   public static void injectMap(Object bean, Map<String,?> attributes, Filter<String> filter) {
     for (String propertyPath : attributes.keySet() ) {
-      if(filter!=null && !filter.doIt(propertyPath)){continue;}
+      if(filter!=null && !filter.execute(propertyPath)){continue;}
       BeanUtil.populatePropertyAsString(bean, propertyPath, attributes.get(propertyPath).toString());
     }
   }

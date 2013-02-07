@@ -62,7 +62,7 @@ public class FieldMap<T> {
       this.target = target;
     }
 
-    public Boolean doIt(FieldMap input) {
+    public Boolean execute(FieldMap input) {
       return input.criteria.contains(target);
     }
   }

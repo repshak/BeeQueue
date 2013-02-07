@@ -59,7 +59,8 @@ public class Update<I> extends Operation<I> {
   public void updateOne(Connection connection, I input) {
     int rc = update(connection, input);
     if( 1 != rc ){
-      throw new BeeException("expected 1 record to be modified, but not:"+rc).addPayload(sql);
+      throw new BeeException("expected 1 record to be modified, but not:"+rc)
+      .memo("sql",sql);
     }
   }
 

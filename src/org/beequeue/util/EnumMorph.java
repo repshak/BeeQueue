@@ -58,10 +58,10 @@ Enum findByName(String name){
 }
 
 
-  public Object doIt(String s){
+  public Object execute(String s){
     return findByName(s);
   }
   public Object toObject(String s){
-    return doIt(s);
+    return execute(s);
   }
 }

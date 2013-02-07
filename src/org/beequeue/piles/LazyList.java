@@ -76,21 +76,21 @@ public class LazyList<T> extends ArrayList<T> {
 
   public <O> LazyList<T> morphInto(BeeOperation<? super O,? extends T> morph, Collection<? extends O> others) {
     for (O o : others) {
-      add(morph.doIt(o));
+      add(morph.execute(o));
     }
     return this;
   }
   
   public <O> LazyList<T> morphInto(BeeOperation<? super O,? extends T> morph, Iterator<? extends O> others) {
     while (others.hasNext()) {
-      add(morph.doIt(others.next()));
+      add(morph.execute(others.next()));
     }
     return this;
   }
   
   public <O> LazyList<T> morphInto(BeeOperation<? super O,? extends T> morph, Enumeration<? extends O> others) {
     while (others.hasMoreElements()) {
-      add(morph.doIt(others.nextElement()));
+      add(morph.execute(others.nextElement()));
     }
     return this;
   }

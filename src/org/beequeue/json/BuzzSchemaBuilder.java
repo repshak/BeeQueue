@@ -106,7 +106,8 @@ public class BuzzSchemaBuilder {
 				classDef.enumValues[i] = Array.get(arrayOfEnums,i).toString() ;
 			}
 		} catch (Exception e) {
-			throw new BeeException("extracting values out of enum:",e).addPayload(typeId);
+			throw new BeeException("extracting values out of enum:",e)
+			.memo("typeId",typeId);
 		}
 	}
 

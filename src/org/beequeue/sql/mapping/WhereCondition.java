@@ -37,44 +37,44 @@ public class WhereCondition<T> {
   public static final String AND = " and ";
   
   public static final BeeOperation<FieldMap, String> TO_EQ = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " = ?";
     }
   };
   public static final BeeOperation<FieldMap, String> TO_GT = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " > ?";
     }
   };
   public static final BeeOperation<FieldMap, String> TO_LT = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " < ?";
     }
   };
   public static final BeeOperation<FieldMap, String> TO_GT_EQ = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " >= ?";
     }
   };
   public static final BeeOperation<FieldMap, String> TO_LT_EQ = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " <= ?";
     }
   };
   public static final BeeOperation<FieldMap, String> TO_NE = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " <> ?";
     }
   };
 
   public static final BeeOperation<FieldMap, String> TO_IS_NULL = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " is null";
     }
   };
 
   public static final BeeOperation<FieldMap, String> TO_IS_NOT_NULL = new BeeOperation<FieldMap, String>(){
-    public String doIt(FieldMap input) {
+    public String execute(FieldMap input) {
       return input.name + " is not null";
     }
   };
@@ -115,7 +115,7 @@ public class WhereCondition<T> {
       if(morph == null){
         morph = TO_EQ ;
       }
-      conditions.add(morph.doIt(fieldMap));
+      conditions.add(morph.execute(fieldMap));
     }
     whereCondition.append(combine(StringMorph.PASS_THRU, conditions ));
     return whereCondition;

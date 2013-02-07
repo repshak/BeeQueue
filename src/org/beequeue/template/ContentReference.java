@@ -65,7 +65,9 @@ public abstract class  ContentReference {
 		try {
 			return source.getTemplateText(this.template, context);
 		} catch (Exception e) {
-			throw BeeException.cast(e).addPayload(this.template,context);
+			throw BeeException.cast(e)
+			.memo("template",this.template)
+			.memo("context",context);
 		}
 	}
 

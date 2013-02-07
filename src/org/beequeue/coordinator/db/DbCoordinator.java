@@ -196,7 +196,7 @@ public class DbCoordinator implements Coordiantor {
 				wh.worker = worker;
 			}else{
 				throw new BeeException("Cannot create worker")
-								.addPayload(worker);
+								.memo("worker", worker);
 			}
 		}else{
 			wh.worker = HostWorkerQueries.LOAD_WORKER_BY_ID.queryOne(connection(), wh.worker.id);
@@ -430,7 +430,9 @@ public class DbCoordinator implements Coordiantor {
 						throw new BeeException("cannot update status");
 					}
 				}catch (Exception e) {
-					throw Throwables.cast(BeeException.class, e).addPayload(msg,mt);
+					throw BeeException.cast(e)
+					.memo("msg",msg)
+					.memo("mt",mt);
 				}
 			}
 		}
@@ -578,7 +580,7 @@ public class DbCoordinator implements Coordiantor {
 			if(job.responsible){
 				if(t.o3!=null){
 					throw new BeeException("only one responsible job should be assigned per message:")
-					.addPayload(t);
+					.memo("",t);
 				}
 				t.o3 = job;
 			}

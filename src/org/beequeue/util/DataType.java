@@ -54,14 +54,14 @@ public abstract class DataType<T> {
 		try {
 			return o2s((T)o);
 		} catch (Exception e) {
-			throw new BeeException(e).addPayload(o);
+			throw new BeeException(e).memo("toString", o);
 		}
 	}
 	public T toObject(String s){
 		try {
 			return s2o(s);
 		} catch (Exception e) {
-			throw new BeeException(e).addPayload(s);
+			throw new BeeException(e).memo("toObject",s);
 		}
 	}
 	

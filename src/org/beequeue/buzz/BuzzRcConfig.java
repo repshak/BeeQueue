@@ -34,7 +34,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 public class BuzzRcConfig {
 	private static final BeeOperation<File, String> READ_AND_RESOLVE = new BeeOperation<File, String>() {
 		@Override
-		public String doIt(File input) {
+		public String execute(File input) {
 			try {
 				String generate = new GroovyTemplate(Files.readAll(input))
 					.generate(BeeQueueHome.instance.getVariables());

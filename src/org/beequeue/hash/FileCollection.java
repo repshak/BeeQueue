@@ -71,10 +71,12 @@ public class FileCollection {
 				}
 			}
 		} catch (Exception e) {
-			throw new BeeException(e).addPayload(errors.toArray());
+			throw new BeeException(e)
+			.memo("errors",errors.toArray());
 		}
 		if(errors.size() > 0){
-			throw new BeeException("has errors:").addPayload(errors.toArray());
+			throw new BeeException("has errors")
+			.memo("errors",errors.toArray());
 		}
 		FileCollection fileCollection = new FileCollection();
 		FileEntry[] array = entries.toArray(new FileEntry[entries.size()]);

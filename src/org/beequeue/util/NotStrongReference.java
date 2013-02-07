@@ -43,7 +43,7 @@ public class NotStrongReference<T> {
 					return cache;
 				}
 			}
-			T newInstance = constructor.doIt(null);
+			T newInstance = constructor.execute(null);
 			Reference<T> newRef = weak 
 					? new WeakReference<T>(newInstance)  
 					: new SoftReference<T>(newInstance) ;

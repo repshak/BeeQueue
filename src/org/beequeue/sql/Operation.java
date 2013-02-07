@@ -64,7 +64,8 @@ public class Operation<I> {
 		try {
 			return connection.prepareStatement(sqlToRun);
 		} catch (Exception e) {
-			throw BeeException.cast(e).addPayload(sqlToRun);
+			throw BeeException.cast(e)
+			.memo("sqlToRun",sqlToRun);
 		}
 	}
 

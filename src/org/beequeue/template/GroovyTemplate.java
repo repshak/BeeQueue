@@ -65,7 +65,9 @@ public class GroovyTemplate extends ContentReference {
 			SimpleTemplateEngine engine = new SimpleTemplateEngine();
 			return engine.createTemplate(templateText).make(new LinkedHashMap<String, Object>(context)).toString();
 		} catch (Exception e) {
-			throw BeeException.cast(e).addPayload(context,templateText);
+			throw BeeException.cast(e)
+			.memo("context",context)
+			.memo("templateText",templateText);
 		}
 	}
 

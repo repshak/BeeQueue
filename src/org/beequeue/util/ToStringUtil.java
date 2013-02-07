@@ -62,23 +62,19 @@ public class ToStringUtil {
 
 	public static <I,T> T toObject(I input, BeeOperation<I,String> read, Class<T> type)  {
 		try {
-			String s =  read.doIt(input);
+			String s =  read.execute(input);
 			return toObject(s, type);
-		} catch (BeeException e) {
-			throw e.addPayload(input);
 		} catch (Exception e) {
-			throw new BeeException(e).addPayload(input);
+			throw BeeException.cast(e).memo("input",input);
 		}
 	}
 
 	public static <I,T> T toObject(I input, BeeOperation<I,String> read, TypeReference<T> type)  {
 		try {
-			String s =  read.doIt(input);
+			String s =  read.execute(input);
 			return toObject(s, type);
-		} catch (BeeException e) {
-			throw e.addPayload(input);
 		} catch (Exception e) {
-			throw new BeeException(e).addPayload(input);
+			throw BeeException.cast(e).memo("input",input);
 		}
 	}
 	

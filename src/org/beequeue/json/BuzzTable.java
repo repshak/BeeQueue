@@ -30,13 +30,13 @@ public class BuzzTable {
 	
 	@JsonInclude (Include.NON_EMPTY)
 	public MapList<String,BuzzColumn> columns = new MapList<String,BuzzColumn>(new BeeOperation<BuzzColumn,String>(){
-		@Override public String doIt(BuzzColumn input) {
+		@Override public String execute(BuzzColumn input) {
 			return input.name;
 		}});
 	
 	@JsonInclude (Include.NON_EMPTY)
 	public MapList<String,BuzzFilter> filters = new MapList<String,BuzzFilter>(new BeeOperation<BuzzFilter,String>(){
-		@Override public String doIt(BuzzFilter input) {
+		@Override public String execute(BuzzFilter input) {
 			return input.name;
 		}});
 

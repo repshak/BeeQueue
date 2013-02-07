@@ -22,7 +22,7 @@ package org.beequeue.util;
 public interface StringMorph {
 	
   public class ToString<T> implements BeeOperation<T, String> {
-    public String doIt(T input) {
+    public String execute(T input) {
       return String.valueOf(input);
     }
   }
@@ -41,7 +41,7 @@ public interface StringMorph {
 			this.replacement = replacement;
 		}
 
-		public String doIt(String text) {
+		public String execute(String text) {
 			return text.replaceAll(regex,replacement);
 		}
 	}
@@ -54,7 +54,7 @@ public interface StringMorph {
 	    this.prefix = prefix;
 	  }
 	  
-	  public String doIt(String text) {
+	  public String execute(String text) {
 	    return prefix + text;
 	  }
 	}
@@ -69,7 +69,7 @@ public interface StringMorph {
     }
 
 
-    public String doIt(String text) {
+    public String execute(String text) {
       return text + suffix;
     }
   }

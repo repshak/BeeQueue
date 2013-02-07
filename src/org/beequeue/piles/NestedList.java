@@ -60,7 +60,7 @@ public class NestedList<I,O> implements Iterable<O>, Serializable  {
   }
 
   private void input(I in) {
-    O out = morph.doIt(in);
+    O out = morph.execute(in);
     if(out!=null){
       if(parent != null){
         parent.add(out);

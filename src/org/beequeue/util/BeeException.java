@@ -53,20 +53,28 @@ public class BeeException extends RuntimeException {
 		return new BeeException(e);
 	}
 	
-	public List<Object> payload = new ArrayList<Object>();
-	public BeeException addPayload( Object ... payload){
-		if(payload!=null){
-			for (int i = 0; i < payload.length; i++) {
-				this.payload.add(payload[i]);
-			}
+	private StringBuilder extraMemos = null;
+	
+	
+	public BeeException memo( String memo, Object ... payload){
+		if(this.extraMemos==null){
+			this.extraMemos = new StringBuilder();
+		}	
+		extraMemos.append("\n");
+		extraMemos.append(memo);
+		if(payload!=null && payload.length > 0){
+			extraMemos.append(": ");
+			Object v = payload.length == 1 ? payload[0]: payload;
+			extraMemos.append(ToStringUtil.toNotPrettyString(v));
 		}
+			
 		return this;
 	}
+	
 	@Override
 	public String getMessage() {
-		if(payload.size() > 0 ){
-			return super.getMessage() + "\n" +
-					"payload:" +  ToStringUtil.toString(payload.toArray());
+		if(extraMemos!=null ){
+			return super.getMessage() + extraMemos.toString();
 		}
 		return super.getMessage();
 	}

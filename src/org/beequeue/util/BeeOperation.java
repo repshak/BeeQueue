@@ -17,7 +17,7 @@
 package org.beequeue.util;
 
 /**
- * Make transition from input type object, to target type object
+ * Workaround for lack of closure support in java
  * 
  * @param <I> input type
  * @param <O> target type
@@ -28,5 +28,5 @@ public interface BeeOperation<I,O> {
    * @param input
    * @return target object
    */
-  O doIt(I input);
+  O execute(I input);
 }

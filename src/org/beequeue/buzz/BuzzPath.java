@@ -104,7 +104,7 @@ public class BuzzPath implements Comparable<BuzzPath> {
 			String element = pathElements[i-copy.size+start];
 			if(Strings.isEmpty(element)) 
 					throw new BuzzException(500, "path mailformed: empty elements in the middle")
-					.addPayload((Object)pathElements);
+					.memo("pathElements",(Object)pathElements);
 			this.pathElements[i] = element;
 		}	
 		this.begin = 0 ;
@@ -182,7 +182,9 @@ public class BuzzPath implements Comparable<BuzzPath> {
 			return new BuzzPath(this.pathElements, this.begin + begin, this.begin + end);
 		}else{
 			throw new BuzzException(500, "Cannot subpath")
-			.addPayload(toString(), begin, end);
+			.memo("path",toString())
+			.memo("end",begin)
+			.memo("end",end);
 		}
 	}
 	

@@ -29,42 +29,42 @@ import java.util.regex.Pattern;
 
 public enum SimpleType implements SimpleTypeInterface{
   STRING(String.class){
-    public Object doIt(String s){
+    public Object execute(String s){
       return s;
     }
   },
   BOOLEAN(Boolean.class,Boolean.TYPE){
-    public Object doIt(String s){
+    public Object execute(String s){
       return new Boolean(s);
     }
   },
   INTEGER(Integer.class,Integer.TYPE){
-    public Object doIt(String s){
+    public Object execute(String s){
       return new Integer(s);
     }
   },
   LONG(Long.class,Long.TYPE){
-    public Object doIt(String s){
+    public Object execute(String s){
       return new Long(s);
     }
   },
   SHORT(Short.class,Short.TYPE){
-    public Object doIt(String s){
+    public Object execute(String s){
       return new Short(s);
     }
   },
   FLOAT(Float.class,Float.TYPE){
-    public Object doIt(String s){
+    public Object execute(String s){
       return new Float(s);
     }
   },
   DOUBLE(Double.class,Double.TYPE){
-    public Object doIt(String s){
+    public Object execute(String s){
       return new Double(s);
     }
   },
   DATE(Date.class){
-    public Object doIt(String s){
+    public Object execute(String s){
       try {
         return new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").parse(s);
       } catch (ParseException e) {
@@ -73,17 +73,17 @@ public enum SimpleType implements SimpleTypeInterface{
     }
   },
   FILE(File.class){
-    public Object doIt(String s){
+    public Object execute(String s){
       return new File(s);
     }
   },
   PATTERN(Pattern.class){
-    public Object doIt(String s){
+    public Object execute(String s){
       return Pattern.compile(s);
     }
   },
   CLASS(Class.class){
-    public Object doIt(String s){
+    public Object execute(String s){
       try {
         return Class.forName(s);
       } catch (ClassNotFoundException e) {
@@ -108,7 +108,7 @@ public enum SimpleType implements SimpleTypeInterface{
   }
   
   public Object toObject(String s){
-    return doIt(s);
+    return execute(s);
   }
   
   public static SimpleTypeInterface find(Class classToTest){

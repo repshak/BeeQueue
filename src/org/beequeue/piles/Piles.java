@@ -76,20 +76,20 @@ public class Piles {
   
   public static <K,K2,V2> SortedMap<K2,V2> ensureSortedMap(Map<K,SortedMap<K2,V2>> parent, K key){
     return ensureAny(parent, key, new BeeOperation<Void, SortedMap<K2,V2>>(){
-      public SortedMap<K2,V2> doIt(Void input) {
+      public SortedMap<K2,V2> execute(Void input) {
         return new TreeMap<K2, V2>();
       }}) ;
   }
   public static <K,K2,V2> Map<K2,V2> ensureMap(Map<K,Map<K2,V2>> parent, K key){
     return ensureAny(parent, key, new BeeOperation<Void, Map<K2,V2>>(){
-      public Map<K2,V2> doIt(Void input) {
+      public Map<K2,V2> execute(Void input) {
         return new HashMap<K2, V2>();
       }}) ;
   }
   
   public static <K,V> List<V> ensureList(Map<K,List<V>> parent, K key){
     return ensureAny(parent, key, new BeeOperation<Void, List<V>>(){
-      public List<V> doIt(Void input) {
+      public List<V> execute(Void input) {
         return new ArrayList<V>();
       }}) ;
   }
@@ -97,7 +97,7 @@ public class Piles {
   public static <K,V> V ensureAny(Map<K,V> parent, K key, BeeOperation<Void,V> coustruct){
     V val = parent.get(key);
     if(val==null){
-      val = coustruct.doIt(null);
+      val = coustruct.execute(null);
       parent.put(key, val);
     }   
     return val ;
@@ -122,7 +122,7 @@ public class Piles {
       if( sb.length() > 0 ){
         sb.append(separator);
       }
-      sb.append(morph.doIt(t));
+      sb.append(morph.execute(t));
     }
     return sb.toString();
   }
