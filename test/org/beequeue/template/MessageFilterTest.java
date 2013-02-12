@@ -18,7 +18,7 @@ package org.beequeue.template;
 
 import static org.junit.Assert.*;
 
-import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueEvent;
 import org.junit.Test;
 
 public class MessageFilterTest {
@@ -28,7 +28,7 @@ public class MessageFilterTest {
 		assertEquals(true, new MessageFilter("true").evalFilter(null));
 		assertEquals(false, new MessageFilter("false").evalFilter(null));
 	    
-		BeeQueueMessage bqm = new BeeQueueMessage();
+		BeeQueueEvent bqm = new BeeQueueEvent();
 		bqm.parameters.put("val", "5");
 	    
 		assertEquals(true, new MessageFilter("msg.parameters.val.toInteger() > 3").evalFilter(bqm));

@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
 import org.beequeue.msg.BeeQueueJob;
-import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueEvent;
 import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
@@ -60,11 +60,11 @@ public interface MessageQueries {
 		}
 		
 	};
-	public static final JdbcFactory<BeeQueueMessage, Object> MESSAGE_FACTORY = new JdbcFactory<BeeQueueMessage, Object>() {
+	public static final JdbcFactory<BeeQueueEvent, Object> MESSAGE_FACTORY = new JdbcFactory<BeeQueueEvent, Object>() {
 		@Override
-		public BeeQueueMessage newInstance(ResultSet rs, Object input, Index idx)
+		public BeeQueueEvent newInstance(ResultSet rs, Object input, Index idx)
 				throws SQLException {
-			BeeQueueMessage msg = new BeeQueueMessage();
+			BeeQueueEvent msg = new BeeQueueEvent();
 			msg.id = rs.getLong(idx.next());
 			msg.name = rs.getString(idx.next());
 			msg.state = MessageState.valueOf(rs.getString(idx.next()));
@@ -81,12 +81,12 @@ public interface MessageQueries {
 	};
 	
 
-	Select<BeeQueueMessage, Long> LOAD_MESSAGE = new Select<BeeQueueMessage, Long>(
+	Select<BeeQueueEvent, Long> LOAD_MESSAGE = new Select<BeeQueueEvent, Long>(
 	SELECT_MESSAGE +  "WHERE MSG_ID = ?",
 	MESSAGE_FACTORY
 	, DbConstants.LONG_SQL_PREPARE);
 	
-	Select<BeeQueueMessage, Void> PICK_EMMITED_MESSAGES = new Select<BeeQueueMessage, Void>(
+	Select<BeeQueueEvent, Void> PICK_EMMITED_MESSAGES = new Select<BeeQueueEvent, Void>(
 	SELECT_MESSAGE + "WHERE LOCK_TS < CURRENT_TIMESTAMP AND MSG_STATE = \'"+MessageState.EMITTED+"\'",
 	MESSAGE_FACTORY
 	, null);
@@ -99,7 +99,7 @@ public interface MessageQueries {
 		public BeeQueueJob newInstance(ResultSet rs, Object input, Index idx)
 				throws SQLException {
 			BeeQueueJob job = new BeeQueueJob();
-			job.message = new BeeQueueMessage();
+			job.message = new BeeQueueEvent();
 			job.id = rs.getLong(idx.next());
 			job.message.id = job.msgId = rs.getLong(idx.next());
 			job.state = JobState.valueOf(rs.getString(idx.next()));
@@ -127,7 +127,7 @@ public interface MessageQueries {
 				throws SQLException {
 			BeeQueueStage stage = new BeeQueueStage();
 			stage.job = new BeeQueueJob();
-			stage.job.message = new BeeQueueMessage();
+			stage.job.message = new BeeQueueEvent();
 			stage.stageId = rs.getLong(idx.next());
 			stage.job.id = stage.jobId = rs.getLong(idx.next());
 			stage.job.message.id  = stage.job.msgId = rs.getLong(idx.next());
@@ -184,11 +184,11 @@ public interface MessageQueries {
 					pstmt.setLong(idx.next(), input.id);
 				}
 			});
-	Update<BeeQueueMessage> UPDATE_MESSAGE_STATUS = new Update<BeeQueueMessage>(
+	Update<BeeQueueEvent> UPDATE_MESSAGE_STATUS = new Update<BeeQueueEvent>(
 			"UPDATE NN_MESSAGE SET MSG_STATE=? WHERE MSG_ID=?",
-			new SqlPrepare<BeeQueueMessage>() {
+			new SqlPrepare<BeeQueueEvent>() {
 				@Override
-				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
+				public void invoke(PreparedStatement pstmt, BeeQueueEvent input, Index idx)
 						throws SQLException {
 					pstmt.setString(idx.next(), input.state.name());
 					pstmt.setLong(idx.next(), input.id);
@@ -228,12 +228,12 @@ public interface MessageQueries {
 			" AND S.STAGE_ID = R.STAGE_ID AND R.WORKER_ID = W.WORKER_ID AND R.RUN_STATE='" + RunState.RUNNING +"' AND W.HOST_CD = ?",
 			RUN_FACTORY, DbConstants.STRING_SQL_PREPARE);
 
-	Update<BeeQueueMessage> INSERT_MESSAGE = new Update<BeeQueueMessage>(
+	Update<BeeQueueEvent> INSERT_MESSAGE = new Update<BeeQueueEvent>(
 			"INSERT INTO NN_MESSAGE (MSG_ID,MSG_NAME,MSG_STATE,MSG_KIND,MSG_LOCATOR,MSG_INFO,USER_CD,DOMAIN_CD,CREATED_TS) " +
 			"VALUES (?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)",
-			new SqlPrepare<BeeQueueMessage>() {
+			new SqlPrepare<BeeQueueEvent>() {
 				@Override
-				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
+				public void invoke(PreparedStatement pstmt, BeeQueueEvent input, Index idx)
 						throws SQLException {
 					if(input.kind == null || input.locator == null){
 						input.updateLocators();
@@ -383,11 +383,11 @@ public interface MessageQueries {
 				}
 			});
 	
-	Update<BeeQueueMessage> UPDATE_MESSAGE_STATE = new Update<BeeQueueMessage>(
+	Update<BeeQueueEvent> UPDATE_MESSAGE_STATE = new Update<BeeQueueEvent>(
 			"UPDATE " + NN_MESSAGE + " SET MSG_STATE=?, LOCK_TS=? WHERE MSG_ID=? AND LOCK_TS = ? ", 
-			new SqlPrepare<BeeQueueMessage>() {
+			new SqlPrepare<BeeQueueEvent>() {
 				@Override
-				public void invoke(PreparedStatement pstmt, BeeQueueMessage input, Index idx)
+				public void invoke(PreparedStatement pstmt, BeeQueueEvent input, Index idx)
 						throws SQLException {
 					pstmt.setString(idx.next(), input.state.name());
 					pstmt.setTimestamp(idx.next(), input.lock.newLock());

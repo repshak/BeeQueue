@@ -14,16 +14,13 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.store.node;
+package org.beequeue.msg;
 
-import org.beequeue.hash.HashKey;
-import org.beequeue.store.BeeMessageFrameKey;
-import org.beequeue.store.BeeMessageKey;
+import java.util.List;
 
-public class RealKeyRange {
-	public BeeMessageKey start;
-	public BeeMessageKey end;
-	public BeeMessageFrameKey frame;
-	public HashKey rangeKey(){return null;}
-
+public class BeeQueueEventDrilldown {
+	public BeeQueueEvent msg;
+	public List<BeeQueueJob> jobs;
+	public List<BeeQueueStage> stages;
+	public List<BeeQueueRun> runs;
 }

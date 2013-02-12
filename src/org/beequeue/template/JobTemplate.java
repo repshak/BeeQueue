@@ -19,7 +19,7 @@ package org.beequeue.template;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueEvent;
 import org.beequeue.util.BeeException;
 
 /**
@@ -56,11 +56,11 @@ public class JobTemplate {
 		return stageMap.get(name);
 	}
 
-	public boolean checkFilters(BeeQueueMessage msg) {
+	public boolean checkFilters(BeeQueueEvent msg) {
 		return matchAnyOfTheseFilters(msg, filters);
 	}
 
-	public boolean matchAnyOfTheseFilters(BeeQueueMessage msg, String[] theseFilters) {
+	public boolean matchAnyOfTheseFilters(BeeQueueEvent msg, String[] theseFilters) {
 		if(theseFilters == null){
 			return true;
 		}

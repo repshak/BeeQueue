@@ -19,7 +19,7 @@ package org.beequeue.template;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueEvent;
 import org.beequeue.util.Initializable;
 
 public class StageTemplate {
@@ -44,7 +44,7 @@ public class StageTemplate {
 		return jobTemplate;
 	}
 	
-	public boolean checkFilters(BeeQueueMessage msg) {
+	public boolean checkFilters(BeeQueueEvent msg) {
 		return jobTemplate.matchAnyOfTheseFilters(msg, filters);
 	}
 

@@ -26,7 +26,7 @@ public class BeeQueueJob {
 	public JobState state;
 	public boolean responsible;
 	public String jobName;
-	public BeeQueueMessage message;
+	public BeeQueueEvent message;
 	
 	public JobTemplate jobTemplate(){
 		return Creator.IgnoreExceptions.create(new Creator<JobTemplate>() { 

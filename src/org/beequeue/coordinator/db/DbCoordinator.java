@@ -44,8 +44,8 @@ import org.beequeue.host.Host;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.msg.BeeQueueDomain;
 import org.beequeue.msg.BeeQueueJob;
-import org.beequeue.msg.BeeQueueMessage;
-import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueEvent;
+import org.beequeue.msg.BeeQueueEventDrilldown;
 import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
@@ -361,7 +361,7 @@ public class DbCoordinator implements Coordiantor {
 
 
 	@Override
-	public void storeMessage(BeeQueueMessage msg) {
+	public void storeMessage(BeeQueueEvent msg) {
 		if( msg.id > 0 ){
 			MessageQueries.UPDATE_MESSAGE_STATE.update(connection(),msg);
 		}else{
@@ -373,8 +373,8 @@ public class DbCoordinator implements Coordiantor {
 
 
 	@Override
-	public BeeQueueMessageDrilldown checkMessage(long messageId) {
-		BeeQueueMessageDrilldown d = new BeeQueueMessageDrilldown();
+	public BeeQueueEventDrilldown checkMessage(long messageId) {
+		BeeQueueEventDrilldown d = new BeeQueueEventDrilldown();
 		d.msg = MessageQueries.LOAD_MESSAGE.query(connection(), messageId).get(0);
 		d.jobs = MessageQueries.LOAD_MESSAGE_JOBS.query(connection(), messageId);
 		d.stages = MessageQueries.LOAD_MESSAGE_STAGES.query(connection(), messageId);
@@ -386,8 +386,8 @@ public class DbCoordinator implements Coordiantor {
 
 	@Override
 	public void processEmittedMessages() {
-		List<BeeQueueMessage> query = MessageQueries.PICK_EMMITED_MESSAGES.query(connection(), null);
-		for (BeeQueueMessage msg : query) {
+		List<BeeQueueEvent> query = MessageQueries.PICK_EMMITED_MESSAGES.query(connection(), null);
+		for (BeeQueueEvent msg : query) {
 			if(1 == MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
 				MessageTemplate mt = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name);
 				try{
@@ -565,13 +565,13 @@ public class DbCoordinator implements Coordiantor {
 
 	public void updateInProcessMessages() {
 		List<BeeQueueJob> query = MessageQueries.LOAD_IN_PROCESS_MESSAGE_JOBS.query(connection(), null);
-		Map<Long,Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob>> messages = new LinkedHashMap<Long, Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob>>();
+		Map<Long,Triple<BeeQueueEvent,List<BeeQueueJob>,BeeQueueJob>> messages = new LinkedHashMap<Long, Triple<BeeQueueEvent,List<BeeQueueJob>,BeeQueueJob>>();
 		for (int i = 0; i < query.size(); i++) {
 			BeeQueueJob job = query.get(i);
-			BeeQueueMessage message = job.message;
-			Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob> t;
+			BeeQueueEvent message = job.message;
+			Triple<BeeQueueEvent,List<BeeQueueJob>,BeeQueueJob> t;
 			if(!messages.containsKey(message.id)){
-				t = new Triple<BeeQueueMessage, List<BeeQueueJob>, BeeQueueJob>(message, new ArrayList<BeeQueueJob>(),null);
+				t = new Triple<BeeQueueEvent, List<BeeQueueJob>, BeeQueueJob>(message, new ArrayList<BeeQueueJob>(),null);
 				messages.put(message.id, t);
 			}else{
 				t = messages.get(message.id);
@@ -587,9 +587,9 @@ public class DbCoordinator implements Coordiantor {
 		}
 		
 		for (Long id : messages.keySet()) {
-			Triple<BeeQueueMessage,List<BeeQueueJob>,BeeQueueJob> t = messages.get(id);
+			Triple<BeeQueueEvent,List<BeeQueueJob>,BeeQueueJob> t = messages.get(id);
 			BeeQueueJob responsibleJob = t.o3;
-			BeeQueueMessage msg = t.o1;
+			BeeQueueEvent msg = t.o1;
 			if(responsibleJob != null){
 				if( responsibleJob.state == JobState.FAILURE ){
 					msg.state = MessageState.FAILURE;

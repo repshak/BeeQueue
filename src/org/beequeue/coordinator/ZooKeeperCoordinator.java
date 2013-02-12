@@ -23,8 +23,8 @@ import org.beequeue.hash.ContentTree;
 import org.beequeue.hash.HashKey;
 import org.beequeue.host.Host;
 import org.beequeue.msg.BeeQueueDomain;
-import org.beequeue.msg.BeeQueueMessage;
-import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueEvent;
+import org.beequeue.msg.BeeQueueEventDrilldown;
 import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
@@ -101,13 +101,13 @@ public class ZooKeeperCoordinator implements Coordiantor {
 	}
 
 	@Override
-	public void storeMessage(BeeQueueMessage msg) {
+	public void storeMessage(BeeQueueEvent msg) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public BeeQueueMessageDrilldown checkMessage(long messageId) {
+	public BeeQueueEventDrilldown checkMessage(long messageId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

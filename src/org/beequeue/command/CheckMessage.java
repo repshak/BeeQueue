@@ -17,7 +17,7 @@
 package org.beequeue.command;
 
 import org.beequeue.coordinator.Coordiantor;
-import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueEventDrilldown;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.Singletons;
@@ -30,7 +30,7 @@ public class CheckMessage {
 				TransactionContext.push();
 				Coordiantor coordinator = Singletons.getCoordinator();
 				long messageId = Long.parseLong(args[0]);
-				BeeQueueMessageDrilldown drilldown = coordinator.checkMessage(messageId);
+				BeeQueueEventDrilldown drilldown = coordinator.checkMessage(messageId);
 				System.out.println("Drilldown :  " + ToStringUtil.toString(drilldown));
 				System.exit(0);
 			}catch(Exception e){

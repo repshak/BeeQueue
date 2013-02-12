@@ -19,7 +19,7 @@ package org.beequeue.command;
 import java.util.Map;
 
 import org.beequeue.coordinator.Coordiantor;
-import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueEvent;
 import org.beequeue.msg.MessageState;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.template.DomainTemplate;
@@ -37,7 +37,7 @@ public class SendMessage {
 				TransactionContext.push();
 				Coordiantor coordinator = Singletons.getCoordinator();
 				WorkerData.instance.checkGlobalConfig(coordinator);
-				BeeQueueMessage msg = new BeeQueueMessage();
+				BeeQueueEvent msg = new BeeQueueEvent();
 				msg.domain = args[0];
 				msg.name = args[1];
 				Map<String, DomainTemplate> activeDomains = Singletons.getGlobalConfig().activeDomains();

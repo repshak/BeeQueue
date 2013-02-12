@@ -22,6 +22,6 @@ import org.beequeue.store.ContentVersion;
 
 public class KeyRangeNode {
 	public HashKey parent;
-	public RealKeyRange range;
+	public BeeMessageKeyRange range;
 	public ContentVersion version;
 }

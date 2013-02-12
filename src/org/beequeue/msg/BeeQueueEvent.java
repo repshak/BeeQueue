@@ -30,7 +30,7 @@ import org.beequeue.util.Creator;
 import org.beequeue.util.Nulls;
 import org.beequeue.worker.Singletons;
 
-public class BeeQueueMessage {
+public class BeeQueueEvent {
 	public String domain;
 	public String name;
 	public MessageState state;

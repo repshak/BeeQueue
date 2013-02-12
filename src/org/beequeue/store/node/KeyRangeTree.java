@@ -20,7 +20,7 @@ package org.beequeue.store.node;
 public class KeyRangeTree extends KeyRangeNode{
 	
 	public static class TreeEntry {
-		public RealKeyRange range;
+		public BeeMessageKeyRange range;
 	}
 	public TreeEntry[] entries;
 	

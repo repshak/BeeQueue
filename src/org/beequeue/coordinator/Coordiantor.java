@@ -22,8 +22,8 @@ import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.hash.HashStore;
 import org.beequeue.host.Host;
 import org.beequeue.msg.BeeQueueDomain;
-import org.beequeue.msg.BeeQueueMessage;
-import org.beequeue.msg.BeeQueueMessageDrilldown;
+import org.beequeue.msg.BeeQueueEvent;
+import org.beequeue.msg.BeeQueueEventDrilldown;
 import org.beequeue.msg.BeeQueueProcess;
 import org.beequeue.msg.BeeQueueRun;
 import org.beequeue.msg.BeeQueueStage;
@@ -54,9 +54,9 @@ public interface Coordiantor extends HashStore {
 
 	void ensureDomains(List<BeeQueueDomain> domains);
 
-	void storeMessage(BeeQueueMessage msg);
+	void storeMessage(BeeQueueEvent msg);
 
-	BeeQueueMessageDrilldown checkMessage(long messageId);
+	BeeQueueEventDrilldown checkMessage(long messageId);
 
 	void processEmittedMessages();
 

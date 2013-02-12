@@ -19,7 +19,7 @@ package org.beequeue.template;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 
-import org.beequeue.msg.BeeQueueMessage;
+import org.beequeue.msg.BeeQueueEvent;
 
 public class MessageFilter {
 	public String expression;
@@ -33,7 +33,7 @@ public class MessageFilter {
 	}
 
 
-	public boolean evalFilter(BeeQueueMessage msg){
+	public boolean evalFilter(BeeQueueEvent msg){
 		Binding binding = new Binding();
 		binding.setVariable("msg", msg);
 		GroovyShell shell = new GroovyShell(binding);
