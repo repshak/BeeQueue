@@ -23,17 +23,17 @@ import java.util.Map;
 
 import org.beequeue.util.Initializable;
 
-public class MessageTemplate implements Initializable {
+public class EventTemplate implements Initializable {
 	
 	public String messageName;
-	public MessageAttribute [] columns;
+	public EventAttribute [] columns;
 	public JobTemplate[] jobs;
-	public Map<String,MessageFilter> filters = new LinkedHashMap<String, MessageFilter>();
+	public Map<String,EventFilter> filters = new LinkedHashMap<String, EventFilter>();
 	public SpawnTemplate spawn;
 	
-	private MessageAttribute [] keyColumns;
+	private EventAttribute [] keyColumns;
 	private Map<String,JobTemplate> jobMap = new LinkedHashMap<String, JobTemplate>();
-	private Map<String,MessageAttribute> columnsMap = new LinkedHashMap<String, MessageAttribute>();
+	private Map<String,EventAttribute> columnsMap = new LinkedHashMap<String, EventAttribute>();
 	private boolean sequential = false;
 	@Override
 	public void init() {
@@ -48,9 +48,9 @@ public class MessageTemplate implements Initializable {
 			spawn.init(this);
 		}
 		if(columns != null){
-			List<MessageAttribute> keyColumnsList = new ArrayList<MessageAttribute>();
+			List<EventAttribute> keyColumnsList = new ArrayList<EventAttribute>();
 			for (int i = 0; i < columns.length; i++) {
-				MessageAttribute ma = columns[i];
+				EventAttribute ma = columns[i];
 				columnsMap.put(ma.name, ma);
 				if(ma.attrType.key){
 					keyColumnsList.add(ma);
@@ -59,7 +59,7 @@ public class MessageTemplate implements Initializable {
 					sequential = true;
 				}
 			}
-			this.keyColumns = keyColumnsList.toArray(new MessageAttribute[keyColumnsList.size()]);
+			this.keyColumns = keyColumnsList.toArray(new EventAttribute[keyColumnsList.size()]);
 		}
 	}
 	
@@ -72,11 +72,11 @@ public class MessageTemplate implements Initializable {
 		return jobMap.get(name);
 	}
 
-	public MessageAttribute column(String name) {
+	public EventAttribute column(String name) {
 		return columnsMap.get(name);
 	}
 
-	public MessageAttribute[] keyColumns() {
+	public EventAttribute[] keyColumns() {
 		return keyColumns;
 	}
 	

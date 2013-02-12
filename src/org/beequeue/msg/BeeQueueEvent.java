@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.beequeue.template.DomainTemplate;
-import org.beequeue.template.MessageAttribute;
-import org.beequeue.template.MessageTemplate;
+import org.beequeue.template.EventAttribute;
+import org.beequeue.template.EventTemplate;
 import org.beequeue.time.LockTimestamp;
 import org.beequeue.util.Creator;
 import org.beequeue.util.Nulls;
@@ -63,14 +63,14 @@ public class BeeQueueEvent {
 		@Override
 		public Object get(Object key) {
 			String name = (String) key;
-			MessageAttribute ma = messageTemplate().column(name);
+			EventAttribute ma = messageTemplate().column(name);
 			return ma.dataType.toObject(parameters.get(key));
 		}
 
 		@Override
 		public Object put(String key, Object value) {
 			String name = (String) key;
-			MessageAttribute ma = messageTemplate().column(name);
+			EventAttribute ma = messageTemplate().column(name);
 			String replaced = parameters.put(name,ma.dataType.toString(value));
 			return replaced == null ? null : ma.dataType.toObject(replaced);
 		}
@@ -78,7 +78,7 @@ public class BeeQueueEvent {
 		@Override
 		public Object remove(Object key) {
 			String name = (String) key;
-			MessageAttribute ma = messageTemplate().column(name);
+			EventAttribute ma = messageTemplate().column(name);
 			String removed = parameters.remove(name);
 			return removed == null ? null : ma.dataType.toObject(removed);
 		}
@@ -124,16 +124,16 @@ public class BeeQueueEvent {
 				return Singletons.getGlobalConfig().activeDomains().get(domain);
 			}});
 	}
-	public MessageTemplate messageTemplate(){
-		return Creator.IgnoreExceptions.create(new Creator<MessageTemplate>() { 
-			public MessageTemplate create() throws Exception { 
+	public EventTemplate messageTemplate(){
+		return Creator.IgnoreExceptions.create(new Creator<EventTemplate>() { 
+			public EventTemplate create() throws Exception { 
 				return domainTemplate().messageTemplate(name);
 			}});
 	}
 	
 	public MessageLocator buildMessageLocator(){
-		MessageTemplate mt = messageTemplate();
-		MessageAttribute[] keyColumns = mt.keyColumns();
+		EventTemplate mt = messageTemplate();
+		EventAttribute[] keyColumns = mt.keyColumns();
 		String[] values = new String[keyColumns.length];
 		for (int i = 0; i < keyColumns.length; i++) {
 			values[i] = Nulls.fallback(parameters.get(keyColumns[i].name),"");

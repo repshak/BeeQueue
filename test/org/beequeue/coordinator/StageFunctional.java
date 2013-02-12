@@ -23,7 +23,7 @@ import org.beequeue.msg.BeeQueueStage;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.template.DomainTemplate;
 import org.beequeue.template.JobTemplate;
-import org.beequeue.template.MessageTemplate;
+import org.beequeue.template.EventTemplate;
 import org.beequeue.template.StageTemplate;
 import org.beequeue.util.ToStringUtil;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class StageFunctional {
 		BeeQueueStage pickStageToRun = c.pickStageToRun();
 		ToStringUtil.out(pickStageToRun);
 		DomainTemplate domainTemplate = pickStageToRun.job.message.domainTemplate();
-		MessageTemplate messageTemplate = pickStageToRun.job.message.messageTemplate();
+		EventTemplate messageTemplate = pickStageToRun.job.message.messageTemplate();
 		JobTemplate jobTemplate = pickStageToRun.job.jobTemplate();
 		StageTemplate stageTemplate = pickStageToRun.stageTemplate();
 		messageTemplate.jobTemplate("report");

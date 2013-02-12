@@ -34,9 +34,9 @@ public class DomainTest {
 		DomainTemplate d = new DomainTemplate();
 		d.properties.put("length", "10" );
 		d.properties.put("width", "20" );
-		d.messages = new MessageTemplate[] {
-				new MessageTemplate(), 
-				new MessageTemplate(), 
+		d.messages = new EventTemplate[] {
+				new EventTemplate(), 
+				new EventTemplate(), 
 		};
 		d.messages[0].messageName="";
 		d.messages[0].jobs = new JobTemplate[]{
@@ -60,15 +60,15 @@ public class DomainTest {
 		DomainTemplate d = new DomainTemplate();
 		d.properties.put("dp1", "10" );
 		d.properties.put("dp2", "20" );
-		d.messages = new MessageTemplate[] {
-			new MessageTemplate(), 
+		d.messages = new EventTemplate[] {
+			new EventTemplate(), 
 		};
-		MessageTemplate msg = d.messages[0];
+		EventTemplate msg = d.messages[0];
 		msg.messageName="ReportRequest";
-		msg.columns= new MessageAttribute[] {
-				new MessageAttribute("ReportName",AttributeType.PARALLEL,DataType.STRING), 
-				new MessageAttribute("StartDate",AttributeType.SEQUENTIAL,DataType.DATE), 
-				new MessageAttribute("EndDdate",AttributeType.SEQUENTIAL,DataType.DATE) };
+		msg.columns= new EventAttribute[] {
+				new EventAttribute("ReportName",AttributeType.PARALLEL,DataType.STRING), 
+				new EventAttribute("StartDate",AttributeType.SEQUENTIAL,DataType.DATE), 
+				new EventAttribute("EndDdate",AttributeType.SEQUENTIAL,DataType.DATE) };
 		msg.jobs = new JobTemplate[]{
 				new JobTemplate()
 		};

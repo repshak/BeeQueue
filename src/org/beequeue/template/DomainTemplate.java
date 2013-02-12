@@ -22,7 +22,7 @@ import java.util.Map;
 import org.beequeue.util.Initializable;
 
 public class DomainTemplate implements Initializable {
-	public MessageTemplate[] messages;
+	public EventTemplate[] messages;
 	public Map<String,String> properties = new LinkedHashMap<String, String>();
 	
 	private Map<String,String> addOnProperties = new LinkedHashMap<String, String>();
@@ -36,16 +36,16 @@ public class DomainTemplate implements Initializable {
 		return all;
 	}
 	
-	private Map<String,MessageTemplate> messageMap = new LinkedHashMap<String, MessageTemplate>();
+	private Map<String,EventTemplate> messageMap = new LinkedHashMap<String, EventTemplate>();
 	
-	public MessageTemplate messageTemplate(String name) {
+	public EventTemplate messageTemplate(String name) {
 		return messageMap.get(name);
 	}
 
 	@Override
 	public void init() {
 		for (int i = 0; i < messages.length; i++) {
-			MessageTemplate mt = messages[i];
+			EventTemplate mt = messages[i];
 			messageMap.put(mt.messageName, mt);
 			mt.init();
 		}

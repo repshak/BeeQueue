@@ -16,23 +16,31 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.template;
 
-import org.beequeue.util.DataType;
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
 
-public class MessageAttribute {
-	public String name;
-	public AttributeType attrType;
-	public DataType<?> dataType;
+import org.beequeue.msg.BeeQueueEvent;
 
-	public MessageAttribute() {
+public class EventFilter {
+	public String expression;
+
+
+	public EventFilter() {}
+
+
+	public EventFilter(String expression) {
+		this.expression = expression;
 	}
 
-	public MessageAttribute(String name, AttributeType attrType,
-			DataType<?> dataType) {
-		super();
-		this.name = name;
-		this.attrType = attrType;
-		this.dataType = dataType;
-	}
 
-	
+	public boolean evalFilter(BeeQueueEvent msg){
+		Binding binding = new Binding();
+		binding.setVariable("msg", msg);
+		GroovyShell shell = new GroovyShell(binding);
+		Object value = shell.evaluate(expression);
+		if( !(value instanceof Boolean) ){
+			throw new RuntimeException("Boolean value expected out of expression: "+expression);
+		}
+		return (Boolean)value;
+	}
 }

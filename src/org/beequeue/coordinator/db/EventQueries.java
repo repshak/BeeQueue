@@ -42,7 +42,7 @@ import org.beequeue.util.ToStringUtil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-public interface MessageQueries {
+public interface EventQueries {
 	public static final String NN_MESSAGE = "NN_MESSAGE";
 	public static final String NN_JOB = "NN_JOB";
 	public static final String NN_STAGE = "NN_STAGE";

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.beequeue.template.AttributeType;
-import org.beequeue.template.MessageTemplate;
+import org.beequeue.template.EventTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Nulls;
 
@@ -74,7 +74,7 @@ public class MessageLocator implements Comparable<MessageLocator> {
 		return false;
 	}
 
-	public MessageLocator extractMessageKind(MessageTemplate template){
+	public MessageLocator extractMessageKind(EventTemplate template){
 		if( this.attributes.length != template.keyColumns().length || !this.name.equals(template.messageName) ){
 			throw new BeeException("template does not comply with message locator:")
 			.memo("temlate",template)

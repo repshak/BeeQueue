@@ -57,7 +57,7 @@ import org.beequeue.sql.JdbcResourceTracker;
 import org.beequeue.sql.SqlUtil;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.template.JobTemplate;
-import org.beequeue.template.MessageTemplate;
+import org.beequeue.template.EventTemplate;
 import org.beequeue.template.StageTemplate;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Dirs;
@@ -363,10 +363,10 @@ public class DbCoordinator implements Coordiantor {
 	@Override
 	public void storeMessage(BeeQueueEvent msg) {
 		if( msg.id > 0 ){
-			MessageQueries.UPDATE_MESSAGE_STATE.update(connection(),msg);
+			EventQueries.UPDATE_MESSAGE_STATE.update(connection(),msg);
 		}else{
-			msg.id = getNewId(MessageQueries.NN_MESSAGE);
-			MessageQueries.INSERT_MESSAGE.update(connection(),msg);
+			msg.id = getNewId(EventQueries.NN_MESSAGE);
+			EventQueries.INSERT_MESSAGE.update(connection(),msg);
 		}
 	}
 
@@ -375,10 +375,10 @@ public class DbCoordinator implements Coordiantor {
 	@Override
 	public BeeQueueEventDrilldown checkMessage(long messageId) {
 		BeeQueueEventDrilldown d = new BeeQueueEventDrilldown();
-		d.msg = MessageQueries.LOAD_MESSAGE.query(connection(), messageId).get(0);
-		d.jobs = MessageQueries.LOAD_MESSAGE_JOBS.query(connection(), messageId);
-		d.stages = MessageQueries.LOAD_MESSAGE_STAGES.query(connection(), messageId);
-		d.runs = MessageQueries.LOAD_MESSAGE_RUNS.query(connection(), messageId);
+		d.msg = EventQueries.LOAD_MESSAGE.query(connection(), messageId).get(0);
+		d.jobs = EventQueries.LOAD_MESSAGE_JOBS.query(connection(), messageId);
+		d.stages = EventQueries.LOAD_MESSAGE_STAGES.query(connection(), messageId);
+		d.runs = EventQueries.LOAD_MESSAGE_RUNS.query(connection(), messageId);
 		return d;
 	}
 
@@ -386,10 +386,10 @@ public class DbCoordinator implements Coordiantor {
 
 	@Override
 	public void processEmittedMessages() {
-		List<BeeQueueEvent> query = MessageQueries.PICK_EMMITED_MESSAGES.query(connection(), null);
+		List<BeeQueueEvent> query = EventQueries.PICK_EMMITED_MESSAGES.query(connection(), null);
 		for (BeeQueueEvent msg : query) {
-			if(1 == MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
-				MessageTemplate mt = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name);
+			if(1 == EventQueries.UPDATE_MESSAGE_STATE.update(connection(), msg)){
+				EventTemplate mt = Singletons.getGlobalConfig().activeDomains().get(msg.domain).messageTemplate(msg.name);
 				try{
 					JobTemplate[] jobs = mt.jobs;
 					boolean alreadyHaveOneResposible = false;
@@ -406,27 +406,27 @@ public class DbCoordinator implements Coordiantor {
 							}
 						}
 						BeeQueueJob job = new BeeQueueJob();
-						job.id = getNewId(MessageQueries.NN_JOB);
+						job.id = getNewId(EventQueries.NN_JOB);
 						job.msgId = msg.id;
 						job.jobName = jt.jobName;
 						job.state = JobState.IN_PROCESS;
 						job.responsible = jt.responsbile ;
-						MessageQueries.INSERT_JOB.update(connection(), job);
+						EventQueries.INSERT_JOB.update(connection(), job);
 						StageTemplate[] stageTemplates = jt.stages;
 						for (int j = 0; j < stageTemplates.length; j++) {
 							BeeQueueStage stage = new BeeQueueStage();
-							stage.stageId = getNewId(MessageQueries.NN_STAGE);
+							stage.stageId = getNewId(EventQueries.NN_STAGE);
 							stage.jobId = job.id;
 							StageTemplate st = stageTemplates[j];
 							stage.retriesLeft = st.retryStrategy.maxTries;
 							stage.state = st.dependOnStage == null  || st.dependOnStage.length == 0 ? StageState.READY : StageState.BLOCKED ;
 							stage.stageName = st.stageName;
-							MessageQueries.INSERT_STAGE.update(connection(), stage);
+							EventQueries.INSERT_STAGE.update(connection(), stage);
 						}
 					}
 					msg.state = MessageState.IN_PROCESS;
 					msg.lock.value = msg.lock.newLock();
-					if( 1 != MessageQueries.UPDATE_MESSAGE_STATE.update(connection(), msg) ){
+					if( 1 != EventQueries.UPDATE_MESSAGE_STATE.update(connection(), msg) ){
 						throw new BeeException("cannot update status");
 					}
 				}catch (Exception e) {
@@ -441,7 +441,7 @@ public class DbCoordinator implements Coordiantor {
 
 	@Override
 	public BeeQueueStage pickStageToRun() {
-		for (BeeQueueStage readyStage : MessageQueries.LOAD_READY_STAGES.query(connection(), null)) {
+		for (BeeQueueStage readyStage : EventQueries.LOAD_READY_STAGES.query(connection(), null)) {
 			readyStage.retriesLeft--;
 			readyStage.newState = StageState.PREPARE_TO_RUN;
 			if(updateStage(readyStage)){
@@ -455,15 +455,15 @@ public class DbCoordinator implements Coordiantor {
 	public void storeRun(BeeQueueRun run) {
 		if(run.id > 0){
 			if(run.isInFinalState()){
-				MessageQueries.REFRESH_DOWN_TS_RUN.update(connection(), run);
+				EventQueries.REFRESH_DOWN_TS_RUN.update(connection(), run);
 			}else if(run.justUpTimeStamp){
-				MessageQueries.REFRESH_UP_TS_RUN.update(connection(), run);
+				EventQueries.REFRESH_UP_TS_RUN.update(connection(), run);
 			}else{
-				MessageQueries.UPDATE_RUN.update(connection(), run);
+				EventQueries.UPDATE_RUN.update(connection(), run);
 			}
 		}else{
-			run.id = getNewId(MessageQueries.NN_RUN);
-			MessageQueries.INSERT_RUN.update(connection(), run);
+			run.id = getNewId(EventQueries.NN_RUN);
+			EventQueries.INSERT_RUN.update(connection(), run);
 		}
 		
 	}
@@ -472,26 +472,26 @@ public class DbCoordinator implements Coordiantor {
 
 	@Override
 	public List<BeeQueueRun> allCurrentRuns(WorkerData instance) {
-		return MessageQueries.LOAD_CURRENT_MESSAGE_RUNS.query(connection(), instance.host.hostName);
+		return EventQueries.LOAD_CURRENT_MESSAGE_RUNS.query(connection(), instance.host.hostName);
 	}
 
 
 
 	@Override
 	public List<BeeQueueProcess> allActiveProcessesOnHost(Host host) {
-		return MessageQueries.ALIVE_PROCESSES.query(connection(), host.hostName);
+		return EventQueries.ALIVE_PROCESSES.query(connection(), host.hostName);
 	}
 
 
 	@Override
 	public void storeProcess(BeeQueueProcess process) {
-		SqlUtil.doUpdateInsertUpdate(connection(), MessageQueries.UPDATE_PROCESS, MessageQueries.INSERT_PROCESS, process);
+		SqlUtil.doUpdateInsertUpdate(connection(), EventQueries.UPDATE_PROCESS, EventQueries.INSERT_PROCESS, process);
 	}
 
 
 	@Override
 	public boolean updateStage(BeeQueueStage readyStage) {
-		if(1 == MessageQueries.UPDATE_STAGE_STATUS.update(connection(), readyStage)){
+		if(1 == EventQueries.UPDATE_STAGE_STATUS.update(connection(), readyStage)){
 			readyStage.state = readyStage.newState;
 			return true;
 		}
@@ -509,7 +509,7 @@ public class DbCoordinator implements Coordiantor {
 
 
 	public void updateInProcessJobs() {
-		List<BeeQueueStage> query = MessageQueries.LOAD_IN_PROCESS_JOBS_STAGES.query(connection(), null);
+		List<BeeQueueStage> query = EventQueries.LOAD_IN_PROCESS_JOBS_STAGES.query(connection(), null);
 		Map<Long,Tuple<BeeQueueJob,Map<String, BeeQueueStage>>> jobs = new LinkedHashMap<Long, Tuple<BeeQueueJob,Map<String, BeeQueueStage>>>();
 		for (int i = 0; i < query.size(); i++) {
 			BeeQueueStage stage = query.get(i);
@@ -558,13 +558,13 @@ public class DbCoordinator implements Coordiantor {
 				tuple.o1.state = JobState.SUCCESS;
 			}
 			if( tuple.o1.state != JobState.IN_PROCESS ){
-				MessageQueries.UPDATE_JOB_STATUS.update(connection(), tuple.o1);
+				EventQueries.UPDATE_JOB_STATUS.update(connection(), tuple.o1);
 			}
 		}
 	}
 
 	public void updateInProcessMessages() {
-		List<BeeQueueJob> query = MessageQueries.LOAD_IN_PROCESS_MESSAGE_JOBS.query(connection(), null);
+		List<BeeQueueJob> query = EventQueries.LOAD_IN_PROCESS_MESSAGE_JOBS.query(connection(), null);
 		Map<Long,Triple<BeeQueueEvent,List<BeeQueueJob>,BeeQueueJob>> messages = new LinkedHashMap<Long, Triple<BeeQueueEvent,List<BeeQueueJob>,BeeQueueJob>>();
 		for (int i = 0; i < query.size(); i++) {
 			BeeQueueJob job = query.get(i);
@@ -613,7 +613,7 @@ public class DbCoordinator implements Coordiantor {
 				}
 			}
 			if( msg.state != MessageState.IN_PROCESS ){
-				MessageQueries.UPDATE_MESSAGE_STATUS.update(connection(), msg);
+				EventQueries.UPDATE_MESSAGE_STATUS.update(connection(), msg);
 			}
 		}
 	}

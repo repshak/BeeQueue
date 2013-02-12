@@ -34,9 +34,9 @@ public class JobTemplate {
 	public boolean responsbile = false;
 	public String filters[] ;
 	private Map<String,StageTemplate> stageMap = new LinkedHashMap<String, StageTemplate>();
-	private MessageTemplate messageTemplate ;
+	private EventTemplate messageTemplate ;
 	
-	void init(MessageTemplate messageTemplate) {
+	void init(EventTemplate messageTemplate) {
 		this.messageTemplate = messageTemplate;
 		checkPresenseOfFilters(filters);
 		if(stages!=null){
@@ -48,7 +48,7 @@ public class JobTemplate {
 		}
 	}
 	
-	public MessageTemplate messageTemplate() {
+	public EventTemplate messageTemplate() {
 		return messageTemplate;
 	}
 

@@ -25,18 +25,18 @@ public class MessageFilterTest {
 
 	@Test
 	public void test() {
-		assertEquals(true, new MessageFilter("true").evalFilter(null));
-		assertEquals(false, new MessageFilter("false").evalFilter(null));
+		assertEquals(true, new EventFilter("true").evalFilter(null));
+		assertEquals(false, new EventFilter("false").evalFilter(null));
 	    
 		BeeQueueEvent bqm = new BeeQueueEvent();
 		bqm.parameters.put("val", "5");
 	    
-		assertEquals(true, new MessageFilter("msg.parameters.val.toInteger() > 3").evalFilter(bqm));
-	    assertEquals(false, new MessageFilter("Integer.valueOf(msg.parameters.val)/2 > 6").evalFilter(bqm));
-	    assertEquals(false, new MessageFilter("int i = msg.parameters.val.toInteger();i/2 > 6").evalFilter(bqm));
-	    assertEquals(false, new MessageFilter("msg.parameters.val > '6'").evalFilter(bqm));
-	    assertEquals(true, new MessageFilter("msg.parameters.val == '5'").evalFilter(bqm));
-	    assertEquals(true, new MessageFilter("msg.parameters.val != '3'").evalFilter(bqm));
+		assertEquals(true, new EventFilter("msg.parameters.val.toInteger() > 3").evalFilter(bqm));
+	    assertEquals(false, new EventFilter("Integer.valueOf(msg.parameters.val)/2 > 6").evalFilter(bqm));
+	    assertEquals(false, new EventFilter("int i = msg.parameters.val.toInteger();i/2 > 6").evalFilter(bqm));
+	    assertEquals(false, new EventFilter("msg.parameters.val > '6'").evalFilter(bqm));
+	    assertEquals(true, new EventFilter("msg.parameters.val == '5'").evalFilter(bqm));
+	    assertEquals(true, new EventFilter("msg.parameters.val != '3'").evalFilter(bqm));
 	
 	}
 

@@ -18,13 +18,13 @@ package org.beequeue.template;
 
 public class SpawnTemplate {
 
-	private MessageTemplate messageTemplate;
+	private EventTemplate messageTemplate;
 	
-	public MessageTemplate messageTemplate(){
+	public EventTemplate messageTemplate(){
 		return messageTemplate;
 	}
 	
-	public void init(MessageTemplate messageTemplate) {
+	public void init(EventTemplate messageTemplate) {
 		this.messageTemplate = messageTemplate;
 		
 	}

@@ -23,8 +23,8 @@ import org.beequeue.msg.BeeQueueEvent;
 import org.beequeue.msg.MessageState;
 import org.beequeue.sql.TransactionContext;
 import org.beequeue.template.DomainTemplate;
-import org.beequeue.template.MessageAttribute;
-import org.beequeue.template.MessageTemplate;
+import org.beequeue.template.EventAttribute;
+import org.beequeue.template.EventTemplate;
 import org.beequeue.util.ToStringUtil;
 import org.beequeue.worker.Singletons;
 import org.beequeue.worker.WorkerData;
@@ -45,13 +45,13 @@ public class SendMessage {
 				if(dt==null){
 					die("Cont find domain:"+msg.domain+" here:", activeDomains.keySet());
 				}
-				MessageTemplate mt = dt.messageTemplate(msg.name);
+				EventTemplate mt = dt.messageTemplate(msg.name);
 				if(mt==null){
 					die("Can't find message:"+msg.name+" here:", dt.messages );
 				}
 				msg.state = MessageState.EMITTED;
 				for (int i = 0; i < mt.columns.length; i++) {
-					MessageAttribute col = mt.columns[i];
+					EventAttribute col = mt.columns[i];
 					if(2+i < args.length ){
 						msg.parameters.put(col.name, args[2+i]);
 					}else{
