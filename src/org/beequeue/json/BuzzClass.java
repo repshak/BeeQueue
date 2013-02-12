@@ -16,10 +16,17 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import org.beequeue.util.BeeOperation;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class BuzzClass {
+	public static BeeOperation<? super BuzzClass, ? extends String> op_GET_NAME = new BeeOperation<BuzzClass,String>(){
+		@Override public String execute(BuzzClass input) {
+			return input.className;
+		}
+	};
 	/**
 	 * className - key to lookup ClassDefiniton
 	 */

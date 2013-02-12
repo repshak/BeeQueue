@@ -16,10 +16,17 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import org.beequeue.util.BeeOperation;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class BuzzColumn {
+	public static BeeOperation<? super BuzzColumn, ? extends String> op_GET_NAME = new BeeOperation<BuzzColumn,String>(){
+		@Override public String execute(BuzzColumn input) {
+			return input.name;
+		}};
+
 	public String name;
 	/** only primitive types */ 
 	public BuiltInType type;

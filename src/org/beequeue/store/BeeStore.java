@@ -20,6 +20,7 @@ import org.beequeue.hash.HashKey;
 
 public interface BeeStore {
 	BeeMessageFrame get(String collectionName);
+	
 	ContentSource read(HashKey key);
 	HashKey save(ContentSource content);
 }

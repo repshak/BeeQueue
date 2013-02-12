@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class BuzzSchema {
-	
 	@JsonInclude (Include.NON_NULL)
 	public BuzzAttribute key;
 	
@@ -34,6 +33,7 @@ public class BuzzSchema {
 		ASCENDING,
 		DESCENDING
 	};
+	
 	public static class KeySorting {
 		public Map<String,SortOrder> keys = new LinkedHashMap<String, BuzzSchema.SortOrder>();
 	}
@@ -44,14 +44,8 @@ public class BuzzSchema {
 	public BuzzAttribute object;
 	
 
-	public MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(new BeeOperation<BuzzClass,String>(){
-		@Override public String execute(BuzzClass input) {
-			return input.className;
-		}});
+	public MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(BuzzClass.op_GET_NAME);
 
 	@JsonInclude (Include.NON_EMPTY)
-	public MapList<String,BuzzColumn> tableColumns = new MapList<String,BuzzColumn>(new BeeOperation<BuzzColumn,String>(){
-		@Override public String execute(BuzzColumn input) {
-			return input.name;
-		}});
+	public MapList<String,BuzzColumn> tableColumns = new MapList<String,BuzzColumn>(BuzzColumn.op_GET_NAME);
 }
