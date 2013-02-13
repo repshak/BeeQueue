@@ -17,7 +17,7 @@
 package org.beequeue.store;
 
 import org.beequeue.json.BuzzSchema;
-import org.beequeue.store.node.KeyRangeTree;
+import org.beequeue.store.node.BeeMessageRangeTree;
 
 public class BeeMessageFrame extends BeeMessageFrameKey {
 	public BuzzSchema schema;
@@ -30,6 +30,6 @@ public class BeeMessageFrame extends BeeMessageFrameKey {
 		
 	};
 	public RetainPolicy retainingPolicy;
-	KeyRangeTree root;
+	BeeMessageRangeTree root;
 	
 }

@@ -16,6 +16,14 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.store;
 
+import org.beequeue.store.ts.TimeSequence;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class BeeMessageKey {	
-	String key;
+	public String text;
+	@JsonInclude (Include.NON_NULL)
+	public TimeSequence ts;
+	
 }

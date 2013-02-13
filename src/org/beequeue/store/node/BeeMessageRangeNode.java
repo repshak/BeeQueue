@@ -16,12 +16,12 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.store.node;
 
+import org.beequeue.hash.HashKey;
+import org.beequeue.store.ContentVersion;
 
-public class KeyRangeTree extends KeyRangeNode{
-	
-	public static class TreeEntry {
-		public BeeMessageKeyRange range;
-	}
-	public TreeEntry[] entries;
-	
+
+public class BeeMessageRangeNode {
+	public HashKey parent;
+	public BeeMessageKeyRange range;
+	public ContentVersion version;
 }
