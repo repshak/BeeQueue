@@ -35,47 +35,19 @@ public class ToStringUtil {
 	}
 
 	public static String toString(Object o) {
-		return toString(MAPPER, o);
+		return writeObject(o, MAPPER.writerWithDefaultPrettyPrinter());
 	}
 
-	public static String toString(ObjectMapper mapper, Object o) {
-		ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+	private static String writeObject(Object o, ObjectWriter writer) {
 		try {
 			return writer.writeValueAsString(o);
 		} catch (Exception e) {
-			return e.toString();
+			throw BeeException.cast(e);
 		}
 	}
-	
+
 	public static String toNotPrettyString(Object o) {
-		return toNotPrettyString(MAPPER, o);
-	}
-	
-	public static String toNotPrettyString(ObjectMapper mapper, Object o) {
-		ObjectWriter writer = mapper.writer();
-		try {
-			return writer.writeValueAsString(o);
-		} catch (Exception e) {
-			return e.toString();
-		}
-	}
-
-	public static <I,T> T toObject(I input, BeeOperation<I,String> read, Class<T> type)  {
-		try {
-			String s =  read.execute(input);
-			return toObject(s, type);
-		} catch (Exception e) {
-			throw BeeException.cast(e).memo("input",input);
-		}
-	}
-
-	public static <I,T> T toObject(I input, BeeOperation<I,String> read, TypeReference<T> type)  {
-		try {
-			String s =  read.execute(input);
-			return toObject(s, type);
-		} catch (Exception e) {
-			throw BeeException.cast(e).memo("input",input);
-		}
+		return writeObject(o, MAPPER.writer());
 	}
 	
 	public static <T> T toObject(String s, Class<T> type)  {
@@ -87,7 +59,7 @@ public class ToStringUtil {
 			}
 			return readValue;
 		} catch (Exception e) {
-			throw new BeeException(e);
+			throw BeeException.cast(e);
 		}
 	}
 	
@@ -100,7 +72,7 @@ public class ToStringUtil {
 			}
 			return readValue;
 		} catch (Exception e) {
-			throw new BeeException(e);
+			throw BeeException.cast(e);
 		}
 	}
 

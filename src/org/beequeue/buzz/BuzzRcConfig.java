@@ -25,13 +25,17 @@ import java.util.Map;
 import org.beequeue.launcher.BeeQueueHome;
 import org.beequeue.template.GroovyTemplate;
 import org.beequeue.util.BeeException;
-import org.beequeue.util.Files;
 import org.beequeue.util.BeeOperation;
-import org.beequeue.util.ToStringUtil;
+import org.beequeue.util.BeeOperationChain;
+import org.beequeue.util.Files;
+import org.beequeue.util.TypeFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public class BuzzRcConfig {
+
+	public static TypeFactory<Map<BuzzPath,BuzzRcConfig>> tf_BUZZ_RC_CONFIG_MAP = TypeFactory.tf(new TypeReference< Map<BuzzPath,BuzzRcConfig> >() {});
+	
 	private static final BeeOperation<File, String> READ_AND_RESOLVE = new BeeOperation<File, String>() {
 		@Override
 		public String execute(File input) {
@@ -47,10 +51,9 @@ public class BuzzRcConfig {
 	};
 
 	public BuzzResourceController[] resourceControllers = new BuzzResourceController[0];
-	
 	public static Map<BuzzPath,BuzzRcConfig> read(File root) {
 		File config = new File(root, "WEB-INF/buzz-config.json.gtemplate");
-		return ToStringUtil.toObject(config, READ_AND_RESOLVE, new TypeReference< Map<BuzzPath,BuzzRcConfig> >() {} );
+		return BeeOperationChain.chain(READ_AND_RESOLVE, tf_BUZZ_RC_CONFIG_MAP.op_STRING_TO_OBJ).execute(config);
 	}
 
 	/**
