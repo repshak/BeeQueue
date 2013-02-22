@@ -16,10 +16,6 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.sql;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-
 import org.beequeue.coordinator.db.DbCoordinator;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Throwables;
@@ -33,7 +29,7 @@ public class BeeExceptionTest {
 		String s = Throwables.toString(new BeeException("abc").memo("dbcoordinator",new DbCoordinator()));
 		boolean starts = s.startsWith(
 		"org.beequeue.util.BeeException: abc\n" +
-		"dbcoordinator: {\"type\":\"db\",\"driver\":null,\"url\":null,\"user\":null,\"password\":null,\"initSql\":null}\n" +
+		"org.beequeue.sql.BeeExceptionTest.test(BeeExceptionTest.java:29)::dbcoordinator: {\"type\":\"db\",\"driver\":null,\"url\":null,\"user\":null,\"password\":null,\"initSql\":null}\n" +
 		"	at org.beequeue");
 		System.out.println(s);
 		Assert.assertTrue(starts);
