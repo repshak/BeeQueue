@@ -18,6 +18,7 @@ package org.beequeue.hash;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -68,6 +69,7 @@ public class HashKey {
 		return false;
 	}
 	
+	public static final Charset UTF_8 = Charset.forName("UTF-8");
 	
 	private static ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>();
 	public static HashKey buildHashKey(HashKeyResource resource, InputStream in) throws IOException {
@@ -87,6 +89,12 @@ public class HashKey {
 	public static HashKey buildHashKey(HashKeyResource resource, byte[] buffer) {
 		MessageDigest md = MessageDigestUtils.md();
 		md.update(buffer);
+		return new HashKey(resource,md.digest());
+	}
+	
+	public static HashKey buildHashKey(HashKeyResource resource, String buffer) {
+		MessageDigest md = MessageDigestUtils.md();
+		md.update(buffer.getBytes(UTF_8));
 		return new HashKey(resource,md.digest());
 	}
 	

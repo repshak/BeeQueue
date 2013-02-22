@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 public class TypeFactory<T> {
 	public final Class<T> type ; 
 	public final TypeReference<T> ref ; 
-	public final BeeOperation<T,String> op_OBJ_TO_STRING = new BeeOperation<T, String>() {
+	public final BeeOperation<T,String> op_OBJ_TO_PRETTY = new BeeOperation<T, String>() {
 		@Override
 		public String execute(T input) {
 			return ToStringUtil.toString(input);

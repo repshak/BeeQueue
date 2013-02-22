@@ -20,8 +20,6 @@
  */
 package org.beequeue.util;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class BeeException extends RuntimeException {
@@ -61,6 +59,7 @@ public class BeeException extends RuntimeException {
 			this.extraMemos = new StringBuilder();
 		}	
 		extraMemos.append("\n");
+		extraMemos.append(Throwables.findPreviousStack(BeeException.class));
 		extraMemos.append(memo);
 		if(payload!=null && payload.length > 0){
 			extraMemos.append(": ");
@@ -85,8 +84,5 @@ public class BeeException extends RuntimeException {
 		}
 	}
 
-	public static void bail(String message) {
-		throw new BeeException(message);
-	}
 
 }

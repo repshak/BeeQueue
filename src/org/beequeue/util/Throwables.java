@@ -19,50 +19,67 @@ package org.beequeue.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-
 public class Throwables {
 
-  /**
-   * <b>Cast exception to <code>&lt;T></code></b>
-   * <p> 
-   * Check if throwable <code>e</code> already belong to 
-   * hierarchy of throwables assignable to <code>&lt;T></code>. 
-   * If true cast it, to <code>&lt;T></code>. If not try to 
-   * create <code>&lt;T></code> with <code>e</code> as cause. If not 
-   * successful throw {@link RuntimeException} with <code>e</code> 
-   * as cause.
-   *  
-   * <p>
-   * @param <T>
-   * @param clazz define hierarchy of throwables
-   * @param cause subject throwable
-   * @return
-   */
-  @SuppressWarnings("unchecked")
-  public static <T extends Throwable > T cast(Class<T> clazz, Throwable cause) {
-    if( clazz.isAssignableFrom(cause.getClass()) ){
-      return (T)cause;
-    }else{
-      try{
-        T newInstance = clazz.newInstance();
-        newInstance.initCause(cause);
-        return newInstance;
-      }catch(Throwable th){}
-      try{
-        return clazz
-          .getConstructor(new Class[]{Throwable.class})
-          .newInstance(new Object[]{cause});
-      }catch(Throwable th){}
-      throw new RuntimeException("cannot cast",cause);
-    }
-  }
-  
-  public static String toString(Throwable t){
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter printWriter = new PrintWriter(stringWriter);
-    t.printStackTrace(printWriter);
-    printWriter.close();
-    return stringWriter.toString();
-  }
+	/**
+	 * <b>Cast exception to <code>&lt;T></code></b>
+	 * <p>
+	 * Check if throwable <code>e</code> already belong to hierarchy of
+	 * throwables assignable to <code>&lt;T></code>. If true cast it, to
+	 * <code>&lt;T></code>. If not try to create <code>&lt;T></code> with
+	 * <code>e</code> as cause. If not successful throw {@link RuntimeException}
+	 * with <code>e</code> as cause.
+	 * 
+	 * <p>
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 *            define hierarchy of throwables
+	 * @param cause
+	 *            subject throwable
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Throwable> T cast(Class<T> clazz, Throwable cause) {
+		if (clazz.isAssignableFrom(cause.getClass())) {
+			return (T) cause;
+		} else {
+			try {
+				T newInstance = clazz.newInstance();
+				newInstance.initCause(cause);
+				return newInstance;
+			} catch (Throwable th) {
+			}
+			try {
+				return clazz.getConstructor(new Class[] { Throwable.class })
+						.newInstance(new Object[] { cause });
+			} catch (Throwable th) {
+			}
+			throw new RuntimeException("cannot cast", cause);
+		}
+	}
 
+	public static String toString(Throwable t) {
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(stringWriter);
+		t.printStackTrace(printWriter);
+		printWriter.close();
+		return stringWriter.toString();
+	}
+
+	public static String findPreviousStack(Class<BeeException> currentClass) {
+		StackTraceElement[] trace = new Throwable().getStackTrace();
+		if(trace!=null){
+			boolean seenCurent = false;
+			for (StackTraceElement elem : trace) {
+				if( elem.getClassName().endsWith(currentClass.getName()) ){
+					seenCurent = true;
+				}else if(seenCurent){
+					//pick element that follows right after current
+					return elem.toString() + "::";
+				}
+			}
+		}
+		return "";
+	}
 }

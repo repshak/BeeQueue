@@ -22,8 +22,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class BeeMessageKey {	
-	public String text;
+	public Object[] keys;
 	@JsonInclude (Include.NON_NULL)
-	public TimeSequence ts;
+	public TimeSequence time = null;
 	
 }

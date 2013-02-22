@@ -16,11 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.beequeue.piles.MapList;
-import org.beequeue.util.BeeOperation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -29,23 +25,9 @@ public class BuzzSchema {
 	@JsonInclude (Include.NON_NULL)
 	public BuzzAttribute key;
 	
-	public static enum SortOrder {
-		ASCENDING,
-		DESCENDING
-	};
-	
-	public static class KeySorting {
-		public Map<String,SortOrder> keys = new LinkedHashMap<String, BuzzSchema.SortOrder>();
-	}
-	@JsonInclude (Include.NON_NULL)
-	public KeySorting keySorting;
-
 	@JsonInclude (Include.NON_NULL)
 	public BuzzAttribute object;
 	
 
 	public MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(BuzzClass.op_GET_NAME);
-
-	@JsonInclude (Include.NON_EMPTY)
-	public MapList<String,BuzzColumn> tableColumns = new MapList<String,BuzzColumn>(BuzzColumn.op_GET_NAME);
 }

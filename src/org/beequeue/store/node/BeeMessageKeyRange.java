@@ -17,13 +17,18 @@
 package org.beequeue.store.node;
 
 import org.beequeue.hash.HashKey;
+import org.beequeue.hash.HashKeyResource;
 import org.beequeue.store.BeeMessageFrameKey;
 import org.beequeue.store.BeeMessageKey;
+import org.beequeue.util.TypeFactory;
 
 public class BeeMessageKeyRange {
+	public static final TypeFactory<BeeMessageKeyRange> TF = new TypeFactory<BeeMessageKeyRange>(BeeMessageKeyRange.class);
 	public BeeMessageKey start;
 	public BeeMessageKey end;
 	public BeeMessageFrameKey frame;
-	public HashKey rangeKey(){return null;}
-
+	
+	public HashKey rangeKey(HashKeyResource resource) {
+		return HashKey.buildHashKey(resource, TF.op_OBJ_TO_COMPACT.execute(this));
+	}
 }
