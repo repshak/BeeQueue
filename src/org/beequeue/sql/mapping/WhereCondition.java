@@ -29,7 +29,7 @@ import org.beequeue.sql.Index;
 import org.beequeue.sql.SqlPrepare;
 import org.beequeue.util.BeeOperation;
 import org.beequeue.util.Quadruple;
-import org.beequeue.util.StringMorph;
+import org.beequeue.util.BeeStringTransformation;
 import org.beequeue.util.Triple;
 import org.beequeue.util.Tuple;
 
@@ -117,7 +117,7 @@ public class WhereCondition<T> {
       }
       conditions.add(morph.execute(fieldMap));
     }
-    whereCondition.append(combine(StringMorph.PASS_THRU, conditions ));
+    whereCondition.append(combine(BeeStringTransformation.PASS_THRU, conditions ));
     return whereCondition;
   }
 

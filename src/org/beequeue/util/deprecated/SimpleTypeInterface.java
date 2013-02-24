@@ -14,14 +14,12 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.util;
-/**
- * Transfrmation - Morph to the same type.
- * 
- * @author smb
- *
- * @param <T>
- */
+package org.beequeue.util.deprecated;
 
-public interface Transformation<T> extends BeeOperation<T,T> {
+import org.beequeue.util.BeeOperation;
+
+
+public interface SimpleTypeInterface 
+extends BeeOperation<String,Object> {
+  Object toObject(String s);
 }

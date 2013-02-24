@@ -20,8 +20,8 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
-import org.beequeue.util.DataType;
 import org.beequeue.util.ToStringUtil;
+import org.beequeue.util.deprecated.DataType;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;

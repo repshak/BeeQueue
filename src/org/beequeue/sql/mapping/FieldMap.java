@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.beequeue.piles.LazyList;
 import org.beequeue.sql.Index;
-import org.beequeue.util.BeanUtil;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Filter;
+import org.beequeue.util.deprecated.BeanUtil;
 
 
 public class FieldMap<T> {

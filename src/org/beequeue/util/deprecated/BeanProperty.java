@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.util;
+package org.beequeue.util.deprecated;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -22,6 +22,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+
 
 public class BeanProperty extends MyProperty {
   public static BeanInfo getBeanInfo(Class<?> clazz) {

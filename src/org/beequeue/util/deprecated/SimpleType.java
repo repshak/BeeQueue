@@ -18,13 +18,16 @@
  * Wakeup OR 
  * www.apache.org/licenses/LICENSE-2.0.html  
  */
-package org.beequeue.util;
+package org.beequeue.util.deprecated;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
+
+import org.beequeue.util.EnumMorph;
+import org.beequeue.util.Throwables;
 
 
 public enum SimpleType implements SimpleTypeInterface{

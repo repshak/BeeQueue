@@ -16,7 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.template;
 
-import org.beequeue.util.DataType;
+import org.beequeue.util.deprecated.DataType;
 
 public class EventAttribute {
 	public String name;

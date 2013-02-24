@@ -19,7 +19,7 @@ package org.beequeue.util;
  * string transition 
  */
 
-public interface StringMorph {
+public interface BeeStringTransformation {
 	
   public class ToString<T> implements BeeOperation<T, String> {
     public String execute(T input) {
@@ -28,9 +28,9 @@ public interface StringMorph {
   }
   BeeOperation<Object,String> TO_STRING = new ToString<Object>();
   
-  Transformation<String> PASS_THRU = new PassThruTransformation<String>();
+  BeeTransformation<String> PASS_THRU = new PassThruTransformation<String>();
 	
-	public static class Regex implements Transformation<String>{
+	public static class Regex implements BeeTransformation<String>{
 		
 		private String regex;
 		private String replacement;
@@ -46,7 +46,7 @@ public interface StringMorph {
 		}
 	}
 	
-	public static class Prefix implements Transformation<String>{
+	public static class Prefix implements BeeTransformation<String>{
 	  
 	  private String prefix;
 	  
@@ -59,7 +59,7 @@ public interface StringMorph {
 	  }
 	}
 
-  public static class Suffix implements Transformation<String>{
+  public static class Suffix implements BeeTransformation<String>{
     
     private String suffix;
 

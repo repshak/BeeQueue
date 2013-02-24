@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.util;
+package org.beequeue.util.deprecated;
 
 import java.beans.BeanInfo;
 import java.lang.reflect.Field;
@@ -22,6 +22,8 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.beequeue.util.Filter;
 
 
 

@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.util;
+package org.beequeue.util.deprecated;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

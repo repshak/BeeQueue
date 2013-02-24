@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.beequeue.util.BeeOperation;
-import org.beequeue.util.StringMorph;
+import org.beequeue.util.BeeStringTransformation;
 
 
 public class LazyList<T> extends ArrayList<T> {
@@ -112,6 +112,6 @@ public class LazyList<T> extends ArrayList<T> {
   }
 
   public String toString(String separator){
-    return toString(separator,new StringMorph.ToString<Object>());
+    return toString(separator,new BeeStringTransformation.ToString<Object>());
   }
 }

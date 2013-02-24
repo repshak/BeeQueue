@@ -14,7 +14,7 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.util;
+package org.beequeue.util.deprecated;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +31,7 @@ import org.beequeue.piles.flock.IntegerFlockImpl;
 import org.beequeue.piles.flock.LongFlockImpl;
 import org.beequeue.piles.flock.ShortFlockImpl;
 import org.beequeue.piles.flock.StringFlockImpl;
+import org.beequeue.util.BeeException;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

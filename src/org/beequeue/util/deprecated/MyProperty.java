@@ -14,11 +14,13 @@
    limitations under the License.
  
  *  ===== END LICENSE ====== */
-package org.beequeue.util;
+package org.beequeue.util.deprecated;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
+
+import org.beequeue.util.Throwables;
 
 public abstract class MyProperty {
   private int index ;

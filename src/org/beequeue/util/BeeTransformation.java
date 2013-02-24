@@ -15,9 +15,10 @@
  
  *  ===== END LICENSE ====== */
 package org.beequeue.util;
+/**
+ * Transfrmation 
+ * @param <T>
+ */
 
-
-public interface SimpleTypeInterface 
-extends BeeOperation<String,Object> {
-  Object toObject(String s);
+public interface BeeTransformation<T> extends BeeOperation<T,T> {
 }

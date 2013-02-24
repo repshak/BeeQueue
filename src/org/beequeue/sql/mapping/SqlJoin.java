@@ -30,7 +30,7 @@ import org.beequeue.sql.JdbcFactory;
 import org.beequeue.sql.Select;
 import org.beequeue.util.BeeOperation;
 import org.beequeue.util.Quadruple;
-import org.beequeue.util.StringMorph;
+import org.beequeue.util.BeeStringTransformation;
 import org.beequeue.util.Triple;
 import org.beequeue.util.Tuple;
 
@@ -137,8 +137,8 @@ public class SqlJoin  {
       whereCondition.append(WhereCondition.AND);
       whereCondition.append(whereSuffix.toString());
     }
-    return "select "+Piles.buildListString(selectKludge, ", ", StringMorph.TO_STRING) +
-    " from " +Piles.buildListString(fromKludge, ", ", StringMorph.TO_STRING) + whereCondition.toString()  ;
+    return "select "+Piles.buildListString(selectKludge, ", ", BeeStringTransformation.TO_STRING) +
+    " from " +Piles.buildListString(fromKludge, ", ", BeeStringTransformation.TO_STRING) + whereCondition.toString()  ;
   }
 
   private String tableAlias(int i) {

@@ -24,7 +24,7 @@ import java.util.List;
 import org.beequeue.piles.LazyList;
 import org.beequeue.piles.Piles;
 import org.beequeue.util.BeeOperation;
-import org.beequeue.util.StringMorph;
+import org.beequeue.util.BeeStringTransformation;
 
 /**
  *
@@ -64,7 +64,7 @@ public class SqlFields<T> implements  SqlMorph<T>{
   
   public SqlFields(List<?> fields) {
     this.fields = fields;
-    this.morph = StringMorph.TO_STRING;
+    this.morph = BeeStringTransformation.TO_STRING;
   }
   
   public SqlFields(List<?> fields, BeeOperation<Object,String> morph) {

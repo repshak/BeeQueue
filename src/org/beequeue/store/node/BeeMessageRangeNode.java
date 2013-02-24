@@ -16,7 +16,6 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.store.node;
 
-import org.beequeue.hash.HashKey;
 import org.beequeue.store.ContentVersion;
 
 

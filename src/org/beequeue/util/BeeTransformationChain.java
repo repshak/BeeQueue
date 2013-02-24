@@ -20,10 +20,10 @@ package org.beequeue.util;
  * 
  * @param <T> input and target types
  */
-public class TransformationChain<T> implements Transformation<T> {
-  private Transformation<T>[] transitionChain ;
+public class BeeTransformationChain<T> implements BeeTransformation<T> {
+  private BeeTransformation<T>[] transitionChain ;
 
-  public TransformationChain(Transformation<T> ... chain) {
+  public BeeTransformationChain(BeeTransformation<T> ... chain) {
     super();
     transitionChain = chain;
   }

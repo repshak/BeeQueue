@@ -19,6 +19,8 @@ package org.beequeue.util;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import org.beequeue.util.deprecated.SimpleTypeInterface;
+
 public class EnumMorph implements SimpleTypeInterface {
 private Class<? extends Enum> enumClass;
 private Enum[] values = null;

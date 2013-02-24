@@ -36,8 +36,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value=DbCoordinator.class, name="db"),
-    @JsonSubTypes.Type(value=ZooKeeperCoordinator.class, name="zk")
+    @JsonSubTypes.Type(value=DbCoordinator.class, name="db")
 })
 public interface Coordiantor extends HashStore {
 	String LOAD_FROM = "$BQ_HOME/coordinator.json";

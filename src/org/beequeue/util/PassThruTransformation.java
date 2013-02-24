@@ -20,7 +20,7 @@ package org.beequeue.util;
  *
  * @param <T> input and output object type
  */
-public class PassThruTransformation<T> implements Transformation<T>{
+public class PassThruTransformation<T> implements BeeTransformation<T>{
   public T execute(T input) {
     return input;
   }
