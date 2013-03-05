@@ -18,16 +18,48 @@ package org.beequeue.buzz;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.beequeue.util.BeeException;
+import org.beequeue.util.DevNullStream;
+import org.beequeue.util.Streams;
 import org.beequeue.util.ToStringUtil;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 
 public class BuzzServer {
+	private static final String SHUT_DOWN_QUERY = "/SH/U7/d0/w4";
+	public class ShutDownHandler extends AbstractHandler {
+		@Override
+		public void handle(String target, Request baseRequest,
+				HttpServletRequest request, HttpServletResponse response)
+				throws IOException, ServletException {
+			if(target.equals(SHUT_DOWN_QUERY)){
+				System.out.println();
+				System.exit(0);
+			}
+
+		}
+	}
+
+	private static void shutdownLocalhost(int port) {
+		try {
+			URL url = new URL("http://localhost:" + port + SHUT_DOWN_QUERY);
+			InputStream in = url.openStream();
+			Streams.copy(in, new DevNullStream());
+		} catch (Exception e) {}
+	}
+
 	private int port ;
 	private File root;
 	private Server server;
@@ -36,8 +68,11 @@ public class BuzzServer {
 
 	public BuzzServer(int port) {
 		super();
+		shutdownLocalhost(port);
 		this.port = port;
 	}
+
+
 
 
 	public File getRoot() {
@@ -62,7 +97,7 @@ public class BuzzServer {
 	public void start(){
 		this.server = new Server(port);
 	    HandlerList handlers = new HandlerList();
-	    handlers.setHandlers(new Handler[] { new BuzzHandler(root) });
+	    handlers.setHandlers(new Handler[] { new ShutDownHandler(), new BuzzHandler(root) });
 	    this.server.setHandler(handlers);
 		try {
 			this.server.start();

@@ -23,17 +23,19 @@ public class BuzzException extends BeeException {
 	public final int statusCode;
 
 	public BuzzException(int statusCode, String message) {
-		super(message);
+		super(statusMessage(statusCode) + "\n" + message);
 		this.statusCode = statusCode;
 	}
-
+	private static String statusMessage(int statusCode){
+		return String.format("StatusCode: %d" , statusCode);
+	}
 	public BuzzException(int statusCode, Throwable cause) {
-		super(cause);
+		super(statusMessage(statusCode), cause);
 		this.statusCode = statusCode;
 	}
 	
 	public BuzzException(int statusCode, String message, Throwable cause) {
-		super(message, cause);
+		super(statusMessage(statusCode) + "\n" + message, cause);
 		this.statusCode = statusCode;
 	}
 

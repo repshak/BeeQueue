@@ -1,13 +1,11 @@
 = ToDo =
-* BuzzSchema
-* GUI design
-** Rework screens 
-** Log visualization
-* Message filters
-* record log file size
-* Spawn design
-
+* Buzz
+** GUI components
+*** given array of BuzzAttribute's should be able to generate html form to edit json
+ 
 == ToTest ==
+* sorting
+== ToThink ==
 * Eat you own dog food: use BeeQueue as build/ci subsytem.
 ** on macosx
 ** on linux
@@ -16,10 +14,9 @@
 * Implement TestCases
 ** [[TestCase1.mediawiki|TestCase1 - Load Balancing]]
 ** [[TestCase2.mediawiki|TestCase2 - Swinng pool chlorination and water level]]
-
-
-== ToThink ==
-
+* GUI design
+** Rework screens 
+** Log visualization
 * Record somewhere that how many runs are failing/succeeding on stage, job and message levels
 * Host - Architecture - Datastores rules to match host to particular stage
 * How job that mark message/job complete, and 
@@ -28,7 +25,8 @@
 * Deployment bq.jar: conditional unpack only if version, in bq.properties does not match already downloaded, delete old one
 
 == Done ==
-
+* Buzz: Automatic restart
+* BuzzSchema
 * fix /db and /query urls
 * Relpace wingstone with [[Jetty.mediawiki]] container
 * Launcher has to specify what cloud it is in on start

@@ -78,7 +78,7 @@ public class BeeException extends RuntimeException {
 		return super.getMessage();
 	}
 	
-	public static void makeSureItIsNot(boolean condition, String message){
+	public static void throwIfTrue(boolean condition, String message){
 		if(condition) {
 			throw new BeeException(message);
 		}
