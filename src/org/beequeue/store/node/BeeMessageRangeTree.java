@@ -21,7 +21,7 @@ import org.beequeue.store.BeeMessageKey;
 
 
 public class BeeMessageRangeTree extends BeeMessageRangeNode{
-	public BeeMessageKey[] entries;
 	public HashKeyResource childResourceType;
+	public BeeMessageKey[] entries;
 	
 }

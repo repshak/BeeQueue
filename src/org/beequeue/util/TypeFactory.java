@@ -35,13 +35,13 @@ public class TypeFactory<T> {
 		return new TypeFactory<T>(ref);
 	}
 	public TypeFactory(TypeReference<T> ref){
-		BeeException.makeSureItIsNot(ref == null, "ref == null");
+		BeeException.throwIfTrue(ref == null, "ref == null");
 		this.type = null;
 		this.ref = ref;
 	}
 	
 	public TypeFactory(Class<T> type){
-		BeeException.makeSureItIsNot(type == null, "type == null");
+		BeeException.throwIfTrue(type == null, "type == null");
 		this.type = type;
 		this.ref = null;
 	}

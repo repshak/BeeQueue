@@ -16,10 +16,12 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import java.util.Comparator;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-public class BuzzAttribute {
+public class BuzzAttribute implements Comparator<Object>{
 	@JsonInclude  (Include.NON_NULL)
 	public String name = null;
 	public BuiltInType type;
@@ -46,5 +48,9 @@ public class BuzzAttribute {
 		this.contentType = that.type;
 		this.className = that.className;
 		
+	}
+
+	public int compare(Object a, Object b) {
+		return SortOrder.DESCENDING == sortOrder ? type.compare(b, a) : type.compare(a, b);
 	}
 }

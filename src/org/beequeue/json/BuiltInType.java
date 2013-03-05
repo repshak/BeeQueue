@@ -16,16 +16,17 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import java.util.Comparator;
 import java.util.Date;
 
 import org.beequeue.util.BeeException;
 
 import com.fasterxml.jackson.databind.JavaType;
 
-public enum BuiltInType {
-	BOOLEAN(Boolean.TYPE,Boolean.class),
-	INTEGER(Integer.TYPE,Integer.class,Long.TYPE,Long.class,Short.TYPE,Short.class),
-	FLOAT(Float.TYPE,Float.class,Double.TYPE,Double.class),
+public enum BuiltInType implements Comparator<Object> {
+	BOOLEAN(Boolean.class,Boolean.TYPE),
+	INTEGER(Long.class,Integer.TYPE,Integer.class,Long.TYPE,Short.TYPE,Short.class),
+	FLOAT(Double.class,Float.TYPE,Float.class,Double.TYPE),
 	STRING(String.class),
 	DATE(Date.class),
 	ENUM{ 
@@ -71,6 +72,13 @@ public enum BuiltInType {
 			}
 		}
 		throw new BeeException("Cannot detect JavaType:"+jt);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public int compare(Object a, Object b) {
+		BeeException.throwIfTrue(this != ENUM && !isPrimitive(), "this != ENUM && !isPrimitive()");
+		return ((Comparable)a).compareTo(b);
 	}
 	
 	

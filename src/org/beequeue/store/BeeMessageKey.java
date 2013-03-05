@@ -25,5 +25,4 @@ public class BeeMessageKey {
 	public Object[] keys;
 	@JsonInclude (Include.NON_NULL)
 	public TimeSequence time = null;
-	
 }
