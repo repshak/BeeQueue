@@ -43,13 +43,12 @@ public class BuzzContext {
 	}
 	public BuzzContext(String target, Request r, HttpServletRequest req, HttpServletResponse res, BuzzHandler handler) {
 		this.target = target;
+		this.resoursePath = BuzzPath.valueOf(target.substring(1));
+		this.handler = handler;
+		this.ancestor = this.resoursePath.findAncestor(handler.rcConfigs.keySet());
 		this.r = r;
 		this.req = req;
 		this.res = res;
-		this.handler = handler;
-		this.resoursePath = BuzzPath.valueOf(target.substring(1));
-		this.ancestor = this.resoursePath.findAncestor(handler.rcConfigs.keySet());
-		System.out.println(target);
 	}
 
 	public boolean setHandled() {

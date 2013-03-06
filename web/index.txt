@@ -5,5 +5,5 @@
   "aoColumns" : [ {
     "sTitle" : "FILE_NAME"
   } ],
-  "aaData" : [ [ "host" ], [ "db" ], [ "home" ], [ "query" ] ]
+  "aaData" : [ [ "host" ], [ "home" ], [ "query" ] ]
 }

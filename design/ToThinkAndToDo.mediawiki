@@ -1,7 +1,5 @@
 = ToDo =
-* Buzz
-** GUI components
-*** given array of BuzzAttribute's should be able to generate html form to edit json
+* Buzz: SimpleForm: given array of BuzzAttribute's generate form to edit json (array or map)
  
 == ToTest ==
 * sorting

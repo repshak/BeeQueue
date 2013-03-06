@@ -14,16 +14,5 @@
 	  { "type" : "FileSystem" ,
 	    "root" : "${BQ_HOST}" 
 	  }
-	]},
-	"db":  { "resourceControllers" : [ 
-	{ "type" : "Query" 
-	}
-	]},
-	"query": { "resourceControllers" : [ 
-		{ "type" : "Query" ,
-		  "queries" : { 
-		    "test" : "select 1" 
-		   }
-		}
-	 ]}
+	]}
 }
