@@ -105,14 +105,15 @@ public class BuzzPathTest {
 			fail();
 		}catch (BuzzException e) {
 			assertEquals(e.statusCode, 500);
-			assertTrue(e.getMessage().startsWith("path mailformed: empty elements in the middle") );
+			String message = e.getMessage();
+			assertTrue(message.startsWith("StatusCode: 500\npath mailformed: empty elements in the middle") );
 		}
 		try{
 			assertSerialization(bp("a", "", "c"));
 			fail();
 		}catch (BuzzException e) {
 			assertEquals(e.statusCode, 500);
-			assertTrue(e.getMessage().startsWith("path mailformed: empty elements in the middle") );
+			assertTrue(e.getMessage().startsWith("StatusCode: 500\npath mailformed: empty elements in the middle") );
 		}
 	}
 
