@@ -1,6 +1,7 @@
 = ToDo =
+* BuzzTable toString
+* BuzzTable sorting
 * Buzz: SimpleForm: given array of BuzzAttribute's generate form to edit json (array or map)
- 
 == ToTest ==
 * sorting
 == ToThink ==

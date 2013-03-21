@@ -16,20 +16,84 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import java.text.DateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
 import org.beequeue.util.BeeException;
+import org.beequeue.util.Nulls;
+import org.beequeue.util.ToStringUtil;
 
 import com.fasterxml.jackson.databind.JavaType;
 
 public enum BuiltInType implements Comparator<Object> {
-	BOOLEAN(Boolean.class,Boolean.TYPE),
-	INTEGER(Long.class,Integer.TYPE,Integer.class,Long.TYPE,Short.TYPE,Short.class),
-	FLOAT(Double.class,Float.TYPE,Float.class,Double.TYPE),
-	STRING(String.class),
-	DATE(Date.class),
-	ENUM{ 
+	BOOLEAN(Boolean.class,Boolean.TYPE){
+		@Override
+		protected Object coerseIt(Object v) {
+			return super.coerseIt(v);
+		}
+		@Override
+		public Object fromString(String s) {
+			return "yYtT1".indexOf(s.charAt(0)) >= 0;
+		}
+	},
+	INTEGER(Long.class,Integer.TYPE,Integer.class,Long.TYPE,Short.TYPE,Short.class){
+		@Override
+		protected Object coerseIt(Object v) {
+			if (v instanceof Number) {
+				return ((Number) v).longValue();
+			}
+			return super.coerseIt(v);
+		}
+		
+		@Override
+		public Object fromString(String s) {
+			return Long.parseLong(s);
+		}
+
+	},
+	FLOAT(Double.class,Float.TYPE,Float.class,Double.TYPE){
+		@Override protected Object coerseIt(Object v) {
+			if (v instanceof Number) {
+				return ((Number) v).doubleValue();
+			}
+			return super.coerseIt(v);
+		}
+		@Override public Object fromString(String s) {
+			return Double.parseDouble(s);
+		}
+	},
+	STRING(String.class){
+		@Override protected Object coerseIt(Object v) {
+			return v.toString();
+		}
+		@Override public Object fromString(String s) {
+			return s;
+		}
+	},
+	DATE(Date.class){
+		@Override protected Object coerseIt(Object v) {
+			if (v instanceof Number) {
+				return new Date(((Number) v).longValue());
+			}
+			return super.coerseIt(v);
+		}
+		@Override public Object fromString(String s) {
+			DateFormat df = (DateFormat) ToStringUtil.MAPPER.getSerializationConfig().getDateFormat().clone();
+			try {
+				return df.parse(s);
+			} catch (Exception e) {
+				throw BeeException.cast(e);
+			}
+		}
+	},
+	ENUM(String.class){
+		@Override protected Object coerseIt(Object v) {
+			return v.toString();
+		}
+		@Override public Object fromString(String s) {
+			return s;
+		}
 		@Override protected boolean matches(JavaType jt){ return jt.isEnumType(); }
 	},
 	OBJECT(){ 
@@ -52,6 +116,10 @@ public enum BuiltInType implements Comparator<Object> {
 	
 	public boolean isPrimitive(){
 		return classes != null && classes.length > 0 ;
+	}
+	
+	public Class<?> getBoxClass(){
+		return isPrimitive() ? classes[0] : null ;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -78,7 +146,43 @@ public enum BuiltInType implements Comparator<Object> {
 	@Override
 	public int compare(Object a, Object b) {
 		BeeException.throwIfTrue(this != ENUM && !isPrimitive(), "this != ENUM && !isPrimitive()");
-		return ((Comparable)a).compareTo(b);
+		return Nulls.compare((Comparable)a, (Comparable)b, true);
+	}
+	
+	public Object fromString(String s){
+		return ToStringUtil.toObject(s, Object.class);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Object coerce(Object v) {
+		BeeException.throwIfTrue(!isPrimitive(), "!isPrimitive()");
+		Object r;
+		if(v == null){
+			r = null;
+		}else{
+			Class boxClass = getBoxClass();
+			boolean alreadyAssignable = boxClass.isAssignableFrom(v.getClass());
+			if( alreadyAssignable ){
+				r = v;
+			}else if(v instanceof String){
+				r = fromString((String)v);
+			}else{
+				r = coerseIt(v);
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * 
+	 * @param v assumed that v is not null and v is not string
+	 * @return
+	 */
+	protected Object coerseIt(Object v) {
+		throw new BeeException("Dont know how to coerce")
+		.memo("from", v.getClass().getName())
+		.memo("to", getBoxClass() )
+		.memo("v", v);
 	}
 	
 	

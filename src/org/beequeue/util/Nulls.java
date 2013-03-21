@@ -17,6 +17,7 @@
 package org.beequeue.util;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -45,11 +46,19 @@ public class Nulls {
   }
   
   public static <T extends Comparable<T>> int compare(T a, T b, boolean nullFirst){
+	  Integer checkNull = checkNull(a, b, nullFirst);
+	  if(checkNull != null){
+		  return checkNull;
+	  }
+	  return a.compareTo(b);
+  }
+  
+  public static <T> int compare(T a, T b, Comparator<T> comporator, boolean nullFirst){
     Integer checkNull = checkNull(a, b, nullFirst);
     if(checkNull != null){
       return checkNull;
     }
-    return a.compareTo(b);
+    return comporator.compare(a, b);
   }
   
   public static <T extends Comparable<T>> int compare(Collection<T> v1, Collection<T> v2, boolean shortListFirst , boolean nullFirst) {

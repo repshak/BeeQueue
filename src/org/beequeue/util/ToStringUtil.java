@@ -30,6 +30,8 @@ public class ToStringUtil {
 	public static ObjectMapper MAPPER = new ObjectMapper()
 	.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	
+	public static TypeFactory<Object> TF =new TypeFactory<Object>(Object.class);
+
 	public String toString() {
 		return toString(this);
 	}

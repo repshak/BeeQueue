@@ -18,10 +18,17 @@ package org.beequeue.json;
 
 import java.util.Comparator;
 
+import org.beequeue.util.BeeOperation;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class BuzzAttribute implements Comparator<Object>{
+	public static BeeOperation<? super BuzzAttribute, ? extends String> op_GET_NAME = new BeeOperation<BuzzAttribute,String>(){
+		@Override public String execute(BuzzAttribute input) {
+			return input.name;
+		}};
+
 	@JsonInclude  (Include.NON_NULL)
 	public String name = null;
 	public BuiltInType type;
@@ -52,5 +59,9 @@ public class BuzzAttribute implements Comparator<Object>{
 
 	public int compare(Object a, Object b) {
 		return SortOrder.DESCENDING == sortOrder ? type.compare(b, a) : type.compare(a, b);
+	}
+
+	public Object coerce(Object v) {
+		return type.coerce(v);
 	}
 }

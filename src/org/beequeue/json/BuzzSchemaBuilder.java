@@ -66,7 +66,6 @@ public class BuzzSchemaBuilder {
 					JavaType valueJavaType = valueMethod.getType(beanDescriptor.bindingsForBeanType());
 					type = recurseSchema(valueJavaType);
 				}else{
-					Class<?> rawClass = beanDescriptor.getBeanClass();
 					type.className = jt.toCanonical() ;
 					BuzzClass classDef = this.schema.types.map().get(type.className);
 					if(classDef==null){

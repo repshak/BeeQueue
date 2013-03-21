@@ -53,9 +53,23 @@ public class MapList<K,V> extends BoundList<V> {
 		return localCopy;
 	}
 	
+	private Map<K,Integer> indexMap = null;
+	public Map<K,Integer> indexMap(){
+		Map<K, Integer> localCopy = indexMap;
+		if( localCopy == null ){
+			localCopy = new HashMap<K, Integer>();
+			for (int i = 0; i < this.size(); i++) {
+				localCopy.put(extractKey.execute(get(i)), i);
+			}
+			localCopy = Collections.unmodifiableMap(localCopy);
+			this.indexMap = localCopy ;
+		}
+		return localCopy;
+	}
 	
 	public void refresh(){
 		this.map=null;
+		this.indexMap=null;
 	}
 	
 	

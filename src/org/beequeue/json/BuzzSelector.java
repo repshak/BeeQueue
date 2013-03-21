@@ -20,7 +20,12 @@ import org.beequeue.util.BeeException;
 import org.beequeue.util.Strings;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-
+/**
+ * TODO: rethink json xpath-like selector
+ * Idea to have some kind selector(like xpath in xml), I did not found nice way 
+ * to implement it so I deprecate it for now until I figure something better.
+ */
+@Deprecated
 public class BuzzSelector {
 	
 	private String[] elements;

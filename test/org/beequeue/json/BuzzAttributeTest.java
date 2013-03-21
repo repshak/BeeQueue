@@ -1,0 +1,65 @@
+package org.beequeue.json;
+
+import static org.junit.Assert.*;
+
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import junit.framework.Assert;
+
+import org.beequeue.util.BeeException;
+import org.junit.Test;
+
+public class BuzzAttributeTest {
+
+	@Test
+	public void test() {
+		BuzzTable buzzTable = new BuzzTable();
+		buzzTable.columns.add(attr( "I1", BuiltInType.INTEGER, SortOrder.DESCENDING ));
+		buzzTable.columns.add(attr( "S2", BuiltInType.STRING, SortOrder.ASCENDING ));
+		buzzTable.columns.add(attr( "D3", BuiltInType.DATE, SortOrder.DESCENDING ));
+		buzzTable.columns.add(attr( "F4", BuiltInType.FLOAT, null ));
+		buzzTable.columns.add(attr( "F5", BuiltInType.FLOAT, null ));
+		BuzzRow row = buzzTable.addNewRow();
+		try{
+			buzzTable.columns.add(attr( "F6", BuiltInType.FLOAT, null ));
+			fail("BeeException !updatesAllowed expected");
+		}catch (BeeException e) {
+			assertEquals(e.getMessage(), "!updatesAllowed");
+		}
+		row.set("I1", "5");
+		assertEquals(row.get("I1"), new Long(5));
+		row.set("S2", 34);
+		assertEquals(row.get("S2"), "34");
+		row = buzzTable.addNewRow();
+		row.set("I1", 7);
+		row.set("S2", "33");
+		row = buzzTable.addNewRow();
+		row.set("I1", 5);
+		row.set("S2", "33");
+		row = buzzTable.addNewRow();
+		row.set("I1", 5);
+		row.set("S2", "33");
+		row.set("D3", "2013-03-08T20:11:11.012+01:30");
+		//todo tostring
+		System.out.println(buzzTable.toString());
+		buzzTable.sort();
+		StringWriter w = new StringWriter();
+		buzzTable.writeTable(w);
+		String orig = w.toString();
+		System.out.println(orig);
+		StringReader r = new StringReader(orig);
+		BuzzTable readTable = BuzzTable.readTable(r);
+		String copy = readTable.toString();
+		System.out.println(copy);
+		Assert.assertEquals(orig, copy);
+	}
+
+	BuzzAttribute attr( String name, BuiltInType type, SortOrder sort){
+		BuzzAttribute a = new BuzzAttribute();
+		a.name = name;
+		a.type = type;
+		a.sortOrder = sort;
+		return a;
+	}
+}

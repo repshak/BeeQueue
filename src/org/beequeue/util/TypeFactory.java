@@ -22,7 +22,7 @@ public class TypeFactory<T> {
 		public T execute(String input) {
 			if( ref !=null ){
 				return ToStringUtil.toObject(input,ref);
-			}else if( ref !=null ){
+			}else if( type !=null ){
 				return ToStringUtil.toObject(input,type);
 			}
 			throw new BeeException("Should never happend");

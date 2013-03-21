@@ -19,7 +19,10 @@ package org.beequeue.piles;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class BoundList<T> extends ArrayList<T> {
+import org.beequeue.json.BuzzRow;
+import org.beequeue.util.BeeException;
+
+public class BoundList<T> extends ArrayList<T> implements Lockable{
 	private static final long serialVersionUID = 1L;
 
 	public static interface Listener {
@@ -27,17 +30,27 @@ public class BoundList<T> extends ArrayList<T> {
 	}
 
 	private Listener updateListener = null;
-
+	private boolean updatesAllowed = true;
+	
 	public Listener getUpdateListener() {
 		return updateListener;
 	}
-
+	
 	public void setUpdateListener(Listener updateListener) {
 		this.updateListener = updateListener;
 	}
-
-	public BoundList() {
+	
+	public boolean isUpdatesAllowed() {
+		return updatesAllowed;
 	}
+	
+	public void preventUpdates() {
+		this.updateListener = null;
+		this.updatesAllowed = false;
+	}
+
+
+	public BoundList() {}
 
 	public BoundList(Listener listener) {
 		this.updateListener = listener;
@@ -45,12 +58,14 @@ public class BoundList<T> extends ArrayList<T> {
 
 	@Override
 	public void add(int index, T element) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		super.add(index, element);
 		fireUpdate();
 	}
 
 	@Override
 	public boolean add(T e) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		boolean add = super.add(e);
 		fireUpdate();
 		return add;
@@ -58,6 +73,7 @@ public class BoundList<T> extends ArrayList<T> {
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		boolean addAll = super.addAll(c);
 		fireUpdate();
 		return addAll;
@@ -65,6 +81,7 @@ public class BoundList<T> extends ArrayList<T> {
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		boolean addAll = super.addAll(index, c);
 		fireUpdate();
 		return addAll;
@@ -72,12 +89,14 @@ public class BoundList<T> extends ArrayList<T> {
 
 	@Override
 	public void clear() {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		super.clear();
 		fireUpdate();
 	}
 
 	@Override
 	public T remove(int index) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		T remove = super.remove(index);
 		fireUpdate();
 		return remove;
@@ -85,6 +104,7 @@ public class BoundList<T> extends ArrayList<T> {
 
 	@Override
 	public boolean remove(Object o) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		boolean remove = super.remove(o);
 		fireUpdate();
 		return remove;
@@ -92,12 +112,14 @@ public class BoundList<T> extends ArrayList<T> {
 
 	@Override
 	protected void removeRange(int fromIndex, int toIndex) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		super.removeRange(fromIndex, toIndex);
 		fireUpdate();
 	}
 
 	@Override
 	public T set(int index, T element) {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		T t = super.set(index, element);
 		fireUpdate();
 		return t;
@@ -106,6 +128,7 @@ public class BoundList<T> extends ArrayList<T> {
 
 	@Override
 	public void trimToSize() {
+		BeeException.throwIfTrue(!updatesAllowed, "!updatesAllowed");
 		super.trimToSize();
 		fireUpdate();
 	}
