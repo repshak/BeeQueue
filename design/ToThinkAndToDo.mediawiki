@@ -1,6 +1,4 @@
 = ToDo =
-* BuzzTable toString
-* BuzzTable sorting
 * Buzz: SimpleForm: given array of BuzzAttribute's generate form to edit json (array or map)
 == ToTest ==
 * sorting
@@ -24,6 +22,8 @@
 * Deployment bq.jar: conditional unpack only if version, in bq.properties does not match already downloaded, delete old one
 
 == Done ==
+* BuzzTable toString
+* BuzzTable sorting
 * Buzz: Automatic restart
 * BuzzSchema
 * fix /db and /query urls
