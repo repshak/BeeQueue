@@ -16,6 +16,8 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import java.util.List;
+
 import org.beequeue.piles.Lockable;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
@@ -29,15 +31,23 @@ public class BuzzRow implements Lockable{
 		return previousVersion;
 	}
 
+	public BuzzRow(BuzzHeader columns) {
+		this.columns = columns;
+		this.data = new Object[columns.size()];
+	}
+	
+	public BuzzRow(BuzzHeader columns, List<Object> rawData) {
+		this(columns);					
+		for (int i = 0; i < rawData.size(); i++) {
+			set(i, rawData.get(i));
+		}
+	}
+
 	public void setPreviousVersion(BuzzRow previousVersion) {
 		BeeException.throwIfTrue(!isUpdatesAllowed(), "!isUpdatesAllowed()");
 		this.previousVersion = previousVersion;
 	}
 
-	public BuzzRow(BuzzHeader columns) {
-		this.columns = columns;
-		this.data = new Object[columns.size()];
-	}
 	
 	public Object get(String name) {
 		return get(columns.colIndex(name));

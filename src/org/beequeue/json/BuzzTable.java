@@ -34,8 +34,8 @@ import org.beequeue.util.ToStringUtil;
 public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	private static final String EOF = "EOF";
 	
-	public BuzzHeader columns = new BuzzHeader();
-	public BoundList<BuzzRow> rows = new BoundList<BuzzRow>();
+	public final BuzzHeader columns = new BuzzHeader();
+	private final BoundList<BuzzRow> rows = new BoundList<BuzzRow>();
 	
 	public BuzzRow newRow(){
 		return new BuzzRow(columns);
@@ -59,6 +59,18 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		row.setPreviousVersion(prevRow);
 		row.preventUpdates();
 		rows.set(at, row);
+	}
+
+	public BuzzRow deleteRow(int at){
+		BeeException.throwIfTrue(rows.size() <= at, "rows.size() <= at");
+		BuzzRow prevRow = rows.get(at);
+		rows.remove(at);
+		return prevRow;
+	}
+
+	public BuzzRow getRow(int at){
+		BeeException.throwIfTrue(rows.size() <= at, "rows.size() <= at");
+		return rows.get(at);
 	}
 	
 	@Override
@@ -119,8 +131,8 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		Collections.sort(rows, getComparator());
 	}
 	
-	public void binarySearch(BuzzRow row){
-		Collections.binarySearch(rows, row, getComparator());
+	public int binarySearch(BuzzRow row){
+		return Collections.binarySearch(rows, row, getComparator());
 	}
 
 	public void writeTable(Writer w) {
@@ -146,11 +158,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 				if( !line.trim().equals(EOF) ){
 					@SuppressWarnings("unchecked")
 					List<Object> rawData = (List<Object>)ToStringUtil.TF.op_STRING_TO_OBJ.execute(line);
-					BuzzRow row = tab.newRow();
-					for (int i = 0; i < rawData.size(); i++) {
-						row.set(i, rawData.get(i));
-					}
-					tab.addRow(row);
+					tab.addRow(new BuzzRow(tab.columns, rawData));
 				}
 			}
 			br.close();
@@ -158,6 +166,10 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		} catch (Exception e) {
 			throw BeeException.cast(e);
 		}
+	}
+	
+	public int getRowCount(){
+		return this.rows.size();
 	}
 
 }
