@@ -20,27 +20,31 @@ public class BuzzAttributeTest {
 		buzzTable.columns.add(attr( "D3", BuiltInType.DATE, SortOrder.DESCENDING ));
 		buzzTable.columns.add(attr( "F4", BuiltInType.FLOAT, null ));
 		buzzTable.columns.add(attr( "F5", BuiltInType.FLOAT, null ));
-		BuzzRow row = buzzTable.addNewRow();
+		BuzzRow row = buzzTable.newRow();
+		row.set("I1", "5");
+		assertEquals(row.get("I1"), new Long(5));
+		row.set("S2", 34);
+		assertEquals(row.get("S2"), "34");
+		buzzTable.addRow(row);
 		try{
 			buzzTable.columns.add(attr( "F6", BuiltInType.FLOAT, null ));
 			fail("BeeException !updatesAllowed expected");
 		}catch (BeeException e) {
 			assertEquals(e.getMessage(), "!updatesAllowed");
 		}
-		row.set("I1", "5");
-		assertEquals(row.get("I1"), new Long(5));
-		row.set("S2", 34);
-		assertEquals(row.get("S2"), "34");
-		row = buzzTable.addNewRow();
+		row = buzzTable.newRow();
 		row.set("I1", 7);
 		row.set("S2", "33");
-		row = buzzTable.addNewRow();
+		buzzTable.addRow(row);
+		row = buzzTable.newRow();
 		row.set("I1", 5);
 		row.set("S2", "33");
-		row = buzzTable.addNewRow();
+		buzzTable.addRow(row);
+		row = buzzTable.newRow();
 		row.set("I1", 5);
 		row.set("S2", "33");
 		row.set("D3", "2013-03-08T20:11:11.012+01:30");
+		buzzTable.addRow(row);
 		//todo tostring
 		System.out.println(buzzTable.toString());
 		buzzTable.sort();

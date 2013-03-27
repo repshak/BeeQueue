@@ -33,14 +33,17 @@ import org.beequeue.util.ToStringUtil;
 
 public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	private static final String EOF = "EOF";
+	
 	public BuzzHeader columns = new BuzzHeader();
 	public BoundList<BuzzRow> rows = new BoundList<BuzzRow>();
 	
-	public BuzzRow addNewRow(){
+	public BuzzRow newRow(){
+		return new BuzzRow(columns);
+	}
+
+	public void addRow(BuzzRow row){
 		if(columns.isUpdatesAllowed()) columns.preventUpdates();
-		Row row = new Row();
 		rows.add(row);
-		return row;
 	}
 	
 	@Override
@@ -59,46 +62,6 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		return rows.iterator();
 	}
 	
-	public int colIndex(String name) {
-		Integer idx = columns.indexMap().get(name);
-		BeeException.throwIfTrue(idx==null, "idx==null when name:"+name );
-		return idx;
-	}
-	
-	public class Row implements BuzzRow {
-		private Object[] data = new Object[columns.size()];
-		
-		@Override
-		public Object get(String name) {
-			return get(colIndex(name));
-		}
-
-
-		@Override
-		public void set(String name, Object v) {
-			set(colIndex(name), v);
-		}
-
-		@Override
-		public Object get(int idx) {
-			return data[idx];
-		}
-
-		@Override
-		public void set(int idx, Object v) {
-			BeeException.throwIfTrue(!isUpdatesAllowed(), "!isUpdatesAllowed()");
-			data[idx] = columns.get(idx).coerce(v);
-		}
-
-
-		@Override
-		public String toString() {
-			return ToStringUtil.toNotPrettyString(data);
-		}
-		
-		
-		
-	}
 	
 
 	private Comparator<BuzzRow> comparator = null;
@@ -163,10 +126,11 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 			while((line = br.readLine())!=null){
 				if( !line.trim().equals(EOF) ){
 					List<Object> rawData = (List<Object>)ToStringUtil.TF.op_STRING_TO_OBJ.execute(line);
-					BuzzRow row = tab.addNewRow();
+					BuzzRow row = tab.newRow();
 					for (int i = 0; i < rawData.size(); i++) {
 						row.set(i, rawData.get(i));
 					}
+					tab.addRow(row);
 				}
 			}
 			br.close();
