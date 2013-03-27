@@ -20,6 +20,7 @@ public class BuzzHeader extends MapList<String, BuzzAttribute> {
 
 	@Override
 	public boolean equals(Object o) {
+		if(this == o) return true;
 		if (o instanceof BuzzHeader) {
 			BuzzHeader that = (BuzzHeader) o;
 			return this.toString().equals(that.toString());

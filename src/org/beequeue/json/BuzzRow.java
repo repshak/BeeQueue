@@ -7,6 +7,16 @@ import org.beequeue.util.ToStringUtil;
 public class BuzzRow implements Lockable{
 	private final BuzzHeader columns;
 	private final Object[] data ;
+	private BuzzRow previousVersion;
+
+	public BuzzRow getPreviousVersion() {
+		return previousVersion;
+	}
+
+	public void setPreviousVersion(BuzzRow previousVersion) {
+		BeeException.throwIfTrue(!isUpdatesAllowed(), "!isUpdatesAllowed()");
+		this.previousVersion = previousVersion;
+	}
 
 	public BuzzRow(BuzzHeader columns) {
 		this.columns = columns;

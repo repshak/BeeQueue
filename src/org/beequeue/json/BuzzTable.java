@@ -41,9 +41,24 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		return new BuzzRow(columns);
 	}
 
-	public void addRow(BuzzRow row){
+	public void addRow(int at, BuzzRow row){
+		BeeException.throwIfTrue(!columns.equals(row.header()), "!columns.equals(row.header())");
 		if(columns.isUpdatesAllowed()) columns.preventUpdates();
-		rows.add(row);
+		row.preventUpdates();
+		rows.add(at, row);
+	}
+	
+	public void addRow(BuzzRow row){
+		addRow(rows.size(),row);
+	}
+	
+	public void setRow(int at, BuzzRow row){
+		BeeException.throwIfTrue(rows.size() <= at, "rows.size() <= at");
+		BeeException.throwIfTrue(!columns.equals(row.header()), "!columns.equals(row.header())");
+		BuzzRow prevRow = rows.get(at);
+		row.setPreviousVersion(prevRow);
+		row.preventUpdates();
+		rows.set(at, row);
 	}
 	
 	@Override
@@ -103,6 +118,10 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	public void sort(){
 		Collections.sort(rows, getComparator());
 	}
+	
+	public void binarySearch(BuzzRow row){
+		Collections.binarySearch(rows, row, getComparator());
+	}
 
 	public void writeTable(Writer w) {
 		PrintWriter pw = new PrintWriter(w);
@@ -125,6 +144,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 			tab.columns.addAll(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
 			while((line = br.readLine())!=null){
 				if( !line.trim().equals(EOF) ){
+					@SuppressWarnings("unchecked")
 					List<Object> rawData = (List<Object>)ToStringUtil.TF.op_STRING_TO_OBJ.execute(line);
 					BuzzRow row = tab.newRow();
 					for (int i = 0; i < rawData.size(); i++) {
