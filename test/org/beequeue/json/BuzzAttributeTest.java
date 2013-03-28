@@ -16,14 +16,18 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
 import org.beequeue.util.BeeException;
+import org.beequeue.util.ToStringUtil;
 import org.junit.Test;
 
 public class BuzzAttributeTest {
@@ -31,11 +35,11 @@ public class BuzzAttributeTest {
 	@Test
 	public void test() {
 		BuzzTable buzzTable = new BuzzTable();
-		buzzTable.columns.add(attr( "I1", BuiltInType.INTEGER, SortOrder.DESCENDING ));
-		buzzTable.columns.add(attr( "S2", BuiltInType.STRING, SortOrder.ASCENDING ));
-		buzzTable.columns.add(attr( "D3", BuiltInType.DATE, SortOrder.DESCENDING ));
-		buzzTable.columns.add(attr( "F4", BuiltInType.FLOAT, null ));
-		buzzTable.columns.add(attr( "F5", BuiltInType.FLOAT, null ));
+		buzzTable.header.add(attr( "I1", BuiltInType.INTEGER, SortOrder.DESCENDING ));
+		buzzTable.header.add(attr( "S2", BuiltInType.STRING, SortOrder.ASCENDING ));
+		buzzTable.header.add(attr( "D3", BuiltInType.DATE, SortOrder.DESCENDING ));
+		buzzTable.header.add(attr( "F4", BuiltInType.FLOAT, null ));
+		buzzTable.header.add(attr( "F5", BuiltInType.FLOAT, null ));
 		BuzzRow row = buzzTable.newRow();
 		row.set("I1", "5");
 		assertEquals(row.get("I1"), new Long(5));
@@ -43,7 +47,7 @@ public class BuzzAttributeTest {
 		assertEquals(row.get("S2"), "34");
 		buzzTable.addRow(row);
 		try{
-			buzzTable.columns.add(attr( "F6", BuiltInType.FLOAT, null ));
+			buzzTable.header.add(attr( "F6", BuiltInType.FLOAT, null ));
 			fail("BeeException !updatesAllowed expected");
 		}catch (BeeException e) {
 			assertEquals(e.getMessage(), "!updatesAllowed");
@@ -73,6 +77,10 @@ public class BuzzAttributeTest {
 		String copy = readTable.toString();
 		System.out.println(copy);
 		Assert.assertEquals(orig, copy);
+		Map<String,List<Object>> map = (Map<String, List<Object>>) ToStringUtil.toObject(copy, Object.class);
+		System.out.println(map.get("header"));
+		System.out.println(map.get("rows"));
+		
 	}
 
 	BuzzAttribute attr( String name, BuiltInType type, SortOrder sort){

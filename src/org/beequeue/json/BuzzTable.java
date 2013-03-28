@@ -32,18 +32,21 @@ import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 
 public class BuzzTable implements Iterable<BuzzRow>, Lockable{
-	private static final String EOF = "EOF";
+	private static final String BOH = "{\"header\": ";
+	private static final String EOH = ",\"rows\":[";
+	private static final String EOR = ",";
+	private static final String EOF = "null]}";
 	
-	public final BuzzHeader columns = new BuzzHeader();
+	public final BuzzHeader header = new BuzzHeader();
 	private final BoundList<BuzzRow> rows = new BoundList<BuzzRow>();
 	
 	public BuzzRow newRow(){
-		return new BuzzRow(columns);
+		return new BuzzRow(header);
 	}
 
 	public void addRow(int at, BuzzRow row){
-		BeeException.throwIfTrue(!columns.equals(row.header()), "!columns.equals(row.header())");
-		if(columns.isUpdatesAllowed()) columns.preventUpdates();
+		BeeException.throwIfTrue(!header.equals(row.header()), "!header.equals(row.header())");
+		if(header.isUpdatesAllowed()) header.preventUpdates();
 		row.preventUpdates();
 		rows.add(at, row);
 	}
@@ -54,7 +57,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	
 	public void setRow(int at, BuzzRow row){
 		BeeException.throwIfTrue(rows.size() <= at, "rows.size() <= at");
-		BeeException.throwIfTrue(!columns.equals(row.header()), "!columns.equals(row.header())");
+		BeeException.throwIfTrue(!header.equals(row.header()), "!header.equals(row.header())");
 		BuzzRow prevRow = rows.get(at);
 		row.setPreviousVersion(prevRow);
 		row.preventUpdates();
@@ -80,7 +83,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 
 	@Override
 	public void preventUpdates() {
-		columns.preventUpdates();
+		header.preventUpdates();
 		rows.preventUpdates();
 	}
 
@@ -104,8 +107,8 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	private class RowComparator implements Comparator<BuzzRow>{
 		@Override
 		public int compare(BuzzRow a, BuzzRow b) {
-			for (int i = 0; i < columns.size() ; i++) {
-				BuzzAttribute attr = columns.get(i);
+			for (int i = 0; i < header.size() ; i++) {
+				BuzzAttribute attr = header.get(i);
 				int r = attr.compare(a.get(i), b.get(i));
 				if(r != 0){
 					return r;
@@ -117,7 +120,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	}
 	
 	public String header(){
-		return ToStringUtil.toNotPrettyString(columns);
+		return ToStringUtil.toNotPrettyString(header);
 	}
 
 	@Override
@@ -138,9 +141,9 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	public void writeTable(Writer w) {
 		PrintWriter pw = new PrintWriter(w);
 		try {
-			pw.println(header());
+			pw.println(BOH + header() + EOH);
 			for (BuzzRow row : this) {
-				pw.println(row.toString());
+				pw.println(row.toString() + EOR);
 			}
 			pw.println(EOF);
 			pw.close();
@@ -151,14 +154,15 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	public static BuzzTable readTable(Reader r) {
 		BufferedReader br = new BufferedReader(r);
 		try {
-			String line = br.readLine();
+			String line = trimBoth(BOH,EOH,br.readLine());
+			
 			BuzzTable tab = new BuzzTable();
-			tab.columns.addAll(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
+			tab.header.addAll(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
 			while((line = br.readLine())!=null){
 				if( !line.trim().equals(EOF) ){
 					@SuppressWarnings("unchecked")
-					List<Object> rawData = (List<Object>)ToStringUtil.TF.op_STRING_TO_OBJ.execute(line);
-					tab.addRow(new BuzzRow(tab.columns, rawData));
+					List<Object> rawData = (List<Object>)ToStringUtil.TF.op_STRING_TO_OBJ.execute(trimEnd(EOR, line));
+					tab.addRow(new BuzzRow(tab.header, rawData));
 				}
 			}
 			br.close();
@@ -168,6 +172,16 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		}
 	}
 	
+	private static String trimBoth(String front, String end, String line) {
+		BeeException.throwIfTrue(!line.startsWith(front)|| !line.endsWith(end), "!line.startsWith(front)|| !line.endsWith(end)");
+		return line.substring(front.length(), line.length()-end.length());
+	}
+	private static String trimEnd( String end, String line) {
+		BeeException.throwIfTrue(!line.endsWith(end), "!line.endsWith(end)");
+		return line.substring(0, line.length()-end.length());
+	}
+	
+
 	public int getRowCount(){
 		return this.rows.size();
 	}
