@@ -31,6 +31,9 @@ import org.beequeue.piles.Lockable;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	private static final String BOH = "{\"header\": ";
 	private static final String EOH = ",\"rows\":[";
@@ -40,9 +43,26 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	public final BuzzHeader header = new BuzzHeader();
 	private final BoundList<BuzzRow> rows = new BoundList<BuzzRow>();
 	
+	public BuzzTable() {
+	}
+
+	@JsonCreator
+	public BuzzTable(@JsonProperty("header") List<BuzzAttribute> header, @JsonProperty("rows") List<List<Object>> rows) {
+		this.header.addAll(header);
+		for (int i = 0; i < rows.size() ; i++) {
+			List<Object> rawData = rows.get(i);
+			if(rawData!=null){
+				addRow(new BuzzRow(this.header, rawData));
+			}
+		}
+	}
+
 	public BuzzRow newRow(){
 		return new BuzzRow(header);
 	}
+
+	
+	
 
 	public void addRow(int at, BuzzRow row){
 		BeeException.throwIfTrue(!header.equals(row.header()), "!header.equals(row.header())");

@@ -80,6 +80,7 @@ public class BuzzAttributeTest {
 		Map<String,List<Object>> map = (Map<String, List<Object>>) ToStringUtil.toObject(copy, Object.class);
 		System.out.println(map.get("header"));
 		System.out.println(map.get("rows"));
+		System.out.println(ToStringUtil.toObject(copy, BuzzTable.class).getRowCount());
 		
 	}
 
