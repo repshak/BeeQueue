@@ -3,11 +3,11 @@
           target: init                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="init">
-		<property name="src" location="src" />
-		<property name="test" location="test" />
+		<property name="src" location="java/src" />
+		<property name="test" location="java/test" />
 		<property name="scripts" location="scripts" />
-		<property name="lib" value="lib" />
-		<property name="web" location="web" />
+		<property name="lib" value="java/lib" />
+		<property name="web" location="js" />
 		<property name="build" location=".build" />
 		<property name="warjar" location="${build}/warjar" />
 		<property name="testreports" location="${build}/testreports" />

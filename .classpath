@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="java/src"/>
+	<classpathentry kind="src" path="java/test"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
-	<classpathentry kind="lib" path="lib/bin/groovy-all-1.8.6.jar"/>
-	<classpathentry kind="lib" path="lib/bin/jackson-core-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-core-jackson-core-2.0.2-68-gfca65f8.zip"/>
-	<classpathentry kind="lib" path="lib/build/jdom-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/build/junit-4.10.jar"/>
-	<classpathentry kind="lib" path="lib/bin/jackson-databind-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-databind-jackson-databind-2.0.4-214-g8d7e140.zip"/>
-	<classpathentry kind="lib" path="lib/bin/jackson-annotations-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-annotations-jackson-annotations-2.0.2-21-g5b6d209.zip"/>
-	<classpathentry kind="lib" path="lib/bin/derbyclient.jar"/>
-	<classpathentry kind="lib" path="lib/sigar-bin/lib/sigar.jar"/>
+	<classpathentry kind="lib" path="java/lib/bin/groovy-all-1.8.6.jar"/>
+	<classpathentry kind="lib" path="java/lib/bin/jackson-core-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-core-jackson-core-2.0.2-68-gfca65f8.zip"/>
+	<classpathentry kind="lib" path="java/lib/build/jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="java/lib/build/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="java/lib/bin/jackson-databind-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-databind-jackson-databind-2.0.4-214-g8d7e140.zip"/>
+	<classpathentry kind="lib" path="java/lib/bin/jackson-annotations-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-annotations-jackson-annotations-2.0.2-21-g5b6d209.zip"/>
+	<classpathentry kind="lib" path="java/lib/bin/derbyclient.jar"/>
+	<classpathentry kind="lib" path="java/lib/sigar-bin/lib/sigar.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/web/jetty-continuation-8.1.5.v20120716.jar"/>
-	<classpathentry kind="lib" path="lib/web/jetty-http-8.1.5.v20120716.jar"/>
-	<classpathentry kind="lib" path="lib/web/jetty-io-8.1.5.v20120716.jar"/>
-	<classpathentry kind="lib" path="lib/web/jetty-server-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
-	<classpathentry kind="lib" path="lib/web/jetty-util-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
-	<classpathentry kind="lib" path="lib/web/servlet-api-3.0.jar"/>
-	<classpathentry kind="lib" path="lib/bin/guava-13.0.1.jar" sourcepath="lib/src/guava-13.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="java/lib/web/jetty-continuation-8.1.5.v20120716.jar"/>
+	<classpathentry kind="lib" path="java/lib/web/jetty-http-8.1.5.v20120716.jar"/>
+	<classpathentry kind="lib" path="java/lib/web/jetty-io-8.1.5.v20120716.jar"/>
+	<classpathentry kind="lib" path="java/lib/web/jetty-server-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
+	<classpathentry kind="lib" path="java/lib/web/jetty-util-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
+	<classpathentry kind="lib" path="java/lib/web/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="java/lib/bin/guava-13.0.1.jar" sourcepath="lib/src/guava-13.0.1-sources.jar"/>
 	<classpathentry kind="output" path=".binn"/>
 </classpath>
