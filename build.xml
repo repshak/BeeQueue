@@ -1,8 +1,14 @@
 <project name="BeeQueue">
+	
+    <!-- import all properties -->
+    <import file="js/lib/buildr/buildr.xml"/>
+	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: init                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="init">
+		<property name="js-src" location="js/src" />
+		<property name="js-test" location="js/test" />
 		<property name="src" location="java/src" />
 		<property name="test" location="java/test" />
 		<property name="scripts" location="scripts" />
@@ -32,7 +38,12 @@
 		</path>
 		<taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="scripts.cp" />
 	</target>
-
+	
+	<target name="js-validate" depends="init">  
+		<jshint>
+			<fileset dir="${js-src}" includes="**/*.js" /> 
+		</jshint>
+	</target>
 	<target name="clean" depends="init" description="Clean up">
 		<delete dir="${build}" />
 		<delete dir="${weblib}" />
