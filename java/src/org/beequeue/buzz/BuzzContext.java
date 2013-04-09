@@ -16,6 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.buzz;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,23 +31,19 @@ public class BuzzContext {
 	HttpServletResponse res;
     BuzzPath resoursePath;
     Map<String, String> params;
-    BuzzPath ancestor ;
-    
+    ContentProvider provider;
 	BuzzHandler handler;
 
-	public BuzzResourceController[] getResourceController() {
-		return handler.rcConfigs.get(this.ancestor).resourceControllers;
-	}
-
 	public BuzzPath relativePath(){
-		return this.resoursePath.subpath(ancestor.size);
+		return this.resoursePath.subpath(1);
 	}
+	
 	public BuzzContext(String target, Request r, HttpServletRequest req, HttpServletResponse res, BuzzHandler handler) {
 		this.target = target;
 		this.resoursePath = BuzzPath.valueOf(target.substring(1));
 		this.handler = handler;
-		this.ancestor = this.resoursePath.findAncestor(handler.rcConfigs.keySet());
 		this.r = r;
+		this.provider = handler.roots.get(resoursePath.elementAt(0));
 		this.req = req;
 		this.res = res;
 	}
@@ -55,5 +52,13 @@ public class BuzzContext {
 		r.setHandled(true);
 		return true;
 	}
+
+	public boolean process() throws IOException {
+		BuzzPath relativePath = relativePath();
+		BuzzContent content = provider.getContent(relativePath);
+		res.setContentType(content.getContentType());
+		RetrievalMethod method = content.getMethod();
+		method.serve(content, this);
+		return setHandled();	}
 
 }

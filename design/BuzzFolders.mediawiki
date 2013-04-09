@@ -1,0 +1,19 @@
+= Generic Use Folders =
+* /a/ - administration ui 
+** host management (joinCloud,setRole,leaveCloud)
+** user management (authDb,setRoles)
+* /d/ - data
+* /f/ - files
+* /j/ - jobs
+* /u/ - personal settings
+= System Folders =
+* /.c/ - classpath
+** static content
+*** .js
+*** .html
+*** .mustache
+* /.h/ - home directory
+** rangestore
+** hashstore
+** giststore
+** timestore

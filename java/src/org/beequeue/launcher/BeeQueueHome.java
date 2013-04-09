@@ -20,9 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 
 import org.beequeue.buzz.BuzzServer;
-import org.beequeue.launcher.JarUnpacker.EntryFilter;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.worker.BeatLogic;
 
 
@@ -74,9 +72,8 @@ public class BeeQueueHome implements VariablesProvider{
 			String webEnv = System.getenv(BQ_WEB);
 			if( webEnv == null || webEnv.trim().length()==0 ){
 				this.buzz.setRoot(new File(home, "web"));
-				JarUnpacker.unpack(BeeQueueHome.class, new EntryFilter() {
-					@Override
-					public boolean include(ZipEntry ze) {
+				JarUtil.unpack(BeeQueueHome.class, new BeeOperation<ZipEntry,Boolean>() {
+					@Override public Boolean execute(ZipEntry ze) {
 						return ze.getName().startsWith("web");
 					}
 				}, home);

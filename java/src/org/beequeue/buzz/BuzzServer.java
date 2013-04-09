@@ -38,6 +38,9 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 
 public class BuzzServer {
+	
+	private static final String ROOT_KEY = "r";
+	
 	private static final String SHUT_DOWN_QUERY = "/SH/U7/d0/w4";
 	public class ShutDownHandler extends AbstractHandler {
 		@Override
@@ -61,7 +64,7 @@ public class BuzzServer {
 	}
 
 	private int port ;
-	private File root;
+	private Map<String, ContentProvider > roots = new LinkedHashMap<String, ContentProvider>();
 	private Server server;
 	
 
@@ -76,12 +79,12 @@ public class BuzzServer {
 
 
 	public File getRoot() {
-		return root;
+		return new File(roots.get(ROOT_KEY).getRoot());
 	}
 
 
 	public void setRoot(File root) {
-		this.root = root;
+		this.roots.put(ROOT_KEY, new FileContentProvider(root)) ;
 	}
 
 
@@ -97,7 +100,7 @@ public class BuzzServer {
 	public void start(){
 		this.server = new Server(port);
 	    HandlerList handlers = new HandlerList();
-	    handlers.setHandlers(new Handler[] { new ShutDownHandler(), new BuzzHandler(root) });
+	    handlers.setHandlers(new Handler[] { new ShutDownHandler(), new BuzzHandler(roots) });
 	    this.server.setHandler(handlers);
 		try {
 			this.server.start();

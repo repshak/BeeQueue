@@ -64,4 +64,20 @@ public class BuzzAttribute implements Comparator<Object>{
 	public Object coerce(Object v) {
 		return type.coerce(v);
 	}
+	
+	/**
+	 * sortcut creator method
+	 * @param name
+	 * @param type
+	 * @param sort
+	 * @return
+	 */
+	public static BuzzAttribute newAttr( String name, BuiltInType type, SortOrder sort){
+		BuzzAttribute a = new BuzzAttribute();
+		a.name = name;
+		a.type = type;
+		a.sortOrder = sort;
+		return a;
+	}
+	
 }
