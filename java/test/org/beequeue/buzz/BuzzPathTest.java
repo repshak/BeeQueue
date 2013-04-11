@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.beequeue.util.BeeException;
 import org.junit.Test;
 
 public class BuzzPathTest {
@@ -103,17 +104,15 @@ public class BuzzPathTest {
 		try{
 			assertSerialization(bp("a", null, "c"));
 			fail();
-		}catch (BuzzException e) {
-			assertEquals(e.statusCode, 500);
+		}catch (BeeException e) {
 			String message = e.getMessage();
-			assertTrue(message.startsWith("StatusCode: 500\npath mailformed: empty elements in the middle") );
+			assertTrue(message.startsWith("path mailformed: empty elements in the middle") );
 		}
 		try{
 			assertSerialization(bp("a", "", "c"));
 			fail();
-		}catch (BuzzException e) {
-			assertEquals(e.statusCode, 500);
-			assertTrue(e.getMessage().startsWith("StatusCode: 500\npath mailformed: empty elements in the middle") );
+		}catch (BeeException e) {
+			assertTrue(e.getMessage().startsWith("path mailformed: empty elements in the middle") );
 		}
 	}
 

@@ -23,7 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.beequeue.util.Throwables;
+import org.beequeue.util.BeeException;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
@@ -39,14 +39,18 @@ final class BuzzHandler extends AbstractHandler {
 	public void handle(String target, Request r, HttpServletRequest req, HttpServletResponse res) 
 	throws IOException, ServletException {
 		BuzzContext ctx = new BuzzContext(target, r, req, res , this); 
+		boolean process;
 		try{
-			if(!ctx.process()){
-				BuzzServer.processError(ctx, HttpServletResponse.SC_NOT_FOUND, "Resource not found", "No applicable resource controller", null, null);
+			process = ctx.process();
+			if(!process){
+				throw new BeeException()
+				.memo(BuzzServer.STATUS_CODE,  HttpServletResponse.SC_NOT_FOUND) ;
 			}
-		}catch (BuzzException e) {
-			BuzzServer.processError(ctx, e.statusCode, e.getMessage(), e.toString(), Throwables.toString(e), null);
 		}catch (Exception e) {
-			BuzzServer.processError(ctx, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Error", e.toString(), Throwables.toString(e), null);
+			BuzzServer.processError(ctx, 
+					BeeException.cast(e)
+					.memo( "target", target)
+					.memo( "roots", roots.keySet()) );
 		}
 	}
 }

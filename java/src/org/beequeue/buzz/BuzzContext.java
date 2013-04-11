@@ -17,36 +17,44 @@
 package org.beequeue.buzz;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.beequeue.util.BeeException;
 import org.eclipse.jetty.server.Request;
 
 public class BuzzContext {
-	String target;
-	Request r; 
-	HttpServletRequest req;
-	HttpServletResponse res;
-    BuzzPath resoursePath;
-    Map<String, String> params;
-    ContentProvider provider;
-	BuzzHandler handler;
+	public final String target;
+	public final Request r; 
+	public final HttpServletRequest req;
+	public final HttpServletResponse res;
+	public final BuzzPath resoursePath;
+	public final ContentProvider provider;
+	public final BuzzHandler handler;
 
 	public BuzzPath relativePath(){
 		return this.resoursePath.subpath(1);
 	}
+
+	public String handlerId() {
+		return resoursePath.size() > 1 ? resoursePath.elementAt(0) : null;
+	}
 	
 	public BuzzContext(String target, Request r, HttpServletRequest req, HttpServletResponse res, BuzzHandler handler) {
-		this.target = target;
-		this.resoursePath = BuzzPath.valueOf(target.substring(1));
-		this.handler = handler;
-		this.r = r;
-		this.provider = handler.roots.get(resoursePath.elementAt(0));
-		this.req = req;
-		this.res = res;
+		try {
+			this.target = target;
+			this.resoursePath = BuzzPath.valueOf(target.substring(1));
+			this.handler = handler;
+			this.r = r;
+			this.req = req;
+			this.res = res;
+			this.provider = handler.roots.get(handlerId());
+		} catch (Exception e) {
+			throw BeeException.cast(e).memo("target", target);
+		}
 	}
+
 
 	public boolean setHandled() {
 		r.setHandled(true);
@@ -54,11 +62,13 @@ public class BuzzContext {
 	}
 
 	public boolean process() throws IOException {
+		if(provider == null) return false;
 		BuzzPath relativePath = relativePath();
 		BuzzContent content = provider.getContent(relativePath);
 		res.setContentType(content.getContentType());
 		RetrievalMethod method = content.getMethod();
 		method.serve(content, this);
-		return setHandled();	}
+		return setHandled();	
+	}
 
 }

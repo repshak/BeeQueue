@@ -20,10 +20,19 @@
  */
 package org.beequeue.util;
 
-
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BeeException extends RuntimeException {
 	private static final long serialVersionUID = -1;
+	
+	/**
+	 * @param message
+	 */
+	public BeeException() {
+		super();
+	}
 	/**
 	 * @param message
 	 */
@@ -53,35 +62,55 @@ public class BeeException extends RuntimeException {
 	
 	private StringBuilder extraMemos = null;
 	
-	
+	private Map<String, Object> memoValues = new LinkedHashMap<String, Object>();
 	public BeeException memo( String memo, Object ... payload){
 		if(this.extraMemos==null){
-			this.extraMemos = new StringBuilder();
+			this.extraMemos = new StringBuilder(super.getMessage());
 		}	
-		extraMemos.append("\n");
-		extraMemos.append(Throwables.findPreviousStack(BeeException.class));
-		extraMemos.append(memo);
+		Object v = null;
 		if(payload!=null && payload.length > 0){
+			v = payload.length == 1 ? payload[0]: payload;
+		}
+		String location = Throwables.findPreviousStack(BeeException.class);
+		memoValues.put(memo, v);
+		extraMemos.append("\n");
+		extraMemos.append(location);
+		extraMemos.append(memo);
+		if(v!=null){
 			extraMemos.append(": ");
-			Object v = payload.length == 1 ? payload[0]: payload;
 			extraMemos.append(ToStringUtil.toNotPrettyString(v));
 		}
-			
 		return this;
+	}
+	
+	
+	
+	public Map<String, Object> getMemoValues() {
+		return Collections.unmodifiableMap(memoValues);
 	}
 	
 	@Override
 	public String getMessage() {
-		if(extraMemos!=null ){
-			return super.getMessage() + extraMemos.toString();
+		if(this.extraMemos!=null ){
+			return this.extraMemos.toString();
 		}
 		return super.getMessage();
 	}
 	
-	public static void throwIfTrue(boolean condition, String message){
+	public static void throwIfTrue(boolean condition, String... messages){
 		if(condition) {
-			throw new BeeException(message);
+			throw new BeeException(Strings.join(" ", messages));
 		}
+	}
+	
+	public static <T> T throwIfNull(T notNull, String... messages){
+		if(notNull == null) {
+			BeeException e = messages.length > 0 ? 
+				new BeeException(Strings.join(" ", messages)):  
+				new BeeException("expected to be not null");
+			throw e ;
+		}
+		return notNull;
 	}
 
 

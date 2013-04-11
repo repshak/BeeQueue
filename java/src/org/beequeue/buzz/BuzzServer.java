@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.DevNullStream;
 import org.beequeue.util.Streams;
+import org.beequeue.util.Throwables;
 import org.beequeue.util.ToStringUtil;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
@@ -39,6 +40,9 @@ import org.eclipse.jetty.server.handler.HandlerList;
 
 public class BuzzServer {
 	
+	public static final String STATUS_MESSAGE = "StatusMessage";
+	public static final String STATUS_CODE = "StatusCode";
+
 	private static final String ROOT_KEY = "r";
 	
 	private static final String SHUT_DOWN_QUERY = "/SH/U7/d0/w4";
@@ -113,18 +117,27 @@ public class BuzzServer {
 
 
 
-  public static void processError(BuzzContext ctx, int statusCode, String statusMessage,
-		String message, String details, String moreInfo) throws IOException {
+  public static void processError(BuzzContext ctx, BeeException e) 
+		  throws IOException {
+	int statusCode;
+	String statMessage = null;
+	try {
+		Map<String, Object> vals = e.getMemoValues();
+		statusCode = ((Number)vals.get(STATUS_CODE)).intValue();
+		statMessage = (String)vals.get(STATUS_MESSAGE);
+	} catch (Exception e1) {
+		statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR ;
+	}
+
 	Map<String,Object> object = new LinkedHashMap<String, Object>();
 	object.put("status", statusCode );
-	object.put("statusMessage", statusMessage );
-	object.put("message", message );
-	object.put("details", details );
-	object.put("moreInfo", moreInfo );
+	object.put("statusMessage", statMessage );
+	object.put("stack", Throwables.toString(e) );
+	
 	ctx.res.setStatus(statusCode);
 	ctx.res.setContentType("text/plain");
 	ctx.res.getOutputStream().print(ToStringUtil.toString(object));
-	ctx.r.setHandled(true);
+	ctx.setHandled();
   }
 
 }

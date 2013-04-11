@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.beequeue.util.BeeException;
 import org.beequeue.util.Nulls;
 import org.beequeue.util.Strings;
 
@@ -103,7 +104,7 @@ public class BuzzPath implements Comparable<BuzzPath> {
 		for (; i < this.pathElements.length; i++) {
 			String element = pathElements[i-copy.size+start];
 			if(Strings.isEmpty(element)) 
-					throw new BuzzException(500, "path mailformed: empty elements in the middle")
+					throw new BeeException("path mailformed: empty elements in the middle")
 					.memo("pathElements",(Object)pathElements);
 			this.pathElements[i] = element;
 		}	
@@ -181,7 +182,7 @@ public class BuzzPath implements Comparable<BuzzPath> {
 		if(begin >= 0  && begin <= end ){
 			return new BuzzPath(this.pathElements, this.begin + begin, this.begin + end);
 		}else{
-			throw new BuzzException(500, "Cannot subpath")
+			throw new BeeException( "Cannot subpath")
 			.memo("path",toString())
 			.memo("end",begin)
 			.memo("end",end);

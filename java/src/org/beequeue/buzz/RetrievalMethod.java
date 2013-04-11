@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.beequeue.util.Streams;
 
 public enum RetrievalMethod { 
-	STREAM{
+	STREAM {
 		@Override
 		public void serve(BuzzContent content, BuzzContext ctx) throws IOException {
 			Streams.copyAndClose(content.getStream(), ctx.res.getOutputStream());
@@ -24,7 +24,6 @@ public enum RetrievalMethod {
 		public void serve(BuzzContent content, BuzzContext ctx) throws IOException {
 			content.getBuzzTable().writeTable(ctx.res.getWriter());
 		}
-		
 	};
 	
 	abstract public void serve(BuzzContent content, BuzzContext ctx) throws IOException;
