@@ -38,7 +38,7 @@ public class BuzzContext {
 	}
 
 	public String handlerId() {
-		return resoursePath.size() > 1 ? resoursePath.elementAt(0) : null;
+		return resoursePath.size() >= 1 ? resoursePath.elementAt(0) : null;
 	}
 	
 	public BuzzContext(String target, Request r, HttpServletRequest req, HttpServletResponse res, BuzzHandler handler) {
@@ -49,7 +49,8 @@ public class BuzzContext {
 			this.r = r;
 			this.req = req;
 			this.res = res;
-			this.provider = handler.roots.get(handlerId());
+			String handlerId = handlerId();
+			this.provider = handler.roots.get(handlerId);
 		} catch (Exception e) {
 			throw BeeException.cast(e).memo("target", target);
 		}

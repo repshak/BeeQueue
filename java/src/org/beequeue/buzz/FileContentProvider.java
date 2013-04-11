@@ -101,6 +101,7 @@ public class FileContentProvider extends ContentProvider {
 		toRow.set(SIZE, fromFile.length());
 		toRow.set(MODIFIED, new Date(fromFile.lastModified()));
 		toRow.set(TYPE, FileType.typeOf(fromFile));
+		toRow.addToTargetTable();
 	}
 
 

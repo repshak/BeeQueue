@@ -58,7 +58,9 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	}
 
 	public BuzzRow newRow(){
-		return new BuzzRow(header);
+		BuzzRow buzzRow = new BuzzRow(header);
+		buzzRow.setTargetTable(this);
+		return buzzRow;
 	}
 
 	

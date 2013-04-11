@@ -90,4 +90,14 @@ public class BuzzRow implements Lockable{
 		this.updatesAllowed = false;
 	}
 	
+	private BuzzTable targetTable = null;
+	public void setTargetTable(BuzzTable buzzTable) {
+		BeeException.throwIfTrue(!isUpdatesAllowed(), "!isUpdatesAllowed()");
+		this.targetTable = buzzTable;
+	}
+	
+	public void addToTargetTable(){
+		targetTable.addRow(this);
+	}
+	
 }
