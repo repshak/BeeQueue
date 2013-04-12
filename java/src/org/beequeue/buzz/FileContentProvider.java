@@ -2,8 +2,12 @@ package org.beequeue.buzz;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.beequeue.json.BuiltInType;
 import org.beequeue.json.BuzzAttribute;
@@ -63,8 +67,12 @@ public class FileContentProvider extends ContentProvider {
 					}
 					return new FileInputStream(file);
 				} catch (Exception e) {
-					throw BeeException.cast(e)
+					BeeException be = BeeException.cast(e)
 					.memo("file", file);
+					if(e instanceof FileNotFoundException){
+						BuzzServer.setStatusCode(be, HttpServletResponse.SC_NOT_FOUND);
+					}
+					throw be;
 				}
 			}
 
@@ -85,8 +93,12 @@ public class FileContentProvider extends ContentProvider {
 					}
 					return table;
 				} catch (Exception e) {
-					throw BeeException.cast(e)
+					BeeException be = BeeException.cast(e)
 					.memo("file", file);
+					if(e instanceof FileNotFoundException){
+						BuzzServer.setStatusCode(be, HttpServletResponse.SC_NOT_FOUND);
+					}
+					throw be;
 				}
 			}
 

@@ -117,27 +117,31 @@ public class BuzzServer {
 
 
 
-  public static void processError(BuzzContext ctx, BeeException e) 
-		  throws IOException {
-	int statusCode;
-	String statMessage = null;
-	try {
-		Map<String, Object> vals = e.getMemoValues();
-		statusCode = ((Number)vals.get(STATUS_CODE)).intValue();
-		statMessage = (String)vals.get(STATUS_MESSAGE);
-	} catch (Exception e1) {
-		statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR ;
+	public static void processError(BuzzContext ctx, BeeException e)
+			throws IOException {
+		int statusCode;
+		String statMessage = null;
+		try {
+			Map<String, Object> vals = e.getMemoValues();
+			statusCode = ((Number) vals.get(STATUS_CODE)).intValue();
+			statMessage = (String) vals.get(STATUS_MESSAGE);
+		} catch (Exception e1) {
+			statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		}
+
+		Map<String, Object> object = new LinkedHashMap<String, Object>();
+		object.put("status", statusCode);
+		object.put("statusMessage", statMessage);
+		object.put("stack", Throwables.toString(e));
+
+		ctx.res.setStatus(statusCode);
+		ctx.res.setContentType("text/plain");
+		ctx.res.getOutputStream().print(ToStringUtil.toString(object));
+		ctx.setHandled();
 	}
 
-	Map<String,Object> object = new LinkedHashMap<String, Object>();
-	object.put("status", statusCode );
-	object.put("statusMessage", statMessage );
-	object.put("stack", Throwables.toString(e) );
-	
-	ctx.res.setStatus(statusCode);
-	ctx.res.setContentType("text/plain");
-	ctx.res.getOutputStream().print(ToStringUtil.toString(object));
-	ctx.setHandled();
-  }
+	public static void setStatusCode(BeeException be, int statusCode) {
+		be.memo(BuzzServer.STATUS_CODE, statusCode);
+	}
 
 }
