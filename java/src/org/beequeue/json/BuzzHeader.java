@@ -25,7 +25,7 @@ public class BuzzHeader  {
 
 	public final class BuzzColumns extends MapList<String, BuzzAttribute> {
 		private static final long serialVersionUID = 1L;
-		private BuzzColumns() {
+		public BuzzColumns() {
 			super(BuzzAttribute.op_GET_NAME);
 		}
 		@Override
