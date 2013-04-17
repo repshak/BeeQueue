@@ -19,7 +19,6 @@ package org.beequeue.piles;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.beequeue.json.BuzzRow;
 import org.beequeue.util.BeeException;
 
 public class BoundList<T> extends ArrayList<T> implements Lockable{

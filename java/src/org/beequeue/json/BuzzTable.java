@@ -38,7 +38,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	private static final String BEGINING_OF_THE_HEADER = "{\"header\": ";
 	private static final String END_OF_THE_HEADER = ",\"rows\":[";
 	private static final String END_OF_ROW = ",";
-	private static final String END_OF_LAST_ROW = "}";
+	private static final String END_OF_LAST_ROW = "]}";
 	
 	public final BuzzHeader header = new BuzzHeader();
 	private final BoundList<BuzzRow> rows = new BoundList<BuzzRow>();
@@ -47,8 +47,8 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	}
 
 	@JsonCreator
-	public BuzzTable(@JsonProperty("header") List<BuzzAttribute> header, @JsonProperty("rows") List<List<Object>> rows) {
-		this.header.columns.addAll(header);
+	public BuzzTable(@JsonProperty("header") BuzzHeader header, @JsonProperty("rows") List<List<Object>> rows) {
+		this.header.columns.addAll(header.columns);
 		for (int i = 0; i < rows.size() ; i++) {
 			List<Object> rawData = rows.get(i);
 			if(rawData!=null){
@@ -180,7 +180,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		try {
 			String line = trimBoth(BEGINING_OF_THE_HEADER,END_OF_THE_HEADER,br.readLine());
 			BuzzTable tab = new BuzzTable();
-			tab.header.copy(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
+			tab.header.setHeader(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
 			while((line = br.readLine())!=null){
 				String trimedLine = line.trim();
 				if( trimedLine.endsWith(END_OF_ROW) ){
