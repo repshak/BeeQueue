@@ -23,7 +23,7 @@ import org.beequeue.util.BeeException;
 import org.beequeue.util.ToStringUtil;
 
 public class BuzzRow implements Lockable{
-	private final BuzzHeader columns;
+	private final BuzzHeader header;
 	private final Object[] data ;
 	private BuzzRow previousVersion;
 
@@ -31,9 +31,9 @@ public class BuzzRow implements Lockable{
 		return previousVersion;
 	}
 
-	public BuzzRow(BuzzHeader columns) {
-		this.columns = columns;
-		this.data = new Object[columns.size()];
+	public BuzzRow(BuzzHeader header) {
+		this.header = header;
+		this.data = new Object[header.columns.size()];
 	}
 	
 	public BuzzRow(BuzzHeader columns, List<Object> rawData) {
@@ -50,12 +50,12 @@ public class BuzzRow implements Lockable{
 
 	
 	public Object get(String name) {
-		return get(columns.colIndex(name));
+		return get(header.colIndex(name));
 	}
 
 
 	public void set(String name, Object v) {
-		set(columns.colIndex(name), v);
+		set(header.colIndex(name), v);
 	}
 
 	public Object get(int idx) {
@@ -64,7 +64,7 @@ public class BuzzRow implements Lockable{
 
 	public void set(int idx, Object v) {
 		BeeException.throwIfTrue(!isUpdatesAllowed(), "!isUpdatesAllowed()");
-		data[idx] = columns.get(idx).coerce(v);
+		data[idx] = header.columns.get(idx).coerce(v);
 	}
 
 
@@ -74,7 +74,7 @@ public class BuzzRow implements Lockable{
 
 
 	public BuzzHeader header() {
-		return columns;
+		return header;
 	}
 
 

@@ -20,16 +20,21 @@ import org.beequeue.piles.MapList;
 import org.beequeue.util.BeeException;
 import org.beequeue.util.TypeFactory;
 
-public class BuzzHeader extends MapList<String, BuzzAttribute> {
-	private static final long serialVersionUID = 1L;
+public class BuzzHeader  {
 	public static TypeFactory<BuzzHeader> TF = new TypeFactory<BuzzHeader>(BuzzHeader.class) ;
 	
-	public BuzzHeader() {
-		super(BuzzAttribute.op_GET_NAME);
-	}
+	public MapList<String, BuzzAttribute> columns = new MapList<String, BuzzAttribute>(BuzzAttribute.op_GET_NAME){
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void refresh() {
+			stringRepresentation = null;
+			super.refresh();
+		}
+	};
+	
 
 	public int colIndex(String name) {
-		Integer idx = indexMap().get(name);
+		Integer idx = columns.indexMap().get(name);
 		BeeException.throwIfTrue(idx==null, "idx==null when name:"+name );
 		return idx;
 	}
@@ -60,11 +65,11 @@ public class BuzzHeader extends MapList<String, BuzzAttribute> {
 		return s;
 	}
 
-	@Override
-	public void refresh() {
-		this.stringRepresentation = null;
-		super.refresh();
+	public void copy(BuzzHeader execute) {
+		this.columns.addAll(execute.columns);
+		
 	}
+
 	
 	
 

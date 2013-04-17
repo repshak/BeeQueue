@@ -35,11 +35,11 @@ public class BuzzAttributeTest {
 	@Test
 	public void test() {
 		BuzzTable buzzTable = new BuzzTable();
-		buzzTable.header.add(BuzzAttribute.newAttr( "I1", BuiltInType.INTEGER, SortOrder.DESCENDING ));
-		buzzTable.header.add(BuzzAttribute.newAttr( "S2", BuiltInType.STRING, SortOrder.ASCENDING ));
-		buzzTable.header.add(BuzzAttribute.newAttr( "D3", BuiltInType.DATE, SortOrder.DESCENDING ));
-		buzzTable.header.add(BuzzAttribute.newAttr( "F4", BuiltInType.FLOAT, null ));
-		buzzTable.header.add(BuzzAttribute.newAttr( "F5", BuiltInType.FLOAT, null ));
+		buzzTable.header.columns.add(BuzzAttribute.newAttr( "I1", BuiltInType.INTEGER, SortOrder.DESCENDING ));
+		buzzTable.header.columns.add(BuzzAttribute.newAttr( "S2", BuiltInType.STRING, SortOrder.ASCENDING ));
+		buzzTable.header.columns.add(BuzzAttribute.newAttr( "D3", BuiltInType.DATE, SortOrder.DESCENDING ));
+		buzzTable.header.columns.add(BuzzAttribute.newAttr( "F4", BuiltInType.FLOAT, null ));
+		buzzTable.header.columns.add(BuzzAttribute.newAttr( "F5", BuiltInType.FLOAT, null ));
 		BuzzRow row = buzzTable.newRow();
 		row.set("I1", "5");
 		assertEquals(row.get("I1"), new Long(5));
@@ -47,7 +47,7 @@ public class BuzzAttributeTest {
 		assertEquals(row.get("S2"), "34");
 		buzzTable.addRow(row);
 		try{
-			buzzTable.header.add(BuzzAttribute.newAttr( "F6", BuiltInType.FLOAT, null ));
+			buzzTable.header.columns.add(BuzzAttribute.newAttr( "F6", BuiltInType.FLOAT, null ));
 			fail("BeeException !updatesAllowed expected");
 		}catch (BeeException e) {
 			assertEquals(e.getMessage(), "!updatesAllowed");

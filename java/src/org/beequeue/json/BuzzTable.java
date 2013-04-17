@@ -35,10 +35,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BuzzTable implements Iterable<BuzzRow>, Lockable{
-	private static final String BOH = "{\"header\": ";
-	private static final String EOH = ",\"rows\":[";
-	private static final String EOR = ",";
-	private static final String EOF = "null]}";
+	private static final String BEGINING_OF_THE_HEADER = "{\"header\": ";
+	private static final String END_OF_THE_HEADER = ",\"rows\":[";
+	private static final String END_OF_ROW = ",";
+	private static final String END_OF_LAST_ROW = "}";
 	
 	public final BuzzHeader header = new BuzzHeader();
 	private final BoundList<BuzzRow> rows = new BoundList<BuzzRow>();
@@ -48,7 +48,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 
 	@JsonCreator
 	public BuzzTable(@JsonProperty("header") List<BuzzAttribute> header, @JsonProperty("rows") List<List<Object>> rows) {
-		this.header.addAll(header);
+		this.header.columns.addAll(header);
 		for (int i = 0; i < rows.size() ; i++) {
 			List<Object> rawData = rows.get(i);
 			if(rawData!=null){
@@ -68,7 +68,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 
 	public void addRow(int at, BuzzRow row){
 		BeeException.throwIfTrue(!header.equals(row.header()), "!header.equals(row.header())");
-		if(header.isUpdatesAllowed()) header.preventUpdates();
+		if(header.columns.isUpdatesAllowed()) header.columns.preventUpdates();
 		row.preventUpdates();
 		rows.add(at, row);
 	}
@@ -105,7 +105,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 
 	@Override
 	public void preventUpdates() {
-		header.preventUpdates();
+		header.columns.preventUpdates();
 		rows.preventUpdates();
 	}
 
@@ -129,8 +129,8 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	private class RowComparator implements Comparator<BuzzRow>{
 		@Override
 		public int compare(BuzzRow a, BuzzRow b) {
-			for (int i = 0; i < header.size() ; i++) {
-				BuzzAttribute attr = header.get(i);
+			for (int i = 0; i < header.columns.size() ; i++) {
+				BuzzAttribute attr = header.columns.get(i);
 				int r = attr.compare(a.get(i), b.get(i));
 				if(r != 0){
 					return r;
@@ -163,11 +163,13 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	public void writeTable(Writer w) {
 		PrintWriter pw = new PrintWriter(w);
 		try {
-			pw.println(BOH + header() + EOH);
-			for (BuzzRow row : this) {
-				pw.println(row.toString() + EOR);
+			pw.println(BEGINING_OF_THE_HEADER + header() + END_OF_THE_HEADER);
+			for (int i = 0; i < rows.size(); i++) {
+				boolean lastRow = i+1==rows.size();
+				String rowDelimiter = lastRow ? END_OF_LAST_ROW : END_OF_ROW;
+				pw.println(rows.get(i).toString() +  rowDelimiter);
+				
 			}
-			pw.println(EOF);
 			pw.close();
 		} catch (Exception e) {
 			throw BeeException.cast(e);
@@ -176,16 +178,21 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 	public static BuzzTable readTable(Reader r) {
 		BufferedReader br = new BufferedReader(r);
 		try {
-			String line = trimBoth(BOH,EOH,br.readLine());
-			
+			String line = trimBoth(BEGINING_OF_THE_HEADER,END_OF_THE_HEADER,br.readLine());
 			BuzzTable tab = new BuzzTable();
-			tab.header.addAll(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
+			tab.header.copy(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
 			while((line = br.readLine())!=null){
-				if( !line.trim().equals(EOF) ){
-					@SuppressWarnings("unchecked")
-					List<Object> rawData = (List<Object>)ToStringUtil.TF.op_STRING_TO_OBJ.execute(trimEnd(EOR, line));
-					tab.addRow(new BuzzRow(tab.header, rawData));
+				String trimedLine = line.trim();
+				if( trimedLine.endsWith(END_OF_ROW) ){
+					trimedLine = trimEnd(END_OF_ROW, trimedLine);
+				}else if( trimedLine.endsWith(END_OF_LAST_ROW) ){
+					trimedLine = trimEnd(END_OF_LAST_ROW, trimedLine);
+				}else{
+					throw new BeeException("unxpected ending of the line").memo("line", trimedLine);
 				}
+				@SuppressWarnings("unchecked")
+				List<Object> rawData = (List<Object>)ToStringUtil.TF.op_STRING_TO_OBJ.execute(trimedLine);
+				tab.addRow(new BuzzRow(tab.header, rawData));
 			}
 			br.close();
 			return tab;
