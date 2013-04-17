@@ -18,19 +18,26 @@ package org.beequeue.json;
 
 import org.beequeue.piles.MapList;
 import org.beequeue.util.BeeException;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.TypeFactory;
 
 public class BuzzHeader  {
-	public static TypeFactory<BuzzHeader> TF = new TypeFactory<BuzzHeader>(BuzzHeader.class) ;
-	
-	public MapList<String, BuzzAttribute> columns = new MapList<String, BuzzAttribute>(BuzzAttribute.op_GET_NAME){
+
+	public final class BuzzColumns extends MapList<String, BuzzAttribute> {
 		private static final long serialVersionUID = 1L;
+		private BuzzColumns() {
+			super(BuzzAttribute.op_GET_NAME);
+		}
 		@Override
 		public void refresh() {
 			stringRepresentation = null;
 			super.refresh();
 		}
-	};
+	}
+
+	public BuzzColumns columns = new BuzzColumns();
+	public static TypeFactory<BuzzHeader> TF = new TypeFactory<BuzzHeader>(BuzzHeader.class) ;
+	
 	
 
 	public int colIndex(String name) {
