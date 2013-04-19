@@ -33,19 +33,18 @@ public class BuzzSchema {
 	public BuzzAttribute object;
 	
 	private MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(BuzzClass.op_GET_NAME);
-
 	public List<BuzzClass> getTypes() {
 		return types;
 	}
 	
-	@JsonIgnore
-	public Map<String, BuzzClass> getTypesMap() {
-		return types.map();
-	}
-
 	public void setTypes(List<BuzzClass> types) {
 		this.types.clear();
 		this.types.addAll(types);
+	}
+
+	@JsonIgnore
+	public Map<String, BuzzClass> getTypesMap() {
+		return types.map();
 	}
 	
 }

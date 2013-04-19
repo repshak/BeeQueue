@@ -155,10 +155,11 @@ public enum BuiltInType implements Comparator<Object> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object coerce(Object v) {
-		BeeException.throwIfTrue(!isPrimitive(), "!isPrimitive()");
 		Object r;
 		if(v == null){
 			r = null;
+		}else if(!isPrimitive()){
+			r = v ;
 		}else{
 			Class boxClass = getBoxClass();
 			boolean alreadyAssignable = boxClass.isAssignableFrom(v.getClass());

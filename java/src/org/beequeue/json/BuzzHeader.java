@@ -84,9 +84,10 @@ public class BuzzHeader  implements Lockable{
 		return attribute;
 	}
 
-	public void resetHeader(BuzzHeader that) {
+	public void reset(BuzzHeader that) {
 		this.columns.clear();
 		this.columns.addAll(that.columns);
+		this.schema = that.schema ;
 	}
 
 	@Override
