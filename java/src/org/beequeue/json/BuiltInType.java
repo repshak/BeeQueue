@@ -185,6 +185,4 @@ public enum BuiltInType implements Comparator<Object> {
 		.memo("v", v);
 	}
 	
-	
-	
 }

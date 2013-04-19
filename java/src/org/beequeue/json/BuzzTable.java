@@ -68,7 +68,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 
 	public void addRow(int at, BuzzRow row){
 		BeeException.throwIfTrue(!header.equals(row.header()), "!header.equals(row.header())");
-		if(header.columns.isUpdatesAllowed()) header.columns.preventUpdates();
+		if(header.isUpdatesAllowed()) header.preventUpdates();
 		row.preventUpdates();
 		rows.add(at, row);
 	}
@@ -180,7 +180,7 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		try {
 			String line = trimBoth(BEGINING_OF_THE_HEADER,END_OF_THE_HEADER,br.readLine());
 			BuzzTable tab = new BuzzTable();
-			tab.header.setHeader(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
+			tab.header.resetHeader(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
 			while((line = br.readLine())!=null){
 				String trimedLine = line.trim();
 				if( trimedLine.endsWith(END_OF_ROW) ){

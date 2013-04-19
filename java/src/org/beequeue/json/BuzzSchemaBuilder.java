@@ -32,7 +32,14 @@ import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 
 public class BuzzSchemaBuilder {
 	
-	public BuzzSchema schema = new BuzzSchema();
+	public BuzzSchemaBuilder(BuzzSchema schema) {
+		this.schema = schema == null ? new BuzzSchema() : schema;
+	}
+	public BuzzSchemaBuilder() {
+		this.schema  = new BuzzSchema();
+	}
+
+	public BuzzSchema schema;
 	
 	public BuzzAttribute add(Class<?> cls) {
 		return this.recurseSchema(ToStringUtil.MAPPER.getTypeFactory().constructType(cls));

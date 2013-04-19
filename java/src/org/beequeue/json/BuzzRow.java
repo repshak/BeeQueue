@@ -50,12 +50,12 @@ public class BuzzRow implements Lockable{
 
 	
 	public Object get(String name) {
-		return get(header.colIndex(name));
+		return get(header.columns.colIndex(name));
 	}
 
 
 	public void set(String name, Object v) {
-		set(header.colIndex(name), v);
+		set(header.columns.colIndex(name), v);
 	}
 
 	public Object get(int idx) {
