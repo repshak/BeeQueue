@@ -16,8 +16,12 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import java.util.List;
+import java.util.Map;
+
 import org.beequeue.piles.MapList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -28,6 +32,20 @@ public class BuzzSchema {
 	@JsonInclude (Include.NON_NULL)
 	public BuzzAttribute object;
 	
+	private MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(BuzzClass.op_GET_NAME);
 
-	public MapList<String,BuzzClass> types = new MapList<String,BuzzClass>(BuzzClass.op_GET_NAME);
+	public List<BuzzClass> getTypes() {
+		return types;
+	}
+	
+	@JsonIgnore
+	public Map<String, BuzzClass> getTypesMap() {
+		return types.map();
+	}
+
+	public void setTypes(List<BuzzClass> types) {
+		this.types.clear();
+		this.types.addAll(types);
+	}
+	
 }

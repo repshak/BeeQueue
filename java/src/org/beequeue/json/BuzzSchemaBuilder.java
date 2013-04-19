@@ -56,11 +56,11 @@ public class BuzzSchemaBuilder {
 		    if(type.type == BuiltInType.ENUM ){
 				Class<?> rawClass = jt.getRawClass();
 				type.className = rawClass.getName() ;
-				BuzzClass classDef = schema.types.map().get(type.className);
+				BuzzClass classDef = schema.getTypesMap().get(type.className);
 				if(classDef==null){
 					classDef = new BuzzClass();
 					classDef.className = type.className ;
-					this.schema.types.add(classDef);
+					this.schema.getTypes().add(classDef);
 					buildEnumClassDef(type, classDef, rawClass);
 				}
 		    }
@@ -76,11 +76,11 @@ public class BuzzSchemaBuilder {
 					type = recurseSchema(valueJavaType);
 				}else{
 					type.className = jt.toCanonical() ;
-					BuzzClass classDef = this.schema.types.map().get(type.className);
+					BuzzClass classDef = this.schema.getTypesMap().get(type.className);
 					if(classDef==null){
 						classDef = new BuzzClass();
 						classDef.className = type.className ;
-						this.schema.types.add(classDef);
+						this.schema.getTypes().add(classDef);
 						buildObjectClassDef(type, classDef, beanDescriptor);
 					}
 				}

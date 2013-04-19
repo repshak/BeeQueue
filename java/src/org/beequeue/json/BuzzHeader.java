@@ -42,7 +42,7 @@ public class BuzzHeader  implements Lockable{
 				attribute.className = className;
 				attribute.contentType = contentType;
 				attribute.type = type;
-				if(className!=null && (schema == null || !schema.types.map().containsKey(className)) ){
+				if(className!=null && (schema == null || !schema.getTypesMap().containsKey(className)) ){
 					try {
 						Class<?> forName = Class.forName(className);
 						bsb.add(forName);
@@ -79,7 +79,7 @@ public class BuzzHeader  implements Lockable{
 		columns.add(attribute);
 		BeeException.throwIfTrue(bsb==null, "bsb==null");
 		if( bsb.schema != this.schema){
-			this.schema = bsb.schema.types.size() == 0 ? null : bsb.schema;
+			this.schema = bsb.schema.getTypes().size() == 0 ? null : bsb.schema;
 		}
 		return attribute;
 	}

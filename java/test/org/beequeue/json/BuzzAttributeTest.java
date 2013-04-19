@@ -21,6 +21,7 @@ import static org.junit.Assert.fail;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,11 +36,11 @@ public class BuzzAttributeTest {
 	@Test
 	public void test() {
 		BuzzTable buzzTable = new BuzzTable();
-		buzzTable.header.columns.add(BuzzAttribute.newAttr( "I1", BuiltInType.INTEGER, SortOrder.DESCENDING ));
-		buzzTable.header.columns.add(BuzzAttribute.newAttr( "S2", BuiltInType.STRING, SortOrder.ASCENDING ));
-		buzzTable.header.columns.add(BuzzAttribute.newAttr( "D3", BuiltInType.DATE, SortOrder.DESCENDING ));
-		buzzTable.header.columns.add(BuzzAttribute.newAttr( "F4", BuiltInType.FLOAT, null ));
-		buzzTable.header.columns.add(BuzzAttribute.newAttr( "F5", BuiltInType.FLOAT, null ));
+		buzzTable.header.addAttribute("I1", SortOrder.DESCENDING, BuiltInType.INTEGER, null, null );
+		buzzTable.header.addAttribute( "S2", SortOrder.ASCENDING, BuiltInType.STRING, null, null);
+		buzzTable.header.addAttribute("D3", SortOrder.DESCENDING, BuiltInType.DATE,  null, null);
+		buzzTable.header.addAttribute( "F4", null, BuiltInType.FLOAT, null, null );
+		buzzTable.header.addAttribute( "F5", null, BuiltInType.FLOAT, null, null );
 		BuzzRow row = buzzTable.newRow();
 		row.set("I1", "5");
 		assertEquals(row.get("I1"), new Long(5));
@@ -84,4 +85,66 @@ public class BuzzAttributeTest {
 		
 	}
 
+	public static enum Abc {
+		a, b, c
+	}
+	
+	public static class Ooo6 {
+		public Map<String,Abc> map;
+		public String name;
+		public double weight;
+	}
+	@Test
+	public void testWithSchema() {
+		BuzzTable buzzTable = new BuzzTable();
+		buzzTable.header.addAttribute("I1", SortOrder.DESCENDING, Integer.class );
+		buzzTable.header.addAttribute( "S2", SortOrder.ASCENDING, String.class);
+		buzzTable.header.addAttribute("D3", SortOrder.DESCENDING, Date.class);
+		buzzTable.header.addAttribute( "F4", null, Float.class );
+		buzzTable.header.addAttribute( "F5", null, Float.class );
+		buzzTable.header.addAttribute( "E6", null, Abc.class );
+		buzzTable.header.addAttribute( "O6", null, Ooo6.class );
+		BuzzRow row = buzzTable.newRow();
+		row.set("I1", "5");
+		assertEquals(row.get("I1"), new Long(5));
+		row.set("S2", 34);
+		assertEquals(row.get("S2"), "34");
+		buzzTable.addRow(row);
+		try{
+			buzzTable.header.columns.add(BuzzAttribute.newAttr( "F6", BuiltInType.FLOAT, null ));
+			fail("BeeException !updatesAllowed expected");
+		}catch (BeeException e) {
+			assertEquals(e.getMessage(), "!updatesAllowed");
+		}
+		row = buzzTable.newRow();
+		row.set("I1", 7);
+		row.set("S2", "33");
+		buzzTable.addRow(row);
+		row = buzzTable.newRow();
+		row.set("I1", 5);
+		row.set("S2", "33");
+		buzzTable.addRow(row);
+		row = buzzTable.newRow();
+		row.set("I1", 5);
+		row.set("S2", "33");
+		row.set("D3", "2013-03-08T20:11:11.012+01:30");
+		buzzTable.addRow(row);
+		//todo tostring
+		System.out.println(buzzTable.toString());
+		buzzTable.sort();
+		StringWriter w = new StringWriter();
+		buzzTable.writeTable(w);
+		String orig = w.toString();
+		System.out.println(orig);
+		StringReader r = new StringReader(orig);
+		BuzzTable readTable = BuzzTable.readTable(r);
+		String copy = readTable.toString();
+		System.out.println(copy);
+		Assert.assertEquals(orig, copy);
+		Map<String,List<Object>> map = (Map<String, List<Object>>) ToStringUtil.toObject(copy, Object.class);
+		System.out.println(map.get("header"));
+		System.out.println(map.get("rows"));
+		System.out.println(ToStringUtil.toObject(copy, BuzzTable.class).getRowCount());
+		
+	}
 }

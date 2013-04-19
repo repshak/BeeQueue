@@ -16,60 +16,22 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.piles;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.beequeue.util.BeeOperation;
 
-public class MapList<K,V> extends BoundList<V> {
+public class MapList<K,V> extends AbstractMapList<K,V> {
 
 	private static final long serialVersionUID = 1L;
 	
 	private BeeOperation<? super V,? extends K> extractKey ;
 	
 	public MapList(BeeOperation<? super V,? extends K> extractKey){
-		super();
 		this.extractKey = extractKey ;
-		setUpdateListener(new Listener() {
-			@Override
-			public void updated() {
-				MapList.this.refresh();
-			}
-		});
 	}
 
-	private Map<K,V> map = null;
-	public Map<K,V> map(){
-		Map<K, V> localCopy = map;
-		if( localCopy == null ){
-			localCopy = new HashMap<K, V>();
-			for (V v : this) {
-				localCopy.put(extractKey.execute(v), v);
-			}
-			localCopy = Collections.unmodifiableMap(localCopy);
-			this.map = localCopy ;
-		}
-		return localCopy;
-	}
-	
-	private Map<K,Integer> indexMap = null;
-	public Map<K,Integer> indexMap(){
-		Map<K, Integer> localCopy = indexMap;
-		if( localCopy == null ){
-			localCopy = new HashMap<K, Integer>();
-			for (int i = 0; i < this.size(); i++) {
-				localCopy.put(extractKey.execute(get(i)), i);
-			}
-			localCopy = Collections.unmodifiableMap(localCopy);
-			this.indexMap = localCopy ;
-		}
-		return localCopy;
-	}
-	
-	public void refresh(){
-		this.map=null;
-		this.indexMap=null;
+
+	@Override
+	protected BeeOperation<? super V, ? extends K> getExtractKey() {
+		return extractKey;
 	}
 	
 	
