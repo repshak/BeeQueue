@@ -16,7 +16,12 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.piles;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public interface Lockable {
+	
+	@JsonIgnore
 	boolean isUpdatesAllowed();
+	
 	void preventUpdates();
 }
