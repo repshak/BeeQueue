@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +104,7 @@ public class BuzzAttributeTest {
 		buzzTable.header.addAttribute( "F4", null, Float.class );
 		buzzTable.header.addAttribute( "F5", null, Float.class );
 		buzzTable.header.addAttribute( "E6", null, Abc.class );
-		buzzTable.header.addAttribute( "O6", null, Ooo6.class );
+		buzzTable.header.addAttribute( "O7", null, Ooo6.class );
 		BuzzRow row = buzzTable.newRow();
 		row.set("I1", "5");
 		assertEquals(row.get("I1"), new Long(5));
@@ -123,11 +124,16 @@ public class BuzzAttributeTest {
 		row = buzzTable.newRow();
 		row.set("I1", 5);
 		row.set("S2", "33");
+		row.set("O7", new Ooo6());
 		buzzTable.addRow(row);
 		row = buzzTable.newRow();
 		row.set("I1", 5);
 		row.set("S2", "33");
 		row.set("D3", "2013-03-08T20:11:11.012+01:30");
+		Ooo6 o7 = new Ooo6();
+		o7.map = new LinkedHashMap<String, BuzzAttributeTest.Abc>();
+		o7.map.put("AA", Abc.c);
+		row.set("O7", o7);
 		buzzTable.addRow(row);
 		//todo tostring
 		System.out.println(buzzTable.toString());

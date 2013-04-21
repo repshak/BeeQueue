@@ -83,10 +83,10 @@ public class FileContentProvider extends ContentProvider {
 						throw new BeeException("file need to be served with:"+ RetrievalMethod.STREAM );
 					}
 					BuzzTable table = new BuzzTable();		
-					table.header.columns.add(BuzzAttribute.newAttr( FILE_NAME, BuiltInType.STRING, SortOrder.ASCENDING ));
-					table.header.columns.add(BuzzAttribute.newAttr( SIZE, BuiltInType.INTEGER, null));
-					table.header.columns.add(BuzzAttribute.newAttr( MODIFIED, BuiltInType.DATE, null));
-					table.header.columns.add(BuzzAttribute.newAttr( TYPE, BuiltInType.ENUM, null));
+					table.header.addAttribute( FILE_NAME, SortOrder.ASCENDING,  String.class );
+					table.header.addAttribute( SIZE,      null,                 Long.class );
+					table.header.addAttribute( MODIFIED,  null,                 Date.class );
+					table.header.addAttribute( TYPE,      null,                 FileType.class );
 					File[] listFiles = file.listFiles();
 					for (int i = 0; i < listFiles.length; i++) {
 						populateFileRow(listFiles[i], table.newRow());
