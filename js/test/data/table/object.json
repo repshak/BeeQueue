@@ -1,0 +1,5 @@
+{"header": {"columns":[{"name":"I1","type":"INTEGER","sortOrder":"DESCENDING"},{"name":"S2","type":"STRING","sortOrder":"ASCENDING"},{"name":"D3","type":"DATE","sortOrder":"DESCENDING"},{"name":"F4","type":"FLOAT"},{"name":"F5","type":"FLOAT"},{"name":"E6","type":"ENUM","className":"org.beequeue.json.BuzzAttributeTest$Abc"},{"name":"O7","type":"OBJECT","className":"org.beequeue.json.BuzzAttributeTest$Ooo6"}],"schema":{"types":[{"className":"org.beequeue.json.BuzzAttributeTest$Abc","enumValues":["A","B","C"]},{"className":"org.beequeue.json.BuzzAttributeTest$Ooo6","objectAttributes":[{"name":"map","type":"MAP","contentType":"ENUM","className":"org.beequeue.json.BuzzAttributeTest$Abc"},{"name":"name","type":"STRING"},{"name":"weight","type":"FLOAT"}]}]}},"rows":[
+[7,"33",null,null,null,null,null],
+[5,"33","2013-03-08T18:41:11.012+0000",null,null,null,{"map":{"AA":"C"},"name":null,"weight":0.0}],
+[5,"33",null,null,null,null,{"map":null,"name":null,"weight":0.0}],
+[5,"34",null,null,null,null,null]]}

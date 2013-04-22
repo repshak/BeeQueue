@@ -19,6 +19,8 @@ package org.beequeue.json;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Date;
@@ -29,6 +31,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.beequeue.util.BeeException;
+import org.beequeue.util.Files;
 import org.beequeue.util.ToStringUtil;
 import org.junit.Test;
 
@@ -67,7 +70,6 @@ public class BuzzAttributeTest {
 		row.set("S2", "33");
 		row.set("D3", "2013-03-08T20:11:11.012+01:30");
 		buzzTable.addRow(row);
-		//todo tostring
 		System.out.println(buzzTable.toString());
 		buzzTable.sort();
 		StringWriter w = new StringWriter();
@@ -78,6 +80,7 @@ public class BuzzAttributeTest {
 		BuzzTable readTable = BuzzTable.readTable(r);
 		String copy = readTable.toString();
 		System.out.println(copy);
+//		dumpContent(copy, "table.json");
 		Assert.assertEquals(orig, copy);
 		Map<String,List<Object>> map = (Map<String, List<Object>>) ToStringUtil.toObject(copy, Object.class);
 		System.out.println(map.get("header"));
@@ -87,7 +90,7 @@ public class BuzzAttributeTest {
 	}
 
 	public static enum Abc {
-		a, b, c
+		A, B, C
 	}
 	
 	public static class Ooo6 {
@@ -96,7 +99,7 @@ public class BuzzAttributeTest {
 		public double weight;
 	}
 	@Test
-	public void testWithSchema() {
+	public void testWithSchema()  {
 		BuzzTable buzzTable = new BuzzTable();
 		buzzTable.header.addAttribute("I1", SortOrder.DESCENDING, Integer.class );
 		buzzTable.header.addAttribute( "S2", SortOrder.ASCENDING, String.class);
@@ -132,10 +135,9 @@ public class BuzzAttributeTest {
 		row.set("D3", "2013-03-08T20:11:11.012+01:30");
 		Ooo6 o7 = new Ooo6();
 		o7.map = new LinkedHashMap<String, BuzzAttributeTest.Abc>();
-		o7.map.put("AA", Abc.c);
+		o7.map.put("AA", Abc.C);
 		row.set("O7", o7);
 		buzzTable.addRow(row);
-		//todo tostring
 		System.out.println(buzzTable.toString());
 		buzzTable.sort();
 		StringWriter w = new StringWriter();
@@ -146,11 +148,21 @@ public class BuzzAttributeTest {
 		BuzzTable readTable = BuzzTable.readTable(r);
 		String copy = readTable.toString();
 		System.out.println(copy);
+//		dumpContent(copy, "object.json");
 		Assert.assertEquals(orig, copy);
 		Map<String,List<Object>> map = (Map<String, List<Object>>) ToStringUtil.toObject(copy, Object.class);
 		System.out.println(map.get("header"));
 		System.out.println(map.get("rows"));
 		System.out.println(ToStringUtil.toObject(copy, BuzzTable.class).getRowCount());
 		
+	}
+	public void dumpContent(String content, String file) {
+		try {
+			File d = new File("js/test/data/table");
+			d.mkdirs();
+			Files.writeAll(new File(d, file), content);
+		} catch (Exception e) {
+			throw BeeException.cast(e).memo("file",file);
+		}
 	}
 }
