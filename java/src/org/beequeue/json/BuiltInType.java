@@ -19,10 +19,12 @@ package org.beequeue.json;
 import java.text.DateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Map;
 
 import org.beequeue.util.BeeException;
 import org.beequeue.util.Nulls;
 import org.beequeue.util.ToStringUtil;
+import org.beequeue.util.TypeFactory;
 
 import com.fasterxml.jackson.databind.JavaType;
 
@@ -82,6 +84,23 @@ public enum BuiltInType implements Comparator<Object> {
 			DateFormat df = (DateFormat) ToStringUtil.MAPPER.getSerializationConfig().getDateFormat().clone();
 			try {
 				return df.parse(s);
+			} catch (Exception e) {
+				throw BeeException.cast(e);
+			}
+		}
+	},
+	LINK(BuzzLink.class){
+		TypeFactory<BuzzLink> TF = new TypeFactory<BuzzLink>(BuzzLink.class);
+		@SuppressWarnings("unchecked")
+		@Override protected Object coerseIt(Object v) {
+			if (v instanceof Map ) {
+				return BuzzLink.buildFromMap((Map<String,String>)v);
+			}
+			return super.coerseIt(v);
+		}
+		@Override public Object fromString(String s) {
+			try {
+				return TF.op_STRING_TO_OBJ.execute(s);
 			} catch (Exception e) {
 				throw BeeException.cast(e);
 			}

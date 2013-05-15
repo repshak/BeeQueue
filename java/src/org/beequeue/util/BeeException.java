@@ -113,5 +113,11 @@ public class BeeException extends RuntimeException {
 		return notNull;
 	}
 
-
+	public static <K,V> V throwIfValueNull(Map<K,V> map, K key){
+		V notNull = map.get(key);
+		if(notNull == null) {
+			throw new BeeException("value for key "+key+" expected to be not null") ;
+		}
+		return notNull;
+	}
 }

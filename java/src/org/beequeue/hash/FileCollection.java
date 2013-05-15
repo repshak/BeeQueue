@@ -57,17 +57,25 @@ public class FileCollection {
 	}
 
 	public static FileCollection scan(File base){
+		return scan(base, 24*60);
+	}
+
+	public static FileCollection scan(File base, int maxWaitTime) {
 		CopyOnWriteArrayList<FileEntry> entries = new CopyOnWriteArrayList<FileEntry>();
 		CopyOnWriteArrayList<String> errors = new CopyOnWriteArrayList<String>();
 		try {
 			ExecutorService threadPool = Executors.newFixedThreadPool(4);
 			constructEntries(base, null, threadPool, entries, errors);
 			threadPool.shutdown();
-			for (int i = 0; !threadPool.awaitTermination(1, TimeUnit.HOURS); i++) {
-				log.warning(""+i+"hours passed by.");
-				if(i > 24){
+			int i = 0;
+			while( !threadPool.awaitTermination(1, TimeUnit.MINUTES) ) {
+				if(i > maxWaitTime){
 					errors.add("waiting for too long:"+ threadPool.shutdownNow() );
 					break;
+				}
+				i += 1;
+				if(i % 60 == 59 ) {
+					log.warning(""+i+"hours passed by.");
 				}
 			}
 		} catch (Exception e) {

@@ -1,0 +1,21 @@
+table, td, th
+{
+  text-align:right;
+  border-collapse:collapse;
+  border:1px solid #1F963B;
+}
+
+td
+{
+padding:1px;
+}
+
+th
+{
+padding:4px;
+background-color:#75AD80;
+color:white;
+text-align: center;
+}
+
+tr:nth-child(odd) {background: #B7CFB8}

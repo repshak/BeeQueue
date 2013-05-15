@@ -9,7 +9,6 @@
 	<classpathentry kind="lib" path="java/lib/build/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/jackson-databind-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-databind-jackson-databind-2.0.4-214-g8d7e140.zip"/>
 	<classpathentry kind="lib" path="java/lib/bin/jackson-annotations-2.0.0.jar" sourcepath="/Users/sergeyk/Documents/sources/FasterXML-jackson-annotations-jackson-annotations-2.0.2-21-g5b6d209.zip"/>
-	<classpathentry kind="lib" path="java/lib/bin/derbyclient.jar"/>
 	<classpathentry kind="lib" path="java/lib/sigar-bin/lib/sigar.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="java/lib/web/jetty-continuation-8.1.5.v20120716.jar"/>
@@ -20,5 +19,6 @@
 	<classpathentry kind="lib" path="java/lib/web/servlet-api-3.0.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/guava-13.0.1.jar" sourcepath="lib/src/guava-13.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/mustache-compiler-0.8.10-jar-with-dependencies.jar" sourcepath="java/lib/src/mustache.java-master.zip"/>
+	<classpathentry kind="lib" path="java/lib/bin/mongo-java-driver-2.9.3.jar"/>
 	<classpathentry kind="output" path=".binn"/>
 </classpath>
