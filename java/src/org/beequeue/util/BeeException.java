@@ -61,8 +61,14 @@ public class BeeException extends RuntimeException {
 	}
 	
 	private StringBuilder extraMemos = null;
-	
 	private Map<String, Object> memoValues = new LinkedHashMap<String, Object>();
+
+	public BeeException memo( boolean addThisMemo, String memo, Object ... payload){
+		if(addThisMemo){
+			memo(memo,payload);
+		}
+		return this;
+	}
 	public BeeException memo( String memo, Object ... payload){
 		if(this.extraMemos==null){
 			this.extraMemos = new StringBuilder(Nulls.fallback(super.getMessage(),""));

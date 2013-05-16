@@ -1,12 +1,13 @@
 (function(){
+  
   bq = {};
 
-  function zeroPad (n) { return (+n < 10 ? '0' : '') + n }
+  function zeroPad (n) { return (+n < 10 ? '0' : '') + n; } 
   
   bq.dateFormat = function  (d){
     return ""+d.getFullYear()+"-"+zeroPad(d.getMonth()+1)+"-"+zeroPad(d.getDate())
          +" "+zeroPad(d.getHours())+":"+zeroPad(d.getMinutes())+"."+zeroPad(d.getSeconds());  
-  }
+  };
 
   
   var format_rules = {
