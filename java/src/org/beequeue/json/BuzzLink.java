@@ -15,4 +15,10 @@ public class BuzzLink {
 		return buzzLink;
 	}
 
+	public BuzzLink init(String title, String xref) {
+		this.title = title;
+		this.xref = xref;
+		return this;
+	}
+
 }

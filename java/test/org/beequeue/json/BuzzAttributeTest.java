@@ -108,6 +108,7 @@ public class BuzzAttributeTest {
 		buzzTable.header.addAttribute( "F5", null, Float.class );
 		buzzTable.header.addAttribute( "E6", null, Abc.class );
 		buzzTable.header.addAttribute( "O7", null, Ooo6.class );
+		buzzTable.header.addAttribute( "L8", null, BuzzLink.class );
 		BuzzRow row = buzzTable.newRow();
 		row.set("I1", "5");
 		assertEquals(row.get("I1"), new Long(5));
@@ -133,6 +134,7 @@ public class BuzzAttributeTest {
 		row.set("I1", 5);
 		row.set("S2", "33");
 		row.set("D3", "2013-03-08T20:11:11.012+01:30");
+		row.set("L8", new BuzzLink().init("MSN","http://msn.com"));
 		Ooo6 o7 = new Ooo6();
 		o7.map = new LinkedHashMap<String, BuzzAttributeTest.Abc>();
 		o7.map.put("AA", Abc.C);
