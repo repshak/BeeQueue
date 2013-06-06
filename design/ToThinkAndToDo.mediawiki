@@ -1,4 +1,5 @@
 = ToDo =
+* BuzzPath: need to be able to escape & / and ?
 * Buzz: SimpleForm: given array of BuzzAttribute's generate form to edit json (array or map)
 == ToTest ==
 * sorting
