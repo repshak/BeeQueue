@@ -53,7 +53,13 @@
 	<target name="test-all" depends="build" description="Test">
 		<mkdir dir="${testbin}" />
 		<mkdir dir="${testreports}" />
-		<javac destdir="${testbin}" source="1.6" target="1.6" srcdir="${test}" debug="true" includeantruntime="false">
+		<javac 
+			encoding="utf-8" 
+			destdir="${testbin}" 
+			source="1.6" target="1.6" 
+			srcdir="${test}" 
+			debug="true" 
+			includeantruntime="false">
 			<classpath location="${warjar}" />
 			<classpath refid="lib.cp" />
 		</javac>
@@ -97,7 +103,13 @@
 			<entry key="version" value="${version}" />
 		</propertyfile>
 
-		<javac destdir="${warjar}" source="1.6" target="1.6" srcdir="${src}" debug="true" includeantruntime="false">
+		<javac 
+			encoding="utf-8" 
+			destdir="${warjar}" 
+			source="1.6" target="1.6" 
+			srcdir="${src}" 
+			debug="true" 
+			includeantruntime="false">
 			<classpath location="${warjar}" />
 			<classpath refid="sigar.cp" />
 		</javac>
