@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.beequeue.util.BeeException;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.Nulls;
 import org.beequeue.util.Strings;
 
@@ -90,8 +91,21 @@ public class BuzzPath implements Comparable<BuzzPath> {
 	public BuzzPath( String... pathElements) {
 		this(EMPTY,pathElements,0,pathElements.length);
 	}
+	
+	public BuzzPath( List<String> pathElements ) {
+		this(pathElements.toArray(new String[pathElements.size()]),0,pathElements.size());
+		checkForEmpty();
+	}
 
-	private BuzzPath( BuzzPath copy, String[] pathElements, int start, int end) {
+	private void checkForEmpty() {
+		for (int i = 0; i < this.pathElements.length; i++) {
+			if(Strings.isEmpty(this.pathElements[i])) 
+					throw new BeeException("path mailformed: empty elements in the middle")
+					.memo("pathElements",(Object)pathElements);
+		}	
+	}
+
+	public BuzzPath( BuzzPath copy, String[] pathElements, int start, int end) {
 		while(end > 0 && end > start && Strings.isEmpty(pathElements[end-1]) ){
 			end--;
 		}
@@ -145,6 +159,22 @@ public class BuzzPath implements Comparable<BuzzPath> {
 			sb.append(pathElements[begin + i]);
 		}
 		return sb.toString();
+	}
+
+	public String toString(BeeOperation<String, String> encode) {
+		StringBuilder sb = new StringBuilder();
+		appendItself(sb, encode);
+		return sb.toString();
+	}
+
+	public StringBuilder appendItself(StringBuilder sb, BeeOperation<String, String> encode) {
+		for (int i = 0; i < size; i++) {
+			if(i > 0){
+				sb.append("/");
+			}
+			sb.append(encode.execute(pathElements[begin + i]));
+		}
+		return sb;
 	}
 
 

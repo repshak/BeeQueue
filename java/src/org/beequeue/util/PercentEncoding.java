@@ -10,6 +10,19 @@ import java.io.ByteArrayOutputStream;
 public class PercentEncoding {
 	public final static String ENCODED_CHARS = "%+/?&=";
 	
+	public static final BeeOperation<String, String> ENCODE = new BeeOperation<String, String>() {
+		@Override
+		public String execute(String input) {
+			return encode(input);
+		}
+	};
+	public static final BeeOperation<String, String> DECODE = new BeeOperation<String, String>() {
+		@Override
+		public String execute(String input) {
+			return decode(input);
+		}
+	};
+	
 	public static String encode(String input){
 		return encode(input, null).toString();
 	}
@@ -67,8 +80,7 @@ public class PercentEncoding {
 									input.substring(i + 1, i + 3), 16);
 							i += 2;
 							c = charCode;
-						} catch (Exception ignore) {
-						}
+						} catch (Exception ignore) {}
 					}
 				}
 				out.write(c);

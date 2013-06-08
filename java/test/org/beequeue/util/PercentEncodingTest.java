@@ -12,6 +12,7 @@ public class PercentEncodingTest {
 	private static final String ENCODED2 = "Abc%2Fdlk%0Add%09%3Fd%0Dldl%3Dzz%2Bz%25";
 	//UTF-8
 	private static final String P3 =       "У попа";
+	private static final String P4 =       "\u0423 \u043F\u043E\u043F\u0430";
 	private static final String ENCODED3 = "%D0%A3+%D0%BF%D0%BE%D0%BF%D0%B0";
 
 	@Test
@@ -20,6 +21,7 @@ public class PercentEncodingTest {
 		assertEquals(PercentEncoding.decode(P1), P1);
 		scenario1(P2, ENCODED2);
 		scenario1(P3, ENCODED3);
+		scenario1(P4, ENCODED3);
 	}
 
 	public void scenario1(String p, String encoded) {
