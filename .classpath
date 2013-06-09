@@ -15,10 +15,13 @@
 	<classpathentry kind="lib" path="java/lib/web/jetty-util-8.1.5.v20120716.jar" sourcepath="java/lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
 	<classpathentry kind="lib" path="java/lib/web/servlet-api-3.0.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/mustache-compiler-0.8.10-jar-with-dependencies.jar" sourcepath="java/lib/src/mustache.java-master.zip"/>
-	<classpathentry kind="lib" path="java/lib/bin/mongo-java-driver-2.9.3.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/jackson-annotations-2.2.2.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/jackson-core-2.2.2.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/jackson-databind-2.2.2.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/jackson-dataformat-yaml-2.2.2.jar"/>
+	<classpathentry kind="lib" path="java/lib/bin/mongo-java-driver-2.11.1.jar" sourcepath="java/lib/src/mongo-java-driver-2.11.1-sources.jar"/>
+	<classpathentry kind="lib" path="java/lib/bin/mongojack-2.0.0-RC5.jar" sourcepath="java/lib/src/mongojack-master.zip"/>
+	<classpathentry kind="lib" path="java/lib/bin/persistence-api-1.0.2.jar"/>
+	<classpathentry kind="lib" path="java/lib/bin/bson4jackson-2.2.0.jar"/>
 	<classpathentry kind="output" path=".binn"/>
 </classpath>
