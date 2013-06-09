@@ -20,13 +20,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
- * ToStringUtil - class used for debugging purposes. That class uses reflection
- * to introspect object properties and print out them. <br>
- * Is is pretty CPU expensive so use with caution.
+ * ToStringUtil - de/serializes objects to JSON and YAML
  */
 public class ToStringUtil {
+	public static ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory())
+	.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
 	public static ObjectMapper MAPPER = new ObjectMapper()
 	.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	
@@ -38,6 +40,10 @@ public class ToStringUtil {
 
 	public static String toString(Object o) {
 		return writeObject(o, MAPPER.writerWithDefaultPrettyPrinter());
+	}
+	
+	public static String toYamlString(Object o) {
+		return writeObject(o, YAML_MAPPER.writer());
 	}
 
 	private static String writeObject(Object o, ObjectWriter writer) {
@@ -53,8 +59,24 @@ public class ToStringUtil {
 	}
 	
 	public static <T> T toObject(String s, Class<T> type)  {
+		return toObject(MAPPER, s, type);
+	}
+	
+	public static <T> T toObject(String s, TypeReference<T> type){
+		return toObject(MAPPER, s, type);
+	}
+	
+	public static <T> T toYamlObject(String s, Class<T> type)  {
+		return toObject(YAML_MAPPER, s, type);
+	}
+
+	public static <T> T toYamlObject(String s, TypeReference<T> type){
+		return toObject(YAML_MAPPER, s, type);
+	}
+
+	public static <T> T toObject(ObjectMapper mapper, String s, Class<T> type) {
 		try {
-			T readValue = MAPPER.readValue(s, type);
+			T readValue = mapper.readValue(s, type);
 			if (readValue instanceof Initializable) {
 				Initializable toInit = (Initializable) readValue;
 				toInit.init();
@@ -65,9 +87,11 @@ public class ToStringUtil {
 		}
 	}
 	
-	public static <T> T toObject(String s, TypeReference<T> type){
+
+	public static <T> T toObject(ObjectMapper mapper, String s,
+			TypeReference<T> type) {
 		try {
-			T readValue = MAPPER.readValue(s, type);
+			T readValue = mapper.readValue(s, type);
 			if (readValue instanceof Initializable) {
 				Initializable toInit = (Initializable) readValue;
 				toInit.init();
