@@ -5,10 +5,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 public class ToStringUtilTest {
-	private static final String JSON_A2 = "{\"name\":\"a2\",\"desc\":null}";
 	private static final String JSON_A1 = "{\"name\":\"a1\",\"desc\":\"A1 description\"}";
-	private static final String YAML_A2 = "---\nname: \"a2\"\ndesc: null\n";
+	private static final String JSON_A2 = "{\"name\":\"a2\",\"desc\":null}";
 	private static final String YAML_A1 = "---\nname: \"a1\"\ndesc: \"A1 description\"\n";
+	private static final String YAML_A2 = "---\nname: \"a2\"\ndesc: null\n";
 
 	public static class A {
 		public String name;

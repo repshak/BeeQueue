@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="java/lib/web/jetty-server-8.1.5.v20120716.jar" sourcepath="lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
 	<classpathentry kind="lib" path="java/lib/web/jetty-util-8.1.5.v20120716.jar" sourcepath="java/lib/src/jetty-all-8.1.5.v20120716-sources.jar"/>
 	<classpathentry kind="lib" path="java/lib/web/servlet-api-3.0.jar"/>
-	<classpathentry kind="lib" path="java/lib/bin/guava-13.0.1.jar" sourcepath="lib/src/guava-13.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/mustache-compiler-0.8.10-jar-with-dependencies.jar" sourcepath="java/lib/src/mustache.java-master.zip"/>
 	<classpathentry kind="lib" path="java/lib/bin/mongo-java-driver-2.9.3.jar"/>
 	<classpathentry kind="lib" path="java/lib/bin/jackson-annotations-2.2.2.jar"/>
