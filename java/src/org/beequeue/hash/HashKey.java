@@ -18,19 +18,20 @@ package org.beequeue.hash;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class HashKey {
+public class HashKey extends Hash{
 	final public HashKeyResource type;
-	final public byte digest[];
 	
 	
 	public HashKey(HashKeyResource type, byte[] digest) {
+		super(digest);
 		this.type = type;
-		this.digest = digest;
+	}
+	public HashKey(HashKeyResource type, Hash hash) {
+		super(hash.digest);
+		this.type = type;
 	}
 
 	public HashKey(HashKeyResource valueOf, String substring) {
@@ -45,7 +46,7 @@ public class HashKey {
 
 	@Override @JsonValue
 	public String toString() {
-		return type.name()+MessageDigestUtils.toHexString(digest);
+		return type.name()+super.toString();
 	}
 
 	@Override
@@ -69,33 +70,16 @@ public class HashKey {
 		return false;
 	}
 	
-	public static final Charset UTF_8 = Charset.forName("UTF-8");
-	
-	private static ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>();
 	public static HashKey buildHashKey(HashKeyResource resource, InputStream in) throws IOException {
-		byte[] buffer = BUFFER.get();
-		if(buffer==null){
-			BUFFER.set(new byte[32*1024]);
-			buffer = BUFFER.get();
-		}
-		MessageDigest md = MessageDigestUtils.md();
-		int countRead ;
-		while((countRead = in.read(buffer))>0){
-			md.update(buffer, 0, countRead);
-		}
-		return new HashKey(resource,md.digest());
+		return new HashKey(resource,Hash.buildHash(in));
 	}
 
 	public static HashKey buildHashKey(HashKeyResource resource, byte[] buffer) {
-		MessageDigest md = MessageDigestUtils.md();
-		md.update(buffer);
-		return new HashKey(resource,md.digest());
+		return new HashKey(resource,Hash.buildHashKey(buffer));
 	}
 	
 	public static HashKey buildHashKey(HashKeyResource resource, String buffer) {
-		MessageDigest md = MessageDigestUtils.md();
-		md.update(buffer.getBytes(UTF_8));
-		return new HashKey(resource,md.digest());
+		return new HashKey(resource,new Hash(buffer));
 	}
 	
 
