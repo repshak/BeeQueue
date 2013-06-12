@@ -21,21 +21,21 @@ import java.io.InputStream;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class HashKey extends Hash{
+public class HashKey implements Comparable<HashKey>{
 	final public HashKeyResource type;
-	
+	final public Hash hash;
 	
 	public HashKey(HashKeyResource type, byte[] digest) {
-		super(digest);
+		this.hash = new Hash(digest);
 		this.type = type;
 	}
 	public HashKey(HashKeyResource type, Hash hash) {
-		super(hash.digest);
+		this.hash = hash;
 		this.type = type;
 	}
 
 	public HashKey(HashKeyResource valueOf, String substring) {
-		this(valueOf,MessageDigestUtils.fromHexString(substring));
+		this(valueOf,new Hash(substring));
 	}
 
 	
@@ -46,28 +46,30 @@ public class HashKey extends Hash{
 
 	@Override @JsonValue
 	public String toString() {
-		return type.name()+super.toString();
+		return type.name()+hash.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		return type.ordinal() + digest[0]+digest[1]+digest[3];
+		return type.ordinal() + hash.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof HashKey) {
-			HashKey that = (HashKey) obj;
-			if( this.type == that.type && this.digest.length == that.digest.length){
-				for (int i = 0; i < this.digest.length; i++) {
-					if( this.digest[i] != that.digest[i] ) {
-						return false;
-					}
-				}
-				return true;
-			}
+			return compareTo((HashKey) obj) == 0;
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(HashKey that) {
+		if(that == null) return 1;
+		int rc = this.type.ordinal() - that.type.ordinal();
+		if( rc != 0 ){
+			rc = this.hash.compareTo(that.hash);
+		}
+		return rc;
 	}
 	
 	public static HashKey buildHashKey(HashKeyResource resource, InputStream in) throws IOException {
@@ -75,11 +77,11 @@ public class HashKey extends Hash{
 	}
 
 	public static HashKey buildHashKey(HashKeyResource resource, byte[] buffer) {
-		return new HashKey(resource,Hash.buildHashKey(buffer));
+		return new HashKey(resource,Hash.buildHash(buffer));
 	}
 	
-	public static HashKey buildHashKey(HashKeyResource resource, String buffer) {
-		return new HashKey(resource,new Hash(buffer));
+	public static HashKey buildHashKey(HashKeyResource resource, String s) {
+		return new HashKey(resource,Hash.buildHash(s));
 	}
 	
 

@@ -1,15 +1,14 @@
 package org.beequeue.hash;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
-import org.beequeue.util.UtfUtils;
+import org.beequeue.util.Bytes;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class Hash {
+public class Hash implements Comparable<Hash>{
 	final public byte digest[];
 	
 	public Hash(byte[] digest) {
@@ -35,33 +34,30 @@ public class Hash {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof HashKey) {
-			HashKey that = (HashKey) obj;
-			if( this.digest.length == that.digest.length){
-				for (int i = 0; i < this.digest.length; i++) {
-					if( this.digest[i] != that.digest[i] ) {
-						return false;
-					}
+	public int compareTo(Hash that) {
+		if(that == null) return 1;
+		int rc = this.digest.length - that.digest.length ;
+		if( rc != 0){
+			for (int i = 0; i < this.digest.length; i++) {
+				if( (rc = this.digest[i] - that.digest[i]) != 0 ) {
+					return rc;
 				}
-				return true;
 			}
+		}
+		return rc;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Hash) {
+			return compareTo((Hash)obj) == 0 ;
 		}
 		return false;
 	}
 	
 	
 	private static ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>();
-	public static Hash buildHash(InputStream in) throws IOException {
-		byte[] buffer = ensureBuffer();
-		MessageDigest md = MessageDigestUtils.md();
-		int countRead ;
-		while((countRead = in.read(buffer))>0){
-			md.update(buffer, 0, countRead);
-		}
-		return new Hash(md.digest());
-	}
-	public static byte[] ensureBuffer() {
+	private static byte[] ensureBuffer() {
 		byte[] buffer = BUFFER.get();
 		if(buffer==null){
 			BUFFER.set(new byte[32*1024]);
@@ -69,17 +65,25 @@ public class Hash {
 		}
 		return buffer;
 	}
-
-	public static Hash buildHashKey(byte[] buffer) {
-		MessageDigest md = MessageDigestUtils.md();
-		md.update(buffer);
-		return new Hash(md.digest());
+	
+	public static Hash buildHash(byte[] buffer) {
+		return buildHash(new Bytes(buffer));
+	}
+	public static Hash buildHash(String s)  {
+		return buildHash(new Bytes(s));
+	}
+	public static Hash buildHash(InputStream in)  {
+		return buildHash(new Bytes(ensureBuffer(),in));
 	}
 	
-	public static Hash buildHash(String buffer) {
+	public static Hash buildHash(Iterable<Bytes> it) {
 		MessageDigest md = MessageDigestUtils.md();
-		md.update(buffer.getBytes(UtfUtils.UTF8));
+		for (Bytes buffer : it) {
+			md.update(buffer.bytes(), 0, buffer.size());
+		}
 		return new Hash(md.digest());
 	}
+
+
 	
 }

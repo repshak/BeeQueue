@@ -3,7 +3,7 @@ package org.beequeue.hash;
 
 public class ContentVersion<K extends ContentKey> {
 	public K key;
-	public HashKey version;
+	public Hash version;
 	
 	@Override
 	public int hashCode() {
