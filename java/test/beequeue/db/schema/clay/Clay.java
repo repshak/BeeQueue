@@ -27,8 +27,9 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 
-public class Clay 
-extends ToStringUtil{
+public class Clay {
+	
+	@Override public String toString() { return ToStringUtil.toString(this); }
 	
 	public ClayTable[] tables;
 	public Clay(InputStream is) throws JDOMException, IOException{

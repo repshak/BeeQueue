@@ -21,31 +21,34 @@ import java.io.Serializable;
 /**
  * Tuple
  * <p>
- * From Wikipedia, the free encyclopedia
- * In mathematics, a tuple is a finite sequence (also known as an "ordered list") 
- * of objects, each of a specified type. A tuple containing n objects is known 
- * as an "n-tuple". For example the 4-tuple (or "quadruple") 
- * [ Mozart, 27, January, 1756], with components of 
- * respective types PERSON, INTEGER, MONTH and INTEGER, 
- * could be used to record that a certain person was born on a 
- * certain day of a certain month of a certain year.
+ * From Wikipedia, the free encyclopedia In mathematics, a tuple is a finite
+ * sequence (also known as an "ordered list") of objects, each of a specified
+ * type. A tuple containing n objects is known as an "n-tuple". For example the
+ * 4-tuple (or "quadruple") [ Mozart, 27, January, 1756], with components of
+ * respective types PERSON, INTEGER, MONTH and INTEGER, could be used to record
+ * that a certain person was born on a certain day of a certain month of a
+ * certain year.
  * <p>
-* 
- * @see Triple 
+ * 
+ * @see Triple
  * @see Quadruple
- *  
+ * 
  * @param <T1>
  * @param <T2>
  */
-public class Tuple<T1,T2> extends ToStringUtil implements Serializable{
-  private static final long serialVersionUID = 1L;
-  public final T1 o1;
+public class Tuple<T1, T2> implements Serializable {
+	private static final long serialVersionUID = 1L;
+	public final T1 o1;
 	public T2 o2;
-	
+
+	@Override public String toString() { return ToStringUtil.toString(this); }
+
+
 	public Tuple(T1 t1) {
-	  this.o1 = t1;
-	  this.o2 = null;
+		this.o1 = t1;
+		this.o2 = null;
 	}
+
 	public Tuple(T1 t1, T2 t2) {
 		this.o1 = t1;
 		this.o2 = t2;

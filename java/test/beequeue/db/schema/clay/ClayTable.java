@@ -22,7 +22,8 @@ import org.beequeue.util.ToStringUtil;
 import org.jdom.Element;
 
 
-public class ClayTable extends ToStringUtil{
+public class ClayTable {
+	@Override public String toString() { return ToStringUtil.toString(this); }
 
 	public ClayTable(Element e) {
 		name = e.getAttributeValue("name");

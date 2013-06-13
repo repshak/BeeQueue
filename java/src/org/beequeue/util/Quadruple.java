@@ -27,12 +27,14 @@ import java.io.Serializable;
  * @param <T3>
  * @param <T4>
  */
-public class Quadruple<T1,T2,T3,T4> extends ToStringUtil implements Serializable{
+public class Quadruple<T1,T2,T3,T4>  implements Serializable{
   private static final long serialVersionUID = 1L;
 	public final T1 o1;
 	public T2 o2;
 	public T3 o3;
 	public T4 o4;
+
+	@Override public String toString() { return ToStringUtil.toString(this); }
 
 	public Quadruple(T1 o1, T2 o2, T3 o3, T4 o4) {
 	  this.o1 = o1;

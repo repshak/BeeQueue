@@ -81,7 +81,7 @@ public enum BuiltInType implements Comparator<Object> {
 			return super.coerseIt(v);
 		}
 		@Override public Object fromString(String s) {
-			DateFormat df = (DateFormat) ToStringUtil.MAPPER.getSerializationConfig().getDateFormat().clone();
+			DateFormat df = (DateFormat) ToStringUtil.JSON_MAPPER.getSerializationConfig().getDateFormat().clone();
 			try {
 				return df.parse(s);
 			} catch (Exception e) {

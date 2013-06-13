@@ -26,11 +26,14 @@ import java.io.Serializable;
  * @param <T2>
  * @param <T3>
  */
-public class Triple<T1,T2,T3> extends ToStringUtil implements Serializable{
+public class Triple<T1,T2,T3> implements Serializable{
   private static final long serialVersionUID = 1L;
 	public final T1 o1 ;
 	public T2 o2 ;
 	public T3 o3 ;
+	
+	@Override public String toString() { return ToStringUtil.toString(this); }
+
 
 	public Triple(T1 o1) {
 	  this.o1 = o1;

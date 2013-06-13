@@ -25,21 +25,18 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 /**
  * ToStringUtil - de/serializes objects to JSON and YAML
  */
-public class ToStringUtil {
+final public class ToStringUtil {
 	public static ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory())
 	.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-	public static ObjectMapper MAPPER = new ObjectMapper()
+	public static ObjectMapper JSON_MAPPER = new ObjectMapper()
 	.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	
 	public static TypeFactory<Object> TF =new TypeFactory<Object>(Object.class);
 
-	public String toString() {
-		return toString(this);
-	}
-
+	
 	public static String toString(Object o) {
-		return writeObject(o, MAPPER.writerWithDefaultPrettyPrinter());
+		return writeObject(o, JSON_MAPPER.writerWithDefaultPrettyPrinter());
 	}
 	
 	public static String toYamlString(Object o) {
@@ -55,15 +52,15 @@ public class ToStringUtil {
 	}
 
 	public static String toNotPrettyString(Object o) {
-		return writeObject(o, MAPPER.writer());
+		return writeObject(o, JSON_MAPPER.writer());
 	}
 	
 	public static <T> T toObject(String s, Class<T> type)  {
-		return toObject(MAPPER, s, type);
+		return toObject(JSON_MAPPER, s, type);
 	}
 	
 	public static <T> T toObject(String s, TypeReference<T> type){
-		return toObject(MAPPER, s, type);
+		return toObject(JSON_MAPPER, s, type);
 	}
 	
 	public static <T> T toYamlObject(String s, Class<T> type)  {
@@ -86,7 +83,6 @@ public class ToStringUtil {
 			throw BeeException.cast(e);
 		}
 	}
-	
 
 	public static <T> T toObject(ObjectMapper mapper, String s,
 			TypeReference<T> type) {

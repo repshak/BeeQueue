@@ -42,11 +42,11 @@ public class BuzzSchemaBuilder {
 	public BuzzSchema schema;
 	
 	public BuzzAttribute add(Class<?> cls) {
-		return this.recurseSchema(ToStringUtil.MAPPER.getTypeFactory().constructType(cls));
+		return this.recurseSchema(ToStringUtil.JSON_MAPPER.getTypeFactory().constructType(cls));
 	}
 
 	public <T> BuzzAttribute add(TypeReference<?> tr) {
-		return this.recurseSchema(ToStringUtil.MAPPER.getTypeFactory().constructType(tr));
+		return this.recurseSchema(ToStringUtil.JSON_MAPPER.getTypeFactory().constructType(tr));
 	}
 
 	private BuzzAttribute recurseSchema(JavaType jt) {
@@ -69,7 +69,7 @@ public class BuzzSchemaBuilder {
 				JavaType contentType = jt.getContentType();
 				type.copyTypeIdAsContent(recurseSchema(contentType));
 			}else if(type.type == BuiltInType.OBJECT ){
-				BeanDescription beanDescriptor = ToStringUtil.MAPPER.getSerializationConfig().introspect(jt);
+				BeanDescription beanDescriptor = ToStringUtil.JSON_MAPPER.getSerializationConfig().introspect(jt);
 				AnnotatedMethod valueMethod = beanDescriptor.findJsonValueMethod();
 				if(valueMethod != null){
 					JavaType valueJavaType = valueMethod.getType(beanDescriptor.bindingsForBeanType());
