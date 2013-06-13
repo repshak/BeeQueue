@@ -37,7 +37,7 @@ public class Hash implements Comparable<Hash>{
 	public int compareTo(Hash that) {
 		if(that == null) return 1;
 		int rc = this.digest.length - that.digest.length ;
-		if( rc != 0){
+		if( rc == 0){
 			for (int i = 0; i < this.digest.length; i++) {
 				if( (rc = this.digest[i] - that.digest[i]) != 0 ) {
 					return rc;

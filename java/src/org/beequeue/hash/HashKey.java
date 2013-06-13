@@ -66,7 +66,7 @@ public class HashKey implements Comparable<HashKey>{
 	public int compareTo(HashKey that) {
 		if(that == null) return 1;
 		int rc = this.type.ordinal() - that.type.ordinal();
-		if( rc != 0 ){
+		if( rc == 0 ){
 			rc = this.hash.compareTo(that.hash);
 		}
 		return rc;
