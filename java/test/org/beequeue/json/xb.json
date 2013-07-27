@@ -29,7 +29,8 @@
       "className" : "org.beequeue.json.BuzzSchemaTest$C"
     }, {
       "name" : "ddd",
-      "type" : "STRING"
+      "type" : "STRING",
+      "className" : "org.beequeue.json.BuzzSchemaTest$D"
     } ]
   }, {
     "className" : "org.beequeue.json.BuzzSchemaTest$A",
@@ -90,12 +91,15 @@
     }, {
       "name" : "m1",
       "type" : "MAP",
-      "contentType" : "STRING"
+      "contentType" : "STRING",
+      "className" : "org.beequeue.json.BuzzSchemaTest$D",
+      "keyClassName" : "org.beequeue.json.BuzzSchemaTest$C"
     }, {
       "name" : "m2",
       "type" : "MAP",
       "contentType" : "OBJECT",
-      "className" : "org.beequeue.json.BuzzSchemaTest$A"
+      "className" : "org.beequeue.json.BuzzSchemaTest$A",
+      "keyClassName" : "org.beequeue.json.BuzzSchemaTest$D"
     } ]
   } ]
 }

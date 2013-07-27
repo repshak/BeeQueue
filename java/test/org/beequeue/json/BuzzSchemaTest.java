@@ -16,6 +16,7 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.json;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
@@ -91,7 +92,7 @@ public class BuzzSchemaTest {
 		Class<? extends BuzzSchemaTest> c = getClass();
 		String dir = c.getPackage().getName().replaceAll("\\.", "/");
 		String xbPath = dir + "/xb.json";
-//		Files.writeAll(new File("test/"+xbPath), ToStringUtil.toString(bsb.schema));
+//		Files.writeAll(new File("java/test/"+xbPath), ToStringUtil.toString(bsb.schema));
 		String readAll = Files.readAll(new InputStreamReader(c.getResourceAsStream("/"+xbPath)));
 		Assert.assertEquals(readAll, ToStringUtil.toString(bsb.schema));
 		A a = new A();
