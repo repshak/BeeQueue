@@ -25,6 +25,9 @@ import org.beequeue.util.BeeOperation;
 import org.beequeue.util.Nulls;
 import org.beequeue.util.Strings;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class BuzzPath implements Comparable<BuzzPath> {
 
 	public static final BuzzPath EMPTY = new BuzzPath();
@@ -73,6 +76,7 @@ public class BuzzPath implements Comparable<BuzzPath> {
 		return BuzzMime.get(Nulls.fallback(extension(), defaultExtension));
 	}
 	
+	@JsonCreator
 	public static BuzzPath valueOf(String path) {
 		return new BuzzPath(path.split("/+"));
 	}
@@ -149,7 +153,7 @@ public class BuzzPath implements Comparable<BuzzPath> {
 	}
 
 
-	@Override
+	@Override @JsonValue
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < size; i++) {

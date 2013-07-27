@@ -52,7 +52,7 @@ public class BuzzSchemaBuilder {
 	private BuzzAttribute recurseSchema(JavaType jt) {
 		BuzzAttribute type = new BuzzAttribute();
 		type.type = BuiltInType.detect(jt);
-		if(type.type.isPrimitive()){
+		if(!type.type.isPrimitive()){
 		    if(type.type == BuiltInType.ENUM ){
 				Class<?> rawClass = jt.getRawClass();
 				type.className = rawClass.getName() ;
@@ -63,17 +63,23 @@ public class BuzzSchemaBuilder {
 					this.schema.getTypes().add(classDef);
 					buildEnumClassDef(type, classDef, rawClass);
 				}
-		    }
-	    }else{
-			if(type.type == BuiltInType.MAP || type.type == BuiltInType.ARRAY ){
-				JavaType contentType = jt.getContentType();
-				type.copyTypeIdAsContent(recurseSchema(contentType));
+		    }else if(type.type == BuiltInType.MAP ){
+		    	JavaType keyType = jt.getKeyType();
+		    	BuzzAttribute keyAttribute = recurseSchema(keyType);
+		    	type.keyClassName = keyAttribute.className;
+		    	JavaType contentType = jt.getContentType();
+		    	type.copyTypeIdAsContent(recurseSchema(contentType));
+		    }else if(type.type == BuiltInType.ARRAY ){
+		    	type.copyTypeIdAsContent(recurseSchema(jt.getContentType()));
 			}else if(type.type == BuiltInType.OBJECT ){
 				BeanDescription beanDescriptor = ToStringUtil.JSON_MAPPER.getSerializationConfig().introspect(jt);
 				AnnotatedMethod valueMethod = beanDescriptor.findJsonValueMethod();
+				type.className = jt.toCanonical() ;
 				if(valueMethod != null){
 					JavaType valueJavaType = valueMethod.getType(beanDescriptor.bindingsForBeanType());
-					type = recurseSchema(valueJavaType);
+					BuzzAttribute valueType = recurseSchema(valueJavaType);
+					valueType.className = type.className;
+					type = valueType;
 				}else{
 					type.className = jt.toCanonical() ;
 					BuzzClass classDef = this.schema.getTypesMap().get(type.className);

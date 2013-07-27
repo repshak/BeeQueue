@@ -78,6 +78,12 @@ public class BuzzSchemaTest {
 	}
 	
 	@Test
+	public void mapAttribute() throws IOException {
+		BuzzSchemaBuilder bsb = new BuzzSchemaBuilder();
+		bsb.schema.object = bsb.add(new TypeReference<X<B>>(){});
+		ToStringUtil.out(bsb.schema);
+	}
+	@Test
 	public void test() throws IOException {
 		BuzzSchemaBuilder bsb = new BuzzSchemaBuilder();
 		bsb.schema.object = bsb.add(new TypeReference<X<B>>(){});

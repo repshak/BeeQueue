@@ -29,6 +29,7 @@ import java.util.List;
 import org.beequeue.piles.BoundList;
 import org.beequeue.piles.Lockable;
 import org.beequeue.util.BeeException;
+import org.beequeue.util.BeeOperation;
 import org.beequeue.util.ToStringUtil;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -172,12 +173,20 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 			throw BeeException.cast(e);
 		}
 	}
-	public static BuzzTable readTable(Reader r) {
+	
+	public static BeeOperation<String, BuzzTable> DEFAULT_TABLE_CONSTRUCTOR = new BeeOperation<String, BuzzTable>(){
+		@Override
+		public BuzzTable execute(String headerLine) {
+			BuzzTable tab = new BuzzTable();
+			tab.header.reset(BuzzHeader.TF.op_STRING_TO_OBJ.execute(headerLine));
+			return tab;
+		}};
+	
+	public static BuzzTable readTable(Reader r, BeeOperation<String, BuzzTable> tableConstructor) {
 		BufferedReader br = new BufferedReader(r);
 		try {
 			String line = trimBoth(BEGINING_OF_THE_HEADER,END_OF_THE_HEADER,br.readLine());
-			BuzzTable tab = new BuzzTable();
-			tab.header.reset(BuzzHeader.TF.op_STRING_TO_OBJ.execute(line));
+			BuzzTable tab = tableConstructor.execute(line);
 			while((line = br.readLine())!=null){
 				String trimedLine = line.trim();
 				if( trimedLine.endsWith(END_OF_ROW) ){
@@ -202,11 +211,11 @@ public class BuzzTable implements Iterable<BuzzRow>, Lockable{
 		BeeException.throwIfTrue(!line.startsWith(front)|| !line.endsWith(end), "!line.startsWith(front)|| !line.endsWith(end)");
 		return line.substring(front.length(), line.length()-end.length());
 	}
+	
 	private static String trimEnd( String end, String line) {
 		BeeException.throwIfTrue(!line.endsWith(end), "!line.endsWith(end)");
 		return line.substring(0, line.length()-end.length());
 	}
-	
 
 	public int getRowCount(){
 		return this.rows.size();

@@ -2,33 +2,39 @@ package org.beequeue.hash;
 
 import org.beequeue.util.Nulls;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public abstract class ContentKey {
 	public final String name;
 	public final String type;
 	
+	@JsonCreator
 	public ContentKey(String name) {
 		this.type = getClass().getSimpleName();
 		this.name = name;
 	}
 
+	@Override @JsonValue
+	public String toString() {
+		return this.name;
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
+		return 31 * type.hashCode() + name.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) 
 			return true;
-		if (obj == null)
+		else if (obj == null) 
 			return false;
-		if (getClass() != obj.getClass())
+		else if (getClass() != obj.getClass())
 			return false;
-		return doCompare((ContentKey)obj)==0;
+		else
+			return doCompare((ContentKey)obj)==0;
 	}
 	
 	protected <T extends ContentKey> int doCompare(T that){

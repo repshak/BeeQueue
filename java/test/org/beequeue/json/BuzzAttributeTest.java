@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Date;
@@ -40,9 +39,9 @@ public class BuzzAttributeTest {
 	@Test
 	public void test() {
 		BuzzTable buzzTable = new BuzzTable();
-		buzzTable.header.addAttribute("I1", SortOrder.DESCENDING, BuiltInType.INTEGER, null, null );
+		buzzTable.header.addAttribute( "I1", SortOrder.DESCENDING, BuiltInType.INTEGER, null, null );
 		buzzTable.header.addAttribute( "S2", SortOrder.ASCENDING, BuiltInType.STRING, null, null);
-		buzzTable.header.addAttribute("D3", SortOrder.DESCENDING, BuiltInType.DATE,  null, null);
+		buzzTable.header.addAttribute( "D3", SortOrder.DESCENDING, BuiltInType.DATE,  null, null);
 		buzzTable.header.addAttribute( "F4", null, BuiltInType.FLOAT, null, null );
 		buzzTable.header.addAttribute( "F5", null, BuiltInType.FLOAT, null, null );
 		BuzzRow row = buzzTable.newRow();
@@ -77,7 +76,7 @@ public class BuzzAttributeTest {
 		String orig = w.toString();
 		System.out.println(orig);
 		StringReader r = new StringReader(orig);
-		BuzzTable readTable = BuzzTable.readTable(r);
+		BuzzTable readTable = BuzzTable.readTable(r,BuzzTable.DEFAULT_TABLE_CONSTRUCTOR);
 		String copy = readTable.toString();
 		System.out.println(copy);
 //		dumpContent(copy, "table.json");
@@ -147,7 +146,7 @@ public class BuzzAttributeTest {
 		String orig = w.toString();
 		System.out.println(orig);
 		StringReader r = new StringReader(orig);
-		BuzzTable readTable = BuzzTable.readTable(r);
+		BuzzTable readTable = BuzzTable.readTable(r,BuzzTable.DEFAULT_TABLE_CONSTRUCTOR);
 		String copy = readTable.toString();
 		System.out.println(copy);
 //		dumpContent(copy, "object.json");

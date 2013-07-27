@@ -106,13 +106,7 @@ public enum BuiltInType implements Comparator<Object> {
 			}
 		}
 	},
-	ENUM(String.class){
-		@Override protected Object coerseIt(Object v) {
-			return v.toString();
-		}
-		@Override public Object fromString(String s) {
-			return s;
-		}
+	ENUM(){
 		@Override protected boolean matches(JavaType jt){ return jt.isEnumType(); }
 	},
 	OBJECT(){ 
@@ -178,7 +172,11 @@ public enum BuiltInType implements Comparator<Object> {
 		if(v == null){
 			r = null;
 		}else if(!isPrimitive()){
-			r = v ;
+			 if(v instanceof String){
+				 r = ToStringUtil.toObject((String)v, Object.class);
+			 }else{
+				 r = v ;
+			 }
 		}else{
 			Class boxClass = getBoxClass();
 			boolean alreadyAssignable = boxClass.isAssignableFrom(v.getClass());

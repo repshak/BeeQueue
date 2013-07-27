@@ -45,16 +45,20 @@ public class BuzzAttribute implements Comparator<Object>{
 	@JsonInclude  (Include.NON_NULL)
 	public String className = null;
 	
+	/** populated string for non primitive types only */ 
+	@JsonInclude  (Include.NON_NULL)
+	public String keyClassName = null;
+	
 	public void copyTypeId(BuzzAttribute that) {
 		this.type = that.type;
 		this.contentType = that.contentType;
 		this.className = that.className;
+		this.keyClassName = that.keyClassName;
 	}
 
 	public void copyTypeIdAsContent(BuzzAttribute that) {
 		this.contentType = that.type;
 		this.className = that.className;
-		
 	}
 
 	public int compare(Object a, Object b) {
@@ -62,9 +66,18 @@ public class BuzzAttribute implements Comparator<Object>{
 	}
 
 	public Object coerce(Object v) {
+		if(v != null && !type.isPrimitive() && hasTypeFactory()){
+			
+		}
 		return type.coerce(v);
 	}
 	
+	private boolean hasTypeFactory() {
+		
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	/**
 	 * sortcut creator method
 	 * @param name
