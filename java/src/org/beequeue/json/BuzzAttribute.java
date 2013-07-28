@@ -19,6 +19,10 @@ package org.beequeue.json;
 import java.util.Comparator;
 
 import org.beequeue.util.BeeOperation;
+import org.beequeue.util.Strings;
+import org.beequeue.util.ToStringUtil;
+import org.beequeue.util.TypeFactory;
+import org.beequeue.util.TypeFactoryCache;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -66,17 +70,17 @@ public class BuzzAttribute implements Comparator<Object>{
 	}
 
 	public Object coerce(Object v) {
-		if(v != null && !type.isPrimitive() && hasTypeFactory()){
-			
+		if(v != null && Strings.hasSome(className) ){
+			TypeFactory<?> tf = TypeFactoryCache.instance.getTypeFactory(className);
+			if( tf.type.isAssignableFrom(v.getClass()) ){
+				return v;
+			}else if(v instanceof String){
+				return tf.op_STRING_TO_OBJ.execute(ToStringUtil.toString((String)v));
+			}
 		}
 		return type.coerce(v);
 	}
 	
-	private boolean hasTypeFactory() {
-		
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	/**
 	 * sortcut creator method

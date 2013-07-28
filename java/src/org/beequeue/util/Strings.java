@@ -36,8 +36,11 @@ public class Strings {
   }
   
   public static boolean hasSome(String s) {
-    return s != null && s.trim().length() > 0;
+	  //TODO 
+	  return s != null && s.trim().length() > 0;
   }
+  
+  
 
   public static int toInteger(String s) {
     return Integer.parseInt(s.replaceAll("^\\s+", "").replaceAll("\\s+$", ""));
