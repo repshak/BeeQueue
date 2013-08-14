@@ -1,7 +1,7 @@
 package org.beequeue.hash;
 
 
-public class ContentVersion<K extends ContentKey> {
+public class ContentVersion<K extends Comparable<K>> {
 	public K key;
 	public Hash version;
 	

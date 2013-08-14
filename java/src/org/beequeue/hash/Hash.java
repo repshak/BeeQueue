@@ -30,7 +30,7 @@ public class Hash implements Comparable<Hash>{
 
 	@Override
 	public int hashCode() {
-		return digest[0]+digest[1]+digest[3];
+		return (digest[0] << 16 ) + (digest[1] << 8) +digest[3];
 	}
 
 	@Override

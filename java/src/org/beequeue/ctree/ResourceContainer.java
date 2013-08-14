@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import org.beequeue.buzz.BuzzPath;
+import org.beequeue.hash.ContentVersion;
 import org.beequeue.json.BuzzTable;
 import org.beequeue.json.SortOrder;
 import org.beequeue.util.BeeException;
@@ -22,7 +23,6 @@ public class ResourceContainer {
 		this.storeDir = storeDir;
 		this.source = source;
 	}
-	
 	
 	public static class ResourceList extends BuzzTable {
 		public ResourceList() {
@@ -52,7 +52,9 @@ public class ResourceContainer {
 		}
 	}
 	
-	
+	public ContentVersion<BuzzPath> version(BuzzPath path){
+		return null;
+	}
 	public InputStream stream(UserId who, BuzzPath path){
 		return null;
 	}

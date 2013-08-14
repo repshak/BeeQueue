@@ -80,7 +80,6 @@ public class BuzzAttribute implements Comparator<Object>{
 		}
 		return type.coerce(v);
 	}
-	
 
 	/**
 	 * sortcut creator method

@@ -16,10 +16,8 @@
  *  ===== END LICENSE ====== */
 package org.beequeue.store.node;
 
-import org.beequeue.store.ContentVersion;
 
 
 public class BeeMessageRangeNode {
 	public BeeMessageKeyRange range;
-	public ContentVersion version;
 }
